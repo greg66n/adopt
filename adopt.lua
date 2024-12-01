@@ -1,4 +1,3 @@
-game:GetService("Players").LocalPlayer.UserId = a4b29fe
 Config = {
     PetFarm = {
         Enabled = true,            -- Master switch for pet farming
