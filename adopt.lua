@@ -1,5 +1,5 @@
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/Spinzox/main/refs/heads/main/script.lua'),true))()
-wait(15)  -- Initial wait time
+wait(2)  -- Initial wait time
 
 for i = 1, 25 do
     -- Execute the same number four times rapidly
