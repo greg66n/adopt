@@ -1,27 +1,35 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+loadstring(game:HttpGet(('https://raw.githubusercontent.com/Spinzox/main/refs/heads/main/script.lua'),true))()
 wait(1)
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local gingerbreadMarkersFolder = ReplicatedStorage:WaitForChild("Resources"):WaitForChild("IceSkating"):WaitForChild("GingerbreadMarkers")
+-- Load bypass script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 
--- Loop through each object in the GingerbreadMarkers folder
-for _, marker in ipairs(gingerbreadMarkersFolder:GetChildren()) do
-    -- Create a new args table with the current marker's name
-    local args = {
-        [1] = marker.Name -- Use the name of the current marker
-    }
+-- Repeat every 60 seconds
+while true do
+    wait(1)
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local gingerbreadMarkersFolder = ReplicatedStorage:WaitForChild("Resources"):WaitForChild("IceSkating"):WaitForChild("GingerbreadMarkers")
 
-    -- Invoke the server with the current marker's name
-    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("WinterEventAPI/PickUpGingerbread"):InvokeServer(unpack(args))
+    -- Loop through each object in the GingerbreadMarkers folder
+    for _, marker in ipairs(gingerbreadMarkersFolder:GetChildren()) do
+        -- Create a new args table with the current marker's name
+        local args = {
+            [1] = marker.Name -- Use the name of the current marker
+        }
 
-    -- Wait for 0.1 seconds before the next call
-    wait(0.1)
+        -- Invoke the server with the current marker's name
+        game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("WinterEventAPI/PickUpGingerbread"):InvokeServer(unpack(args))
+
+        -- Wait for 0.1 seconds before the next call
+        wait(0.1)
+    end
+
+    wait(1)
+    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("WinterEventAPI/RedeemPendingGingerbread"):FireServer()
+
+    -- Wait 60 seconds before repeating the process
+    wait(60)
 end
 
-wait(1)
-game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("WinterEventAPI/RedeemPendingGingerbread"):FireServer()
-wait(1)
-
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/Spinzox/main/refs/heads/main/script.lua'),true))()
 wait(2)  -- Initial wait time
 
 for i = 1, 25 do
