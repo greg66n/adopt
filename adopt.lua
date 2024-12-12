@@ -1,4 +1,4 @@
-getgenv().hub_key = "W4bc8641e98bf4177ec38acd062c91494"
+getgenv().hub_key = "4d964454191739793dcfa2a29ed7193a"
 getgenv().custom_label = "VPS1"
 getgenv().BabyFarmActive = true
 getgenv().MiniGameFarm = true
