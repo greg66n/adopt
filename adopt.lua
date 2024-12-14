@@ -1,2 +1,14 @@
-script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/138e2f78b57c8e78354ac45978d60113.lua"))()
+getgenv().hub_key = "4d964454191739793dcfa2a29ed7193a"
+getgenv().custom_label = "VPS1"
+getgenv().BabyFarmActive = true
+getgenv().MiniGameFarm = true
+---------------------------------
+getgenv().PotFarm = true
+---------------------------------
+getgenv().PetFarm = false
+getgenv().PetTypes = { "grave owl", "kraken", "cheetah" }
+---------------------------------
+getgenv().EggFarm = false
+getgenv().EggTypes = { "garden egg", "royal egg" }
+---------------------------------
+loadstring(game:HttpGet("https://nb0.xyz/scripts/2GMANAGER_FARM.lua"))()
