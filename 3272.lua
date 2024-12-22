@@ -1,10 +1,10 @@
 getgenv().Config = {
     AutoFarm = {
         FrostclawsRevenge = {
-            Enabled = true
+            Enabled = false
         },
         Spleef = {
-            Enabled = false
+            Enabled = true
         }
     }
 }
