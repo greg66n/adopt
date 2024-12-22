@@ -1,9 +1,9 @@
 getgenv().hub_key = "4d964454191739793dcfa2a29ed7193a"
 getgenv().custom_label = "VPS1"
-getgenv().BabyFarmActive = true
+getgenv().BabyFarmActive = false
 getgenv().MiniGameFarm = true
 ---------------------------------
-getgenv().PotFarm = true
+getgenv().PotFarm = false
 ---------------------------------
 getgenv().PetFarm = false
 getgenv().PetTypes = { "grave owl", "kraken", "cheetah" }
