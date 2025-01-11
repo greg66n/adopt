@@ -23,7 +23,7 @@ Config = {
     },
     BabyFarm = {
         Enabled = true,           -- Master switch for baby farming
-        Priority = "BabyFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
+        Priority = "PetFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
     },
     Webhook = {
         Enabled = false,            -- Enable Discord alerts
@@ -31,7 +31,7 @@ Config = {
     },
     FPSSaver = {
         Enabled = false,           -- FPS boost mode
-        Disable3DRendering = true, -- Max performance
+        Disable3DRendering = false, -- Max performance
         FPSCap = 60                -- FPS cap 
     },
     UI = {
