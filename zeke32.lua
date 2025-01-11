@@ -30,7 +30,7 @@ Config = {
         URL = "webhook here",          -- Your webhook
     },
     FPSSaver = {
-        Enabled = true,           -- FPS boost mode
+        Enabled = false,           -- FPS boost mode
         Disable3DRendering = true, -- Max performance
         FPSCap = 60                -- FPS cap 
     },
