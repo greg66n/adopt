@@ -1,5 +1,6 @@
+wait(10)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-wait(1)
+wait(5)
 local args = {
     [1] = "pets",
     [2] = "winter_2024_mistletroll",
@@ -95,7 +96,3 @@ local args = {
     [2] = "winter_2024_adopt_lanyard",
     [3] = {
         ["buy_count"] = 3
-    }
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
