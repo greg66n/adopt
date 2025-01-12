@@ -96,3 +96,7 @@ local args = {
     [2] = "winter_2024_adopt_lanyard",
     [3] = {
         ["buy_count"] = 3
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(arg
