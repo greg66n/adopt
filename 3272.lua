@@ -1,5 +1,5 @@
 task.spawn(function()
-    task.wait(55)
+    task.wait(70)
     getgenv().API_KEY = "pQP1Ma1WE4h81mPToP54"
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
