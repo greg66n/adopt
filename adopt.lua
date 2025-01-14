@@ -6,7 +6,7 @@ end)
 
 task.spawn(function()
    -- ARCEUS, CODEX ETC
-script_key=NxzplPKcRYahKMvLcZtfTAOQURrRclwP;
+script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
 getgenv().Config = {
     ["Winter_EVENT"] = false,
     ["PetFarmActive"] = true,
