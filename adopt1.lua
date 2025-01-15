@@ -18,6 +18,16 @@ getgenv().Config = {
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
+wait(1)
+local args = {
+    [1] = "pet_accessories",
+    [2] = "winter_2024_elf_shoes",
+    [3] = {
+        ["buy_count"] = 3
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 
 
