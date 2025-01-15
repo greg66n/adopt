@@ -6,6 +6,7 @@ end)
 
 task.spawn(function()
    -- ARCEUS, CODEX ETC
+task.wait(35)
 script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
 getgenv().Config = {
     ["Winter_EVENT"] = false,
