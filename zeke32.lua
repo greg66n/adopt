@@ -6,6 +6,7 @@ end)
 
 task.spawn(function()
    -- ARCEUS, CODEX ETC
+task.wait(35)
 script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
 getgenv().Config = {
     ["Winter_EVENT"] = false,
@@ -18,7 +19,3 @@ getgenv().Config = {
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
-
-
-
-
