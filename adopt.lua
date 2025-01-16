@@ -18,7 +18,7 @@ getgenv().Config = {
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
-wait(1)
+wait(5)
 local args = {
     [1] = "pets",
     [2] = "winter_2024_frostbite_cub",
