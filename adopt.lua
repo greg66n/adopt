@@ -1,6 +1,4 @@
 
-
-
 Config = {
     PetFarm = {
         Enabled = true,            -- Master switch for pet farming
@@ -26,7 +24,7 @@ Config = {
     },
     BabyFarm = {
         Enabled = true,           -- Master switch for baby farming
-        Priority = "PetFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
+        Priority = "BabyFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
     },
     Webhook = {
         Enabled = true,            -- Enable Discord alerts
@@ -43,7 +41,7 @@ Config = {
     }
 }
 
-script_key="script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
+script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/d416a9fb566c94cba596550ef09d256b.lua"))()"
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
