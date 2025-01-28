@@ -1,6 +1,6 @@
 
 
-wait(1)
+wait(30)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
 local locations = {"Neighborhood", "MainMap","SkyCastle"}
