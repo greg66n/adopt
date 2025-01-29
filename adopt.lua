@@ -22,10 +22,10 @@ end)
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
-local locations = {"Neighborhood", "MainMap","SkyCastle"}
+local locations = {"Neighborhood", "MainMap", "SkyCastle", "LNY2025GlitchZone"}
 
 while true do  -- loop infinitely
-    for i = 1, 150 do
+    for i = 1, 100 do
         for _, location in ipairs(locations) do
             local args = {
                 [1] = location,
