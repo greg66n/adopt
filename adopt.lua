@@ -37,3 +37,27 @@ while true do  -- loop infinitely
     end
     wait(43200)  -- loop every 12h
 end
+wait(1)
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_blossom_snake",
+    [3] = {}
+}
+
+for i = 1, 8 do
+    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+    wait(0.2) -- Delay of 0.2 seconds between each call
+end
+wait(1)
+local args = {
+    [1] = "pets",
+    [2] = "garden_2024_egg", 
+    [3] = {}
+}
+
+for i = 1, 100 do
+    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+    wait(0.1) -- Delay of 0.1 seconds between each call
+end
+
+
