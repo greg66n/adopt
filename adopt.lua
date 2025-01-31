@@ -64,17 +64,6 @@ local args = {
 game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 wait(1)
 local args = {
-    [1] = "pets",
-    [2] = "garden_2024_egg", 
-    [3] = {}
-}
-
-for i = 1, 100 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-    wait(0.1) -- Delay of 0.1 seconds between each call
-end
-wait(1)
-local args = {
     [1] = "toys",
     [2] = "lunar_2025_lucky_coin_flying_disc", 
     [3] = {}
