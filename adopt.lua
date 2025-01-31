@@ -73,7 +73,7 @@ local args = {
     [3] = {}
 }
 
-for i = 1, 100 do
+for i = 1, 10 do
     game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
     wait(0.1) -- Delay of 0.1 seconds between each call
 end
