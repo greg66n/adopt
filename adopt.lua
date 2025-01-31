@@ -24,17 +24,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-Remote
 wait(1)
 local locations = {"Neighborhood", "MainMap", "SkyCastle", "LNY2025GlitchZone"}
 
-while true do  -- loop infinitely
+for _, location in ipairs(locations) do
     for i = 1, 100 do
-        for _, location in ipairs(locations) do
-            local args = {
-                [1] = location,
-                [2] = tostring(i)
-            }
-            game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
-            wait(0.2)  -- 0.5 second delay prevent crash.. don't remove this to execute faster
-        end
+        local args = {
+            [1] = location,
+            [2] = tostring(i)
+        }
+        game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+        wait(0.2)  -- 0.1 second delay
     end
+end
+
 
 wait(1)
 local args = {
