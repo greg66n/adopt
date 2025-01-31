@@ -34,10 +34,6 @@ for _, location in ipairs(locations) do
         wait(0.2)  -- 0.1 second delay
     end
 end
-
-
-
-
 wait(1)
 local args = {
     [1] = "pets",
@@ -82,3 +78,6 @@ local args = {
     [1] = "toys",
     [2] = "lunar_2025_lucky_coin_flying_disc", 
     [3] = {}
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
