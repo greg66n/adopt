@@ -35,6 +35,23 @@ for _, location in ipairs(locations) do
     end
 end
 
+wait(1)
+local args = {
+    [1] = "toys",
+    [2] = "lunar_2025_lucky_coin_flying_disc", 
+    [3] = {}
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_knot_earrings", 
+    [3] = {}
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
 
 wait(1)
 local args = {
@@ -58,5 +75,22 @@ for i = 1, 100 do
     game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
     wait(0.1) -- Delay of 0.1 seconds between each call
 end
+wait(1)
+local args = {
+    [1] = "toys",
+    [2] = "lunar_2025_lucky_coin_flying_disc", 
+    [3] = {}
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_knot_earrings", 
+    [3] = {}
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
 
 
