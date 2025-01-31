@@ -35,8 +35,7 @@ while true do  -- loop infinitely
             wait(0.2)  -- 0.5 second delay prevent crash.. don't remove this to execute faster
         end
     end
-    wait(43200)  -- loop every 12h
-end
+
 wait(1)
 local args = {
     [1] = "pets",
