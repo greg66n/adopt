@@ -1,4 +1,3 @@
-
 task.spawn(function()
     task.wait(35)
     getgenv().API_KEY = "pQP1Ma1WE4h81mPToP54"
@@ -7,6 +6,7 @@ end)
 
 task.spawn(function()
    -- ARCEUS, CODEX ETC
+task.wait(35)
 script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
 getgenv().Config = {
     ["Winter_EVENT"] = false,
@@ -20,22 +20,76 @@ getgenv().Config = {
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
 wait(1)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
-local locations = {"MainMap", "LNY2025GlitchZone"}
+local args = {
+    [1] = "pets",
+    [2] = "winter_2024_frostbite_cub",
+    [3] = {
+        ["buy_count"] = 32
+    }
+}
 
-for _, location in ipairs(locations) do
-    for i = 1, 100 do
-        local args = {
-            [1] = location,
-            [2] = tostring(i)
-        }
-        game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
-        wait(0.2)  -- 0.1 second delay
-    end
-end
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
+
+local args = {
+    [1] = "toys",
+    [2] = "winter_2024_snowflake_plush",
+    [3] = {
+        ["buy_count"] = 3
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "winter_2024_santas_bow",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "winter_2024_elf_shoes",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "winter_2024_elf_shoes",
+    [3] = {
+        ["buy_count"] = 3
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
 
 
+local args = {
+    [1] = "toys",
+    [2] = "winter_2024_bauble_throw_toy",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 
 wait(1)
