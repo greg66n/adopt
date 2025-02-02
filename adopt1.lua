@@ -58,6 +58,17 @@ for i = 1, 100 do
     game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
     wait(0.2)  -- Delay of 0.2 seconds
 end
+wait(1)
+local args = {
+    [1] = "MainMap",
+    [3] = true
+}
+
+for i = 1, 100 do
+    args[2] = tostring(i)
+    game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+    wait(0.2)  -- Delay of 0.2 seconds
+end
 
 wait(1)
 local args = {
