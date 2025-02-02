@@ -49,6 +49,18 @@ for _, location in ipairs(locations) do
 end
 wait(1)
 local args = {
+    [1] = "MoonInterior",
+    [3] = true
+}
+
+for i = 1, 100 do
+    args[2] = tostring(i)
+    game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+    wait(0.2)  -- Delay of 0.2 seconds
+end
+
+wait(1)
+local args = {
     [1] = "pets",
     [2] = "lunar_2025_blossom_snake",
     [3] = {}
