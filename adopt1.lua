@@ -22,7 +22,7 @@ end)
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
-local locations = {"MainMap", "LNY2025GlitchZone"}
+local locations = {"MainMap", "MoonInterior"}
 
 for _, location in ipairs(locations) do
     for i = 1, 100 do
