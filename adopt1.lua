@@ -22,7 +22,7 @@ end)
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
-local locations = {"MainMap", "MoonInterior"}
+local locations = {"MainMap"}
 
 for _, location in ipairs(locations) do
     for i = 1, 100 do
@@ -35,14 +35,18 @@ for _, location in ipairs(locations) do
     end
 end
 wait(1)
-local args = {
-    [1] = "MainMap",
-    [2] = "42",
-    [3] = true
-}
+local locations = {"MoonInterior"}
 
-game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
-
+for _, location in ipairs(locations) do
+    for i = 1, 100 do
+        local args = {
+            [1] = location,
+            [2] = tostring(i)
+        }
+        game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+        wait(0.2)  -- 0.1 second delay
+    end
+end
 wait(1)
 local args = {
     [1] = "pets",
