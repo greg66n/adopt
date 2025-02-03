@@ -1,3 +1,33 @@
+wait(5)
+ations = {"MainMap", "MoonInterior"}
+local args = {}
+
+-- Function to collect stars
+local function collectStars(location, isSpecial)
+    for i = 1, 100 do
+        args[1] = location
+        args[2] = tostring(i)
+        
+        -- If it's a special star, add the third argument
+        if isSpecial then
+            args[3] = true
+        else
+            args[3] = nil
+        end
+        
+        game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+        wait(0.2)  -- Delay of 0.2 seconds
+    end
+end
+
+-- Collect stars for both locations
+for _, location in ipairs(locations) do
+    collectStars(location, false)  -- Regular stars
+    wait(1)  -- Wait 1 second before moving to the next location
+    collectStars(location, true)   -- Special stars
+    wait(1)  -- Wait 1 second before moving to the next location
+end
+wait(1)
 task.spawn(function()
     task.wait(35)
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
