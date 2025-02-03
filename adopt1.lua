@@ -1,5 +1,5 @@
 
-wait(5)
+wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
 local locations = {"MainMap", "MoonInterior"}
