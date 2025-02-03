@@ -1,3 +1,4 @@
+wait(1)
 local locations = {"MainMap"}
 
 for _, location in ipairs(locations) do
