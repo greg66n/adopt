@@ -1,5 +1,5 @@
 wait(5)
-ations = {"MainMap", "MoonInterior"}
+local locations = {"MainMap", "MoonInterior"}
 local args = {}
 
 -- Function to collect stars
