@@ -30,6 +30,7 @@ for _, location in ipairs(locations) do
     collectStars(location, true)   -- Special stars
     wait(1)  -- Wait 1 second before moving to the next location
 end
+
 wait(1)
 task.spawn(function()
     task.wait(35)
