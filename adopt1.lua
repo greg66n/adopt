@@ -19,3 +19,16 @@ getgenv().Config = {
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
 
+wait(1)
+local locations = {"MainMap"}
+
+for _, location in ipairs(locations) do
+    for i = 1, 100 do
+        local args = {
+            [1] = location,
+            [2] = tostring(i)
+        }
+        game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ShootingStarCollected"):FireServer(unpack(args))
+        wait(0.2)  -- 0.1 second delay
+    end
+end
