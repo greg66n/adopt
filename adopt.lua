@@ -4,8 +4,8 @@ task.spawn(function()
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
 
--- ARCEUS, CODEX ETC
-script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
+task.spawn(function()
+    script_key="NxzplPKcRYahKMvLcZtfTAOQURrRclwP";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
     ["PetFarmActive"] = true,
@@ -15,11 +15,9 @@ getgenv().Config = {
     ["DiscordId"] = "942321951010086922",
     ["Webhook"] = "https://discord.com/api/webhooks/123456",
 }
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
-    -- add other scripts here
-end) -- add other scripts here
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()-- add other scripts here
 end)
-
+wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
 local locations = {"MainMap"}
