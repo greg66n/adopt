@@ -31,6 +31,12 @@ for _, location in ipairs(locations) do
 end
 
 wait(1)
+local args = {
+    [1] = "MoonInterior"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ClaimRoyalEgg"):FireServer(unpack(args))
+wait(1)
 task.spawn(function()
     task.wait(35)
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
@@ -51,4 +57,5 @@ getgenv().Config = {
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
+
 
