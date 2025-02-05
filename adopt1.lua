@@ -32,6 +32,12 @@ for _, location in ipairs(locations) do
 end
 
 wait(1)
+local args = {
+    [1] = "MoonInterior"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ClaimRoyalEgg"):FireServer(unpack(args))
+wait(1)
 task.spawn(function()
     task.wait(35)
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
