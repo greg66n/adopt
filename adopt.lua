@@ -57,5 +57,48 @@ getgenv().Config = {
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
 end)
+wait(600)
+local args = {
+    [1] = "coastal_climb"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(6005)
+local args = {
+    [1] = "ancient_ruins"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(12500)
+local args = {
+    [1] = "lonelypeak"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(25009)
+local args = {
+    [1] = "miniworld"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(30001)
+local args = {
+    [1] = "pyramid"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(40505)
+local args = {
+    [1] = "shipwreck_bay"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+wait(60409)
+local args = {
+    [1] = "tinyisles"
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
+
 
 
