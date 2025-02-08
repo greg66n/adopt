@@ -47,7 +47,7 @@ local args = {
     [1] = "pets",
     [2] = "moon_2025_egg",
     [3] = {
-        ["buy_count"] = 5
+        ["buy_count"] = 0
     }
 }
 
