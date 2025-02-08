@@ -47,7 +47,7 @@ local args = {
     [1] = "pets",
     [2] = "moon_2025_egg",
     [3] = {
-        ["buy_count"] = 40
+        ["buy_count"] = 5
     }
 }
 
@@ -59,7 +59,7 @@ Config = {
         Enabled = true,            -- Master switch for pet farming
         AutoNeon = false,          -- Makes neon pets when you have 4 full grown
         FarmUntilFullyGrown = false, -- true = farms youngest pets | false = oldest pets
-        PrioritizeFriendship = true, -- true = highest friendship pets | false = by age only
+        PrioritizeFriendship = false, -- true = highest friendship pets | false = by age only
         FarmEggs = true,           -- Farm eggs until they hatch then buys more
         EggType = "moon_2025_egg",   -- cracked_egg, regular_pet_egg, royal_egg, garden_2024_egg
         SelectFarmEgg = "moon_2025_egg",
