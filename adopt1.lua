@@ -46,7 +46,7 @@ end)
 
 Config = {
     PetFarm = {
-        Enabled = false,            -- Master switch for pet farming
+        Enabled = true,            -- Master switch for pet farming
         AutoNeon = false,          -- Makes neon pets when you have 4 full grown
         FarmUntilFullyGrown = false, -- true = farms youngest pets | false = oldest pets
         PrioritizeFriendship = true, -- true = highest friendship pets | false = by age only
