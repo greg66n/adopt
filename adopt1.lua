@@ -43,6 +43,17 @@ task.spawn(function()
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
+wait(1)
+local args = {
+    [1] = "pets",
+    [2] = "moon_2025_egg",
+    [3] = {
+        ["buy_count"] = 40
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
 
 Config = {
     PetFarm = {
