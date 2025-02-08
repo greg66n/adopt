@@ -52,7 +52,7 @@ Config = {
         PrioritizeFriendship = true, -- true = highest friendship pets | false = by age only
         FarmEggs = true,           -- Farm eggs until they hatch then buys more
         EggType = "moon_2025_egg",   -- cracked_egg, regular_pet_egg, royal_egg, garden_2024_egg
-        SelectFarmEgg = "moon_2025_egg",
+        SelectFarmEgg = "any",
         BuyEggs = true,           -- Auto buys eggs when needed
         AutoAgePotionEnabled = false,
         AutoAgePotionPets = {"winter_2024_ice_cube","winter_2024_berry_cool_cube"}, -- example of how u use multiple pets
@@ -78,7 +78,7 @@ Config = {
     FPSSaver = {
         Enabled = false,           -- FPS boost mode
         Disable3DRendering = false, -- Max performance
-        FPSCap = 60                -- FPS cap 
+        FPSCap = 10                -- FPS cap 
     },
     UI = {
         Maximized = false,          -- true = big | false = small
