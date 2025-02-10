@@ -44,6 +44,12 @@ task.spawn(function()
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
 wait(1)
+local args = {
+    [1] = true
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("HousingAPI/SetDoorLocked"):InvokeServer(unpack(args))
+wait(1)
 Config = {
     PetFarm = {
         Enabled = true,            -- Master switch for pet farming
