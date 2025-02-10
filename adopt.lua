@@ -53,7 +53,12 @@ local args = {
 
 game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 wait(1)
+local args = {
+    [1] = true
+}
 
+game:GetService("ReplicatedStorage").API:FindFirstChild("HousingAPI/SetDoorLocked"):InvokeServer(unpack(args))
+wait(1)
 Config = {
     PetFarm = {
         Enabled = true,            -- Master switch for pet farming
