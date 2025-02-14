@@ -169,6 +169,20 @@ local args = {
 
 game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
 local args = {
     [1] = "toys",
     [2] = "moon_2025_shooting_star_grappling_hook",
@@ -220,6 +234,18 @@ wait(1)
 local args = {
     [1] = "pet_accessories",
     [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
     [3] = {
         ["buy_count"] = 1
     }
