@@ -57,7 +57,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_blossom_snake",
     [3] = {
-        ["buy_count"] = 4
+        ["buy_count"] = 5
     }
 }
 
@@ -103,7 +103,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_blossom_snake",
     [3] = {
-        ["buy_count"] = 2
+        ["buy_count"] = 3
     }
 }
 
@@ -115,7 +115,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_nebula_snake",
     [3] = {
-        ["buy_count"] = 2
+        ["buy_count"] = 3
     }
 }
 
@@ -134,6 +134,40 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 local args = {
     [1] = "toys",
