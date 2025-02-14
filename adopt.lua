@@ -38,224 +38,147 @@ local args = {
 game:GetService("ReplicatedStorage").API:FindFirstChild("MoonAPI/ClaimRoyalEgg"):FireServer(unpack(args))
 wait(1)
 task.spawn(function()
-    task.wait(35)
+    task.wait(1)
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
 wait(1)
 local args = {
-    [1] = "toys",
-    [2] = "lunar_2025_lucky_coin_flying_disc", 
-    [3] = {}
+    [1] = "pets",
+    [2] = "lunar_2025_blossom_snake",
+    [3] = {
+        ["buy_count"] = 4
+    }
 }
 
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-end
-
-wait(2)
-
-local args = {
-    [1] = "toys",
-    [2] = "lunar_2025_pellet_drum_rattle", 
-    [3] = {}
-}
-
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 wait(1)
 
 local args = {
-    [1] = "toys",
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 4
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_blossom_snake",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "strollers",
     [2] = "lunar_2025_rickshaw_stroller", 
-    [3] = {}
+    [3] = {
+        ["buy_count"] = 1
+    }
 }
 
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 wait(1)
 
 local args = {
-    [1] = "pet_accessories",
-    [2] = "lunar_2025_knot_earrings", 
-    [3] = {}
+    [1] = "toys",
+    [2] = "moon_2025_shooting_star_grappling_hook",
+    [3] = {
+        ["buy_count"] = 2
+    }
 }
 
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "toys",
+    [2] = "moon_2025_shooting_star_grappling_hook",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 wait(1)
 
 local args = {
     [1] = "pet_accessories",
     [2] = "moon_2025_lunar_new_year_headdress", 
-    [3] = {}
+    [3] = {
+        ["buy_count"] = 2
+    }
 }
 
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
 wait(1)
 
 local args = {
     [1] = "pet_accessories",
-    [2] = "moon_egg_2025_helmet", 
-    [3] = {}
-}
-
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
-wait(1)
-
-local args = {
-    [1] = "pets",
-    [2] = "lunar_2025_gilded_snake",
-    [3] = {}
-}
-
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
-wait(1)
-
-local args = {
-    [1] = "pets",
-    [2] = "lunar_2025_nebula_snake", 
-    [3] = {}
-}
-
-for i = 1, 2 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
-wait(1)
-
-local args = {
-    [1] = "pets",
-    [2] = "lunar_2025_blossom_snake", 
-    [3] = {}
-}
-
-for i = 1, 4 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
-wait(1)
-
-local args = {
-    [1] = "pets",
-    [2] = "lunar_2025_prism_snake", 
-    [3] = {}
-}
-
-for i = 1, 1 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
-
-wait(1)
-
-local args = {
-    [1] = "pets",
-    [2] = "lunar_2025_haetae", 
-    [3] = {}
-}
-
-for i = 1, 4 do
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-wait(1)
-local args = {
-    [1] = true
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("HousingAPI/SetDoorLocked"):InvokeServer(unpack(args))
-wait(1)
-Config = {
-    PetFarm = {
-        Enabled = true,            -- Master switch for pet farming
-        AutoNeon = false,          -- Makes neon pets when you have 4 full grown
-        FarmUntilFullyGrown = false, -- true = farms youngest pets | false = oldest pets
-        PrioritizeFriendship = false, -- true = highest friendship pets | false = by age only
-        FarmEggs = true,           -- Farm eggs until they hatch then buys more
-        EggType = "moon_2025_egg",   -- cracked_egg, regular_pet_egg, royal_egg, garden_2024_egg
-        SelectFarmEgg = "moon_2025_egg",
-        BuyEggs = true,           -- Auto buys eggs when needed
-        AutoAgePotionEnabled = false,
-        AutoAgePotionPets = {"winter_2024_ice_cube","winter_2024_berry_cool_cube"}, -- example of how u use multiple pets
-        RarityFarming = {
-            Enabled = false, -- enable for rarity farming on wor
-            Order = {
-                "ultra_rare", -- highest priority 
-                "common",
-                "legendary",
-                "rare",
-                "uncommon" -- lowest priority 
-            }
-        }
-    },
-    BabyFarm = {
-        Enabled = true,           -- Master switch for baby farming
-        Priority = "BabyFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
-    },
-    Webhook = {
-        Enabled = true,            -- Enable Discord alerts
-        URL = "webhook here",          -- Your webhook
-    },
-    FPSSaver = {
-        Enabled = false,           -- FPS boost mode
-        Disable3DRendering = false, -- Max performance
-        FPSCap = 10                -- FPS cap 
-    },
-    UI = {
-        Maximized = false,          -- true = big | false = small
-        Scale = 1                  -- 0.1 = tiny, 0.5 = half, 1 = full
+    [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
     }
 }
 
-script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/8a2399ec22841391ee52540ec7c001e1.lua"))() --Adopt Me Potion Farm / Mass Farming 
-wait(600)
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
 local args = {
-    [1] = "coastal_climb"
+    [1] = "pet_accessories",
+    [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
+    }
 }
 
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(6005)
-local args = {
-    [1] = "ancient_ruins"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(12500)
-local args = {
-    [1] = "lonelypeak"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(25009)
-local args = {
-    [1] = "miniworld"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(30001)
-local args = {
-    [1] = "pyramid"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(40505)
-local args = {
-    [1] = "shipwreck_bay"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(60409)
-local args = {
-    [1] = "tinyisles"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-
-
-
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
