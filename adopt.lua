@@ -1,6 +1,206 @@
 wait(5)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_blossom_snake",
+    [3] = {
+        ["buy_count"] = 5
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 4
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_blossom_snake",
+    [3] = {
+        ["buy_count"] = 3
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "strollers",
+    [2] = "lunar_2025_rickshaw_stroller", 
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "toys",
+    [2] = "moon_2025_shooting_star_grappling_hook",
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "toys",
+    [2] = "moon_2025_shooting_star_grappling_hook",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 2
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
 local locations = {"MainMap", "MoonInterior"}
 local args = {}
 
@@ -47,7 +247,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_blossom_snake",
     [3] = {
-        ["buy_count"] = 4
+        ["buy_count"] = 5
     }
 }
 
@@ -93,7 +293,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_blossom_snake",
     [3] = {
-        ["buy_count"] = 2
+        ["buy_count"] = 3
     }
 }
 
@@ -105,7 +305,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_nebula_snake",
     [3] = {
-        ["buy_count"] = 2
+        ["buy_count"] = 3
     }
 }
 
@@ -126,6 +326,54 @@ game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/B
 wait(1)
 
 local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_nebula_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
     [1] = "toys",
     [2] = "moon_2025_shooting_star_grappling_hook",
     [3] = {
@@ -176,6 +424,30 @@ wait(1)
 local args = {
     [1] = "pet_accessories",
     [2] = "moon_2025_lunar_new_year_headdress", 
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
+wait(1)
+
+local args = {
+    [1] = "pet_accessories",
+    [2] = "lunar_2025_dancing_lion_mask",
     [3] = {
         ["buy_count"] = 1
     }
