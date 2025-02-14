@@ -1,6 +1,16 @@
 wait(5)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
+local args = {
+    [1] = "pets",
+    [2] = "lunar_2025_prism_snake",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
 local locations = {"MainMap", "MoonInterior"}
 local args = {}
 
