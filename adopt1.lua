@@ -25,7 +25,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/B
 
 local args = {
     [1] = "pets",
-    [2] = "lunar_2025_prism_snake",
+    [2] = "lunar_2025_nebula_snake",
     [3] = {
         ["buy_count"] = 2
     }
@@ -63,7 +63,7 @@ local args = {
     [1] = "pets",
     [2] = "lunar_2025_nebula_snake",
     [3] = {
-        ["buy_count"] = 3
+        ["buy_count"] = 2
     }
 }
 
@@ -109,7 +109,7 @@ wait(1)
 
 local args = {
     [1] = "pets",
-    [2] = "lunar_2025_prism_snake",
+    [2] = "lunar_2025_nebula_snake",
     [3] = {
         ["buy_count"] = 1
     }
