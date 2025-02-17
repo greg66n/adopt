@@ -6,13 +6,9 @@ wait(0.1)
 local args = {
     [1] = "pets",
     [2] = "valentines_2025_love_bird",
-    [3] = {
-        ["buy_count"] = 2
-    }
+    [3] = {}
 }
 
-while true do
-    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-    wait(5)  -- Wait for 5 seconds before repeating the entire cycle
-end
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
 
