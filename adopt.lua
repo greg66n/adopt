@@ -1,6 +1,8 @@
 wait(2)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
+wait(1)
 task.spawn(function()
     task.wait(1)
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
