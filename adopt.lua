@@ -2,113 +2,78 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-Remote
 wait(0.1)
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
 wait(10)
-local Player = game.Players.LocalPlayer    
-local Http = game:GetService("HttpService")
-local TPS = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
 
-local _place,_id = game.PlaceId, game.JobId
--- Asc for lowest player count, Desc for highest player count
-local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=10"
-function ListServers(cursor)
-   local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
-   return Http:JSONDecode(Raw)
+Time = 1 -- seconds
+repeat wait() until game:IsLoaded()
+wait(Time)
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+function TPReturner()
+   local Site;
+   if foundAnything == "" then
+       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+   else
+       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+   end
+   local ID = ""
+   if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+       foundAnything = Site.nextPageCursor
+   end
+   local num = 0;
+   for i,v in pairs(Site.data) do
+       local Possible = true
+       ID = tostring(v.id)
+       if tonumber(v.maxPlayers) > tonumber(v.playing) then
+           for _,Existing in pairs(AllIDs) do
+               if num ~= 0 then
+                   if ID == tostring(Existing) then
+                       Possible = false
+                   end
+               else
+                   if tonumber(actualHour) ~= tonumber(Existing) then
+                       local delFile = pcall(function()
+                           delfile("NotSameServers.json")
+                           AllIDs = {}
+                           table.insert(AllIDs, actualHour)
+                       end)
+                   end
+               end
+               num = num + 1
+           end
+           if Possible == true then
+               table.insert(AllIDs, ID)
+               wait()
+               pcall(function()
+                   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                   wait()
+                   game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+               end)
+               wait(4)
+           end
+       end
+   end
 end
-
-time_to_wait = 1 --seconds
-
--- choose a random server and join every 2 minutes
-while wait(time_to_wait) do
-   --freeze player before teleporting to prevent synapse crash?
-   Player.Character.HumanoidRootPart.Anchored = true
-   local Servers = ListServers()
-   local Server = Servers.data[math.random(1,#Servers.data)]
-   TPS:TeleportToPlaceInstance(_place, Server.id, Player)
+ 
+function Teleport()
+   while wait() do
+       pcall(function()
+           TPReturner()
+           if foundAnything ~= "" then
+               TPReturner()
+           end
+       end)
+   end
 end
-wait(1)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/greg66n/adopt/refs/heads/main/serverhop.lua"))()
-wait(1)
-task.spawn(function()
-    task.wait(1)
-    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
-end)
+ 
+-- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
+
+    Teleport()
 
 wait(1)
-local args = {
-    [1] = true
-}
 
-game:GetService("ReplicatedStorage").API:FindFirstChild("HousingAPI/SetDoorLocked"):InvokeServer(unpack(args))
-wait(1)
-Config = {
-    PetFarm = {
-        Enabled = true,            -- Master switch for pet farming
-        AutoNeon = false,          -- Makes neon pets when you have 4 full grown
-        FarmUntilFullyGrown = false, -- true = farms youngest pets | false = oldest pets
-        PrioritizeFriendship = false, -- true = highest friendship pets | false = by age only
-        FarmEggs = true,           -- Farm eggs until they hatch then buys more
-        EggType = "moon_2025_egg",   -- cracked_egg, regular_pet_egg, royal_egg, garden_2024_egg
-        SelectFarmEgg = "moon_2025_egg",
-        BuyEggs = true,           -- Auto buys eggs when needed
-        AutoAgePotionEnabled = false,
-        AutoAgePotionPets = {"winter_2024_ice_cube","winter_2024_berry_cool_cube"}, -- example of how u use multiple pets
-        RarityFarming = {
-            Enabled = false, -- enable for rarity farming on wor
-            Order = {
-                "ultra_rare", -- highest priority 
-                "common",
-                "legendary",
-                "rare",
-                "uncommon" -- lowest priority 
-            }
-        }
-    },
-    BabyFarm = {
-        Enabled = true,           -- Master switch for baby farming
-        Priority = "BabyFirst",    -- BabyFirst = do baby tasks first | PetFirst = do pet tasks first
-    },
-    Webhook = {
-        Enabled = true,            -- Enable Discord alerts
-        URL = "webhook here",          -- Your webhook
-    },
-    FPSSaver = {
-        Enabled = false,           -- FPS boost mode
-        Disable3DRendering = false, -- Max performance
-        FPSCap = 10                -- FPS cap 
-    },
-    UI = {
-        Maximized = false,          -- true = big | false = small
-        Scale = 1                  -- 0.1 = tiny, 0.5 = half, 1 = full
-    }
-}
-
-script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/8a2399ec22841391ee52540ec7c001e1.lua"))() --Adopt Me Potion Farm / Mass Farming 
-wait(600)
-local args = {
-    [1] = "coastal_climb"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(6005)
-local args = {
-    [1] = "ancient_ruins"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(12500)
-local args = {
-    [1] = "lonelypeak"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(25009)
-local args = {
-    [1] = "miniworld"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(30001)
 local args = {
     [1] = "pyramid"
 }
