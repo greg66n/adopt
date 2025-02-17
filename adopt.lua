@@ -2,7 +2,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-Remote
 wait(0.1)
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
 wait(10)
-
 Time = 1 -- seconds
 repeat wait() until game:IsLoaded()
 wait(Time)
@@ -72,22 +71,3 @@ end
 
     Teleport()
 
-wait(1)
-
-local args = {
-    [1] = "pyramid"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(40505)
-local args = {
-    [1] = "shipwreck_bay"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
-wait(60409)
-local args = {
-    [1] = "tinyisles"
-}
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("MinigameAPI/FinishObby"):FireServer(unpack(args))
