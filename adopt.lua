@@ -1,8 +1,5 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-wait(0.1)
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
-wait(10)
-Time = 1 -- seconds
+
+Time = 12 -- seconds
 repeat wait() until game:IsLoaded()
 wait(Time)
 local PlaceID = game.PlaceId
@@ -70,4 +67,7 @@ end
 -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
 
     Teleport()
-
+wait(0.1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+wait(0.1)
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
