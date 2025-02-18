@@ -1,14 +1,68 @@
-wait(0.1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(0.1)
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/08615e5f6a25239a4ffa9b6203728d70.lua"))()
-wait(1)
+local heartArgs = {
+    [2] = {
+        [1] = 1,
+        [2] = 2,
+        [3] = 3,
+        [4] = 4,
+        [5] = 5,
+        [6] = 6,
+        [7] = 7,
+        [8] = 8,
+        [9] = 9,
+        [10] = 10,
+    }
+}
+
+local secondHeartArgs = {
+    [2] = {
+        [1] = 11,
+        [2] = 12,
+        [3] = 13,
+        [4] = 14,
+        [5] = 15,
+        [6] = 16,
+        [7] = 17,
+        [8] = 18,
+        [9] = 19,
+        [10] = 20,
+    }
+}
+
+for i = 1, 8 do
+    local args = {
+        [1] = i,  -- cycling through numbers 1 to 8
+    }
+    
+    -- First call with PickupRose
+    game:GetService("ReplicatedStorage").API:FindFirstChild("ValentinesEventAPI/PickupRose"):FireServer(unpack(args))
+    wait(0.1)  -- Wait for 1 second
+    
+    -- Second call with PickupRoseHearts and first heartArgs
+    heartArgs[1] = i
+    game:GetService("ReplicatedStorage").API:FindFirstChild("ValentinesEventAPI/PickupRoseHearts"):FireServer(unpack(heartArgs))
+    wait(0.1)  -- Wait for 1 second
+
+    -- Third call with PickupRoseHearts and secondHeartArgs
+    secondHeartArgs[1] = i
+    game:GetService("ReplicatedStorage").API:FindFirstChild("ValentinesEventAPI/PickupRoseHearts"):FireServer(unpack(secondHeartArgs))
+    wait(0.1)  -- Wait for 1 second
+end
+
+wait(0.1)
+
 local args = {
     [1] = "pets",
     [2] = "valentines_2025_love_bird",
-    [3] = {}
+    [3] = {
+        ["buy_count"] = 1
+    }
 }
 
-
-game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-
+while true do
+    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+    wait(5)  -- Wait for 5 seconds before repeating the entire cycle
+end
+wait(0.1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/greg66n/adopt/refs/heads/main/serverhop.lua"))()
