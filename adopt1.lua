@@ -63,7 +63,8 @@ function Teleport()
    end
 end
  
-wait(0.1)
+
+ wait(0.1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(0.1)
 local heartArgs = {
@@ -128,8 +129,6 @@ local args = {
 
 
     game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
- 
-end
 -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
 
     Teleport()
