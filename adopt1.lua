@@ -126,9 +126,9 @@ local args = {
     }
 }
 
-while true do
+
     game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-    wait(5)  -- Wait for 5 seconds before repeating the entire cycle
+ 
 end
 -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
 
