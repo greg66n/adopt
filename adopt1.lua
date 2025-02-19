@@ -1,5 +1,5 @@
 Time = 0 -- seconds
-repeat wait(0) until game:IsLoaded()
+repeat wait(5) until game:IsLoaded()
 wait(5)
 local PlaceID = game.PlaceId
 local AllIDs = {}
