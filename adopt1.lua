@@ -1,6 +1,6 @@
 Time = 0 -- seconds
 repeat wait(0) until game:IsLoaded()
-wait(10)
+wait(0)
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
@@ -132,6 +132,3 @@ local args = {
 -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
 
     Teleport()
-
-
-
