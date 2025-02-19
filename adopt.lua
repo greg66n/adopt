@@ -1,3 +1,4 @@
+wait(5)
 Time = 0 -- seconds
 repeat wait(5) until game:IsLoaded()
 wait(5)
