@@ -121,7 +121,7 @@ wait(0.1)
 
 local args = {
     [1] = "pets",
-    [2] = "valentines_2025_love_bird",
+    [2] = "valentines_2025_sweetheart_rat", 
     [3] = {
         ["buy_count"] = 1
     }
