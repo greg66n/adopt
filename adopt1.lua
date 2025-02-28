@@ -124,8 +124,8 @@ for i = 1, 8 do
 end
 wait(0.1)
   local args = {
-        [1] = "toys",
-        [2] = "valentines_2025_cupids_bow_grappling_hook",
+        [1] = "pet_accessories",
+        [2] = "valentines_2025_heart_bow", 
         [3] = {}
     }
     
