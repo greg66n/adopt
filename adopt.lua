@@ -128,7 +128,7 @@ local args = {
     [1] = "pet_accessories",
     [2] = "valentines_2025_heart_heels",
     [3] = {
-        ["buy_count"] = 1
+        ["buy_count"] = 3
     }
 }
 
