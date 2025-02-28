@@ -124,7 +124,14 @@ for i = 1, 8 do
 end
 
 wait(0.1)
-
+ local args = {
+        [1] = "toys",
+        [2] = "valentines_2025_cupids_bow_grappling_hook",
+        [3] = {}
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(0.1)
 local args = {
     [1] = "pets",
     [2] = "valentines_2025_sweetheart_rat", 
