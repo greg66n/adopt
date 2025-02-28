@@ -125,7 +125,7 @@ end
 wait(0.1)
  local args = {
         [1] = "toys",
-        [2] = "valentines_2025_cupids_bow_grappling_hook",
+        [2] = "valentines_2025_heart_throwing_disc",
         [3] = {}
     }
     
