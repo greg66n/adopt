@@ -1,4 +1,3 @@
-
 getgenv().farmsettings = {
     pet = "", --leave blank to automatically select the pet
     babyfarm = true,
