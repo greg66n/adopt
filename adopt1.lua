@@ -2,7 +2,7 @@ getgenv().farmsettings = {
     pet = "", --leave blank to automatically select the pet
     babyfarm = true,
     switchpetsongrown = false, --leave false for age potions
-    prioritizeeggs = true,
+    prioritizeeggs = false,
     webhook = "https://discord.com/api/webhooks/1344037762969632840/iJDUdXKiDhc6_SuSGW9Q4fKTohJ1rT_R-ld5YaApXzke9oaZkPH10JpuuGRwCJjT7Fw9"
 }
 if getgenv().running then warn("already executed"); return end
