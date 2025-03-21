@@ -1,3 +1,21 @@
+local args = {
+    [1] = "claim_jacket"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("StPatricksAPI/AttemptClaim"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "claim_shoes"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("StPatricksAPI/AttemptClaim"):InvokeServer(unpack(args))
+
+local args = {
+    [1] = "claim_hat"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("StPatricksAPI/AttemptClaim"):InvokeServer(unpack(args))
+
 script_key="SxUwNCauqKtHFATeixFiAjdgLHnBJOHW";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
