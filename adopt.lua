@@ -39,5 +39,4 @@ Config = {
 }
 
 script_key="script_key="OkbUgSyCLieCMbeVqgTZOAgbKIdxjRLH"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/d416a9fb566c94cba596550ef09d256b.lua"))()"
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/8a2399ec22841391ee52540ec7c001e1.lua"))() --Adopt Me Potion Farm / Mass Farming
