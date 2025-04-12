@@ -1,7 +1,7 @@
 
 Config = {
     PetFarm = {
-        Enabled = true,   -- Enable/disable pet farming
+        Enabled = false,   -- Enable/disable pet farming
         AutoNeon = false,  -- Auto create neon pets (4 full-grown)
         FarmUntilFullyGrown = false, -- Farm youngest first (true) or oldest (false)
         PrioritizeFriendship = true, -- Farm highest friendship pets first
