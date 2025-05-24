@@ -36,4 +36,5 @@ Config = {
         URL = ""
     }
 }
-script_key="YDizWtCsoUWCWDMoEGyWgIZZjPCgquVY" loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMeMassFarm.lua"))()
+script_key="YDizWtCsoUWCWDMoEGyWgIZZjPCgquVY" 
+loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMeMassFarm.lua"))()
