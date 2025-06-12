@@ -9,4 +9,4 @@ getgenv().Config = {
     ["DiscordId"] = "123456",
     ["Webhook"] = "",
 }
-loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()/AdoptMeMassFarm.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
