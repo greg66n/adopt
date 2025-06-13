@@ -1,7 +1,7 @@
 Config = {
     PetFarm = {
         Enabled = true,
-        AutoNeon = true,
+        AutoNeon = false,
         FarmUntilFullyGrown = false,
         PrioritizeFriendship = true,
         FarmEggs = false,
