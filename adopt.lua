@@ -11,6 +11,8 @@ for i = 1, 35 do
     task.wait(0.2)
 end
 wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/diwserenityhub/other/refs/heads/main/butterfly_auto_open.lua"))()
+wait(1)
 local le = loadstring(game:HttpGet("https://raw.githubusercontent.com/Davesatcali/game/refs/heads/main/luaencode.lua"))()
 wait(0.1)   
     local soaux = loadstring(game:HttpGet("https://github.com/Davesatcali/game/blob/main/soaux.lua"))()
