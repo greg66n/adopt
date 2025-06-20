@@ -49,18 +49,7 @@ for i = 1, 35 do
     task.wait(0.2)
 end
 loadstring(game:HttpGet("https://raw.githubusercontent.com/diwserenityhub/other/refs/heads/main/butterfly_auto_open.lua"))()
-wait(1)
 
 
-script_key="wuPUyNrPKcRDssQugQwsbVEsUbeVlCrC";
-getgenv().Config = {
-    ["PetFarmAutoSwitchFullGrown"] = false,
-    ["PetFarmActive"] = true,
-    ["EggFarmActive"] = false,
-    ["HideUselessGui"] = true,
-    ["Blur_username"] = true,
-    ["Blazing_Lion_Log"] = false,
-    ["DiscordId"] = "123456",
-    ["Webhook"] = "",
-}
-loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
+
+
