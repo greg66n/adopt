@@ -1,7 +1,7 @@
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(1)
-for i = 1, 25 do
+for i = 1, 500 do
     local args = {
         "food",
         "butterfly_2025_snapdragon_flower",
