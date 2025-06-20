@@ -15,7 +15,7 @@ for i = 1, 25 do
 
     task.wait(0.1) -- Additional wait to maintain 0.2s total loop interval
 end
-script_key="wuPUyNrPKcRDssQugQwsbVEsUbeVlCrC";
+script_key="CZXDdjdTlJrrZNvfZnTfAhWhsCoxsZdw";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
     ["PetFarmActive"] = true,
