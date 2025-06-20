@@ -1,4 +1,4 @@
-
+wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(0.1)
 while true do
