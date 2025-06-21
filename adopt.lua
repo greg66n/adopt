@@ -1,21 +1,5 @@
-wait(1)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-wait(1)
-for i = 1, 25 do
-    local args = {
-        "food",
-        "butterfly_2025_snapdragon_flower",
-        1
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("SocialStonesAPI/AttemptExchange"):FireServer(unpack(args))
 
-    -- Wait 0.1 seconds, then run the external script
-    task.wait(0.1)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/diwserenityhub/other/refs/heads/main/butterfly_auto_open.lua"))()
-
-    task.wait(0.1) -- Additional wait to maintain 0.2s total loop interval
-end
-script_key="CZXDdjdTlJrrZNvfZnTfAhWhsCoxsZdw";
+script_key="NNptyejARvtAQnjzaTTHGVBWfpWBcBpK";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
     ["PetFarmActive"] = true,
