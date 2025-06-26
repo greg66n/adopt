@@ -56,24 +56,33 @@ local function countfurnitures(furnitures)
 	return count
 end
 local function scan()
-for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-	task.wait(0.1)
-	if v~=game:GetService("Players").LocalPlayer then
-		loadhouse(true, v)
-		if not game:GetService("Players"):FindFirstChild(v.Name) then warn("couldn't find player (left), skibidi") continue end
-		workspace:WaitForChild("HouseInteriors"):WaitForChild("blueprint"):WaitForChild(v.Name)
-		warn(countfurnitures(cd.get("house_interior").furniture))
-		if countfurnitures(cd.get("house_interior").furniture) >= 1000 then
-			warn("insane house: "..v.Name)
-			warn("furniture quantity: "..countfurnitures(cd.get("house_interior").furniture))
-			warn("building type: "..cd.get("house_interior").building_type)
-			local housetable = cd.get("house_interior")
-			housetable.player = nil
-			writefile("Savedhouses/"..cd.get("house_interior").building_type.."_"..tostring(countfurnitures(cd.get("house_interior").furniture))..".lua", "return "..le(housetable))
-		end
-	end
+for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+    task.wait(0.1)
+    if v ~= game:GetService("Players").LocalPlayer then
+        loadhouse(true, v)
+        local blueprint = workspace:WaitForChild("HouseInteriors"):WaitForChild("blueprint"):WaitForChild(v.Name, 5)
+        if not blueprint then
+            warn("couldn't find house for "..v.Name.." (skipping)")
+            continue
+        end
+        if not game:GetService("Players"):FindFirstChild(v.Name) then
+            warn("player left before scan, skipping "..v.Name)
+            continue
+        end
+        local furnitureCount = countfurnitures(cd.get("house_interior").furniture)
+        warn(furnitureCount)
+        if furnitureCount >= 1000 then
+            warn("insane house: "..v.Name)
+            warn("furniture quantity: "..furnitureCount)
+            warn("building type: "..cd.get("house_interior").building_type)
+            local housetable = cd.get("house_interior")
+            housetable.player = nil
+            writefile("Savedhouses/"..cd.get("house_interior").building_type.."_"..tostring(furnitureCount)..".lua", "return "..le(housetable))
+        end
+    end
 end
 warn("finished scanning!")
+
 end
 scan()
 local HttpService = game:GetService("HttpService")
