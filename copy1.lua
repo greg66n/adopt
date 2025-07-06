@@ -1,4 +1,4 @@
-wait(35)
+wait(99999999999999999)
 local messages = {
     "This is too easy",
     "Let’s raid!",
