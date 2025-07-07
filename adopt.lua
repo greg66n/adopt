@@ -22,5 +22,5 @@ local function enterinterior(name)
 task.spawn(enter, name, "", {})
 end
 enterinterior("MainMap!Snow")
-wait(5)
+wait(10)
 script_key="YDizWtCsoUWCWDMoEGyWgIZZjPCgquVY" loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMeEventFarm.lua"))()
