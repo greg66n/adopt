@@ -1,4 +1,4 @@
-ocal plr = game:GetService("Players").LocalPlayer
+local plr = game:GetService("Players").LocalPlayer
 
 if plr.Character == nil then
     repeat 
