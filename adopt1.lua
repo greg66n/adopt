@@ -5,11 +5,11 @@ if plr.Character == nil then
         local playbutton = plr:WaitForChild("PlayerGui"):WaitForChild("NewsApp")
             :WaitForChild("EnclosingFrame"):WaitForChild("MainFrame")
             :WaitForChild("Buttons"):WaitForChild("PlayButton")
-        
+
         firesignal(playbutton.MouseButton1Down)
         firesignal(playbutton.MouseButton1Up)
         firesignal(playbutton.MouseButton1Click)
-        
+
         task.wait(2)
     until plr.Character ~= nil
 end
