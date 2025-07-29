@@ -1,171 +1,132 @@
+local AUTHORIZED_HWIDS = {
+    "fd8f3535cda6d6f8017025eb4f125b31018bc911a907eeb0a5eedd06e4167528", -- Replace with your actual HWID from the finder script
+    -- "ANOTHER_HWID_HERE", -- Add more HWIDs if needed
+}
 
-local le = loadstring(game:HttpGet("https://raw.githubusercontent.com/0Void2391/Sulfoxide/refs/heads/main/modules/luaencode.lua"))()
-wait(0.1)   
-    local soaux = loadstring(game:HttpGet("https://raw.githubusercontent.com/0Void2391/Sulfoxide/refs/heads/main/soaux.lua"))()
-wait(0.1)
-getgenv().farmsettings = {
-    pet = "Evil Unicorn", --leave blank to automatically select the pet
-    babyfarm = true,
-    switchpetsongrown = false, --leave false for age potions
-    prioritizeeggs = false,
+-- HWID Lock Functions
+local function getCurrentHWID()
+    -- Try multiple methods to get HWID
+    if gethwid then
+        return gethwid()
+    end
     
-}
---if getgenv().running then warn("already executed"); return end
-getgenv().farmsettings = getgenv().farmsettings or {
-    pet = "", --leave blank to automatically select the pet
+    local success, hwid = pcall(function()
+        return game:GetService("RbxAnalyticsService"):GetClientId()
+    end)
+    
+    if success and hwid then
+        return hwid
+    end
+    
+    -- Fallback method
+    local HttpService = game:GetService("HttpService")
+    local Players = game:GetService("Players")
+    
+    local player = Players.LocalPlayer
+    local userId = player.UserId
+    local accountAge = player.AccountAge
+    local gameId = game.GameId
+    
+    return HttpService:GenerateGUID(false) .. "_" .. userId .. "_" .. accountAge .. "_" .. gameId
+end
+
+local function isAuthorized()
+    local currentHWID = getCurrentHWID()
+    
+    for _, authorizedHWID in pairs(AUTHORIZED_HWIDS) do
+        if tostring(currentHWID) == tostring(authorizedHWID) then
+            return true
+        end
+    end
+    
+    return false
+end
+
+local function kickPlayer(reason)
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    
+    -- Different methods to kick/disconnect
+    if player.Kick then
+        player:Kick(reason)
+    elseif game.Shutdown then
+        game:Shutdown()
+    else
+        -- Force disconnect by causing an error
+        error(reason)
+    end
+end
+
+-- MAIN HWID CHECK
+if not isAuthorized() then
+    warn("UNAUTHORIZED ACCESS DETECTED!")
+    warn("Your HWID: " .. tostring(getCurrentHWID()))
+    
+    kickPlayer("❌ Access Denied: Unauthorized HWID detected. Contact script owner for access.")
+    
+    -- Prevent script from continuing
+    return
+end
+
+-- SUCCESS MESSAGE
+print("✅ HWID Authorization successful!")
+print("🔒 Script locked to HWID: " .. tostring(getCurrentHWID()))
+-- Adopt Me Zotti Autofarm by 0_Void
+getgenv().farmsettings = {
+    pet = "", -- Leave blank for auto-select
     babyfarm = true,
-    switchpetsongrown = false, --leave false for age potions
+    switchpetsongrown = false, -- False for age potions
     prioritizeeggs = false,
-    webhook = ""
+    buykeys = true,
+    webhook = "https://discord.com/api/webhooks/1359276470056259664/3rqfbdj6pCQbw-bhEnZtwsTfVo_Jfn-GTvdwXGNjdrPwf8KydxqwyFdIOR97wazzbgDQ",
+    gui = true,
 }
+--writefile("adoptmeautofarm.txt")
+if getgenv().running then 
+    warn("Script already running")
+    return 
+end
+getgenv().running = true
+
+-- Set default settings if not provided
+getgenv().farmsettings = getgenv().farmsettings or {
+    pet = "",
+    babyfarm = true,
+    switchpetsongrown = false,
+    prioritizeeggs = false,
+    webhook = "",
+    gui = true
+}
+
+-- Initialize settings with defaults
 getgenv().farmsettings.pet = getgenv().farmsettings.pet or ""
-getgenv().farmsettings.babyfarm = (getgenv().farmsettings.babyfarm == nil and true) or getgenv().farmsettings.babyfarm
-getgenv().farmsettings.switchpetsongrown = (getgenv().farmsettings.switchpetsongrown == nil and false) or getgenv().farmsettings.switchpetsongrown
-getgenv().farmsettings.prioritizeeggs = (getgenv().farmsettings.prioritizeeggs == nil and false) or getgenv().farmsettings.prioritizeeggs
+getgenv().farmsettings.babyfarm = getgenv().farmsettings.babyfarm == nil and true or getgenv().farmsettings.babyfarm
+getgenv().farmsettings.switchpetsongrown = if getgenv().farmsettings.switchpetsongrown == nil then false else getgenv().farmsettings.switchpetsongrown
+getgenv().farmsettings.prioritizeeggs = if getgenv().farmsettings.prioritizeeggs == nil then false else getgenv().farmsettings.prioritizeeggs
+getgenv().farmsettings.gui = getgenv().farmsettings.gui == nil and true or getgenv().farmsettings.gui
+-- Wait for game to load
 repeat task.wait() until game:IsLoaded()
 task.wait(2.5)
 setthreadidentity(2)
-local router = require(game:GetService("ReplicatedStorage").ClientModules.Core.RouterClient.RouterClient)
-local cd = require(game:GetService("ReplicatedStorage").ClientModules.Core.ClientData)
-local petentitymanager = require(game:GetService("ReplicatedStorage").ClientModules.Game.PetEntities.PetEntityManager)
-local inventorydb = require(game:GetService("ReplicatedStorage").ClientDB.Inventory.InventoryDB)
-local plr = game:GetService("Players").LocalPlayer
-local l_load_0 = require(game.ReplicatedStorage.Fsys).load;
-local liveopstime = l_load_0("LiveOpsTime");
+-- Services and modules
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local GuiService = game:GetService("GuiService")
+local plr = Players.LocalPlayer
+local router = require(ReplicatedStorage.ClientModules.Core.RouterClient.RouterClient)
+local cd = require(ReplicatedStorage.ClientModules.Core.ClientData)
+local petentitymanager = require(ReplicatedStorage.ClientModules.Game.PetEntities.PetEntityManager)
+local inventorydb = require(ReplicatedStorage.ClientDB.Inventory.InventoryDB)
+local minigamemanager = require(game:GetService("ReplicatedStorage").ClientModules.Game.MinigameClientManager)
+local terrainhelper = require(game:GetService("ReplicatedStorage").SharedModules.TerrainHelper)
+local Fsys = require(ReplicatedStorage.Fsys)
+local liveopstime = Fsys.load("LiveOpsTime")
+setthreadidentity(8)
+-- Lua encoder for settings serialization
+local le = loadstring(game:HttpGet("https://raw.githubusercontent.com/Davesatcali/game/refs/heads/main/luaencode.lua"))()
 
-local function creategui()
-    local G2L = {};
-
-    -- StarterGui.ScreenGui
-    G2L["1"] = Instance.new("ScreenGui", gethui());
-    G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
-    G2L["1"]["DisplayOrder"] = 1
-    G2L["1"]["ResetOnSpawn"] = false
-
-
-    -- StarterGui.ScreenGui.Frame
-    G2L["2"] = Instance.new("Frame", G2L["1"]);
-    G2L["2"]["BorderSizePixel"] = 0;
-    G2L["2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["2"]["BackgroundTransparency"] = 1;
-    G2L["2"]["Size"] = UDim2.new(1, 0, 1, 100);
-    G2L["2"]["Position"] = UDim2.new(0, 0, -0.1, 0);
-    G2L["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title
-    G2L["3"] = Instance.new("TextLabel", G2L["2"]);
-    G2L["3"]["BorderSizePixel"] = 0;
-    G2L["3"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["3"]["TextSize"] = 84;
-    G2L["3"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["3"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["3"]["BackgroundTransparency"] = 1;
-    G2L["3"]["Size"] = UDim2.new(0, 260, 0, 82);
-    G2L["3"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["3"]["Text"] = [[Parse]];
-    G2L["3"]["Name"] = [[Title]];
-    G2L["3"]["Position"] = UDim2.new(0.45, 0, 0.116, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title.Task
-    G2L["4"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["4"]["BorderSizePixel"] = 0;
-    G2L["4"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["4"]["TextSize"] = 33;
-    G2L["4"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["4"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["4"]["BackgroundTransparency"] = 1;
-    G2L["4"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["4"]["Text"] = [[Current task: None]];
-    G2L["4"]["Name"] = [[Task]];
-    G2L["4"]["Position"] = UDim2.new(-0.57227, 0, 2.54878, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title.Money
-    G2L["5"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["5"]["BorderSizePixel"] = 0;
-    G2L["5"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["5"]["TextSize"] = 33;
-    G2L["5"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["5"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["5"]["BackgroundTransparency"] = 1;
-    G2L["5"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["5"]["Text"] = [[Money farmed: 0]];
-    G2L["5"]["Name"] = [[Money]];
-    G2L["5"]["Position"] = UDim2.new(-0.57227, 0, 3.15854, 0);
-
-
-    G2L["sd"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["sd"]["BorderSizePixel"] = 0;
-    G2L["sd"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["sd"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["sd"]["TextSize"] = 33;
-    G2L["sd"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["sd"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["sd"]["BackgroundTransparency"] = 1;
-    G2L["sd"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["sd"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["sd"]["Text"] = [[Cherry blossoms farmed: 0]];
-    G2L["sd"]["Name"] = [[Event]];
-    G2L["sd"]["Position"] = UDim2.new(-0.57227, 0, 3.76829, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title.Potions
-    G2L["6"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["6"]["BorderSizePixel"] = 0;
-    G2L["6"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["6"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["6"]["TextSize"] = 33;
-    G2L["6"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["6"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["6"]["BackgroundTransparency"] = 1;
-    G2L["6"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["6"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["6"]["Text"] = [[Gained potions: 0]];
-    G2L["6"]["Name"] = [[Potions]];
-    G2L["6"]["Position"] = UDim2.new(-0.57227, 0, 4.37805, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title.Time
-    G2L["7"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["7"]["BorderSizePixel"] = 0;
-    G2L["7"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["7"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["7"]["TextSize"] = 33;
-    G2L["7"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["7"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["7"]["BackgroundTransparency"] = 1;
-    G2L["7"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["7"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["7"]["Text"] = [[Time elapsed: 00:00.000]];
-    G2L["7"]["Name"] = [[Time]];
-    G2L["7"]["Position"] = UDim2.new(-0.57227, 0, 4.9878, 0);
-
-
-    -- StarterGui.ScreenGui.Frame.Title.Pet
-    G2L["8"] = Instance.new("TextLabel", G2L["3"]);
-    G2L["8"]["BorderSizePixel"] = 0;
-    G2L["8"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-    G2L["8"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["8"]["TextSize"] = 33;
-    G2L["8"]["FontFace"] = Font.new([[rbxasset://fonts/families/Zekton.json]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-    G2L["8"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-    G2L["8"]["BackgroundTransparency"] = 1;
-    G2L["8"]["Size"] = UDim2.new(0, 533, 0, 50);
-    G2L["8"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-    G2L["8"]["Text"] = [[Current pet: None]];
-    G2L["8"]["Name"] = [[Pet]];
-    G2L["8"]["Position"] = UDim2.new(-0.57227, 0, 1.93902, 0);
-
-
-
-    return G2L["1"], require;
-end
 if plr.Character == nil then
     repeat 
         local playbutton = game:GetService("Players").LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame.Buttons.PlayButton
@@ -175,141 +136,219 @@ if plr.Character == nil then
         task.wait(2)
     until not (plr.Character == nil)
 end
-if getgenv().farmsettings.babyfarm then
-    local args = {
-        "Babies",
-        {
-            dont_respawn = true,
-            source_for_logging = "avatar_editor"
-        }
+-- GUI Creation
+local function createGUI()
+    local screenGui = Instance.new("ScreenGui", gethui())
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.DisplayOrder = -1
+    screenGui.ResetOnSpawn = false
+
+    local mainFrame = Instance.new("Frame", screenGui)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    mainFrame.BackgroundTransparency = 1 -- Make the mainFrame background transparent
+    mainFrame.Size = UDim2.new(1, 0, 1, 100)
+    mainFrame.Position = UDim2.new(0, 0, -0.1, 0)
+    mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    mainFrame.Visible = getgenv().farmsettings.gui
+
+    local title = Instance.new("TextLabel", mainFrame)
+    title.BorderSizePixel = 0
+    title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    title.BackgroundTransparency = 1 -- Make the title background transparent
+    title.TextSize = 84
+    title.FontFace = Font.new("rbxasset://fonts/families/Zekton.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    title.TextColor3 = Color3.fromRGB(50, 150, 255) -- Lighter blue font
+    title.Size = UDim2.new(0, 260, 0, 82)
+    title.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    title.Text = "Zotti autofarm"
+    title.Name = "Title"
+    title.Position = UDim2.new(0.45, 0, 0.116, 0)
+
+    local labels = {
+        {name = "Pet", text = "Current pet: None", position = UDim2.new(-0.57227, 0, 1.93902, 0)},
+        {name = "Task", text = "Current task: None", position = UDim2.new(-0.57227, 0, 2.54878, 0)},
+        {name = "Money", text = "Money farmed: 0", position = UDim2.new(-0.57227, 0, 3.15854, 0)},
+        {name = "Event", text = "Doubloons farmed: 0", position = UDim2.new(-0.57227, 0, 3.76829, 0)},
+        {name = "Potions", text = "Gained potions: 0", position = UDim2.new(-0.57227, 0, 4.37805, 0)},
+        {name = "Time", text = "Time elapsed: 00:00.000", position = UDim2.new(-0.57227, 0, 4.9878, 0)}
     }
-    router.get("TeamAPI/ChooseTeam"):InvokeServer(unpack(args))
-    task.wait(0.2)
+
+    for _, labelInfo in ipairs(labels) do
+        local label = Instance.new("TextLabel", title)
+        label.BorderSizePixel = 0
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        label.BackgroundTransparency = 1 -- Make the label background transparent
+        label.TextSize = 33
+        label.FontFace = Font.new("rbxasset://fonts/families/Zekton.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        label.TextColor3 = Color3.fromRGB(50, 150, 255) -- Lighter blue font
+        label.Size = UDim2.new(0, 533, 0, 50)
+        label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        label.Text = labelInfo.text
+        label.Name = labelInfo.name
+        label.Position = labelInfo.position
+    end
+
+    return screenGui
 end
-setthreadidentity(8)
-local gui = creategui()
-local function getpetkind()
-    for i,v in pairs(inventorydb.pets) do
-        if getgenv().farmsettings.pet and string.lower(v.name) == string.lower(getgenv().farmsettings.pet) then
-            return i
+local gui = createGUI()
+-- Utility Functions
+local function formatTime(elapsedTime)
+    local minutes = math.floor(elapsedTime / 60)
+    local seconds = math.floor(elapsedTime % 60)
+    local milliseconds = math.floor((elapsedTime * 1000) % 1000)
+    return string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
+end
+
+local function getPetKind()
+    for id, petData in pairs(inventorydb.pets) do
+        if petData and petData.name and getgenv().farmsettings.pet and string.lower(petData.name) == string.lower(getgenv().farmsettings.pet) then
+            return id
         end
     end
     return ""
 end
 
-local function getpetnamefromid(id)
-    for i,v in pairs(cd.get("inventory").pets) do
-        if i == id then
-            return inventorydb.pets[v.kind].name
+local function getPetNameFromId(id)
+    for petId, petData in pairs(cd.get("inventory").pets) do
+        if petId == id and inventorydb.pets[petData.kind].name then
+            return inventorydb.pets[petData.kind].name
         end
     end
     return ""
 end
-local function ispetowner(kind)
-    for i,v in pairs(cd.get("inventory").pets) do
-        if v.kind == kind then
+
+local function isPetOwner(kind)
+    for _, petData in pairs(cd.get("inventory").pets) do
+        if petData.kind == kind then
             return true
         end
     end
     return false
 end
-local function getpetid()
-    local highestage = 0
-    local highestfriendship = 0
-    local petkind = getpetkind()
-    if getgenv().farmsettings.prioritizeeggs == true then
-        for i,v in pairs(cd.get("inventory").pets) do
-            if inventorydb.pets[v.kind].is_egg then
-                return i
+
+local function getPetId()
+    local highestAge = 0
+    local highestFriendship = 0
+    local petKind = getPetKind()
+
+    -- Prioritize eggs if enabled
+    if getgenv().farmsettings.prioritizeeggs then
+        for petId, petData in pairs(cd.get("inventory").pets) do
+            if inventorydb.pets[petData.kind].is_egg then
+                return petId
             end
         end
     end
-    for i,v in pairs(cd.get("inventory").pets) do
-        if v.properties.age > highestage then
-            highestage = v.properties.age
+    if #cd.get("inventory").pets == 1 then
+        return next(cd.get("inventory").pets)
+    end
+    -- Find highest age and friendship levels
+    for _, petData in pairs(cd.get("inventory").pets) do
+        if petData.properties.age > highestAge and petData.id ~= "practice_dog" then
+            highestAge = petData.properties.age
         end
-        if v.properties.friendship_level > highestfriendship then
-            highestfriendship = v.properties.friendship_level
+        if petData.properties.friendship_level > highestFriendship then
+            highestFriendship = petData.properties.friendship_level
         end
     end
-    for i,v in pairs(cd.get("inventory").pets) do
-        if petkind ~= "" and v.kind == petkind then
-            return i
-        elseif petkind ~= "" and ispetowner(petkind) then
+
+    -- Select appropriate pet
+    for petId, petData in pairs(cd.get("inventory").pets) do
+        if petKind ~= "" and petData.kind == petKind then
+            return petId
+        elseif petKind ~= "" and isPetOwner(petKind) then
             continue
         end
-        if highestfriendship > 0 then
-            if v.properties.friendship_level == highestfriendship then
-                return i
+
+        if highestFriendship > 0 then
+            if petData.properties.friendship_level == highestFriendship then
+                return petId
             else
                 continue
             end
         end
-        if v.properties.age == 6 and not getgenv().farmsettings.switchpetsongrown then
-            return i
-        elseif highestage == 0 then --every pet full grown so highestage didn't update. we then return the first fullgrown pet
-            return i
-        elseif highestage == v.properties.age then
-            return i
+
+        if petData.properties.age == 6 and not getgenv().farmsettings.switchpetsongrown and petData.id ~= "practice_dog" then
+            return petId
+        elseif highestAge == 0 and petData.id ~= "practice_dog" then -- All pets full grown
+            return petId
+        elseif highestAge == petData.properties.age and petData.id ~= "practice_dog" then
+            return petId
         end
     end
 end
-local function getailments(ailmenttype, pet)
-    if ailmenttype == "baby" then
+
+local function getAilments(ailmentType, pet)
+    if ailmentType == "baby" then
         return cd.get("ailments_manager").baby_ailments or {}
     else
         return cd.get("ailments_manager").ailments[pet] or {}
     end
 end
-local function getstrollerid()
-    for i,v in pairs(cd.get("inventory").strollers) do
-        if v.kind == "stroller-default" then
-            return i
+
+local function getStrollerId()
+    for strollerId, strollerData in pairs(cd.get("inventory").strollers) do
+        if strollerData.kind == "stroller-default" then
+            return strollerId
         end
     end
 end
-local function getpetchar(pet)
-    local f = petentitymanager.get_pet_entity
-    for i, v in pairs(debug.getupvalue(f,1)) do
-        if v.unique_id == pet.."-"..tostring(plr.UserId) then
-            return i
+
+local function getPetChar(pet)
+    local petEntities = debug.getupvalue(petentitymanager.get_pet_entity, 1)
+    for char, entity in pairs(petEntities) do
+        if entity.unique_id == pet.."-"..tostring(plr.UserId) then
+            return char
         end
     end
 end
-local function usestroller(pet)
-    router.get("ToolAPI/Equip"):InvokeServer(getstrollerid())
-    task.wait(0.1)
+
+local function useStroller(pet)
+    router.get("ToolAPI/Equip"):InvokeServer(getStrollerId())
+    if not plr.Character:WaitForChild("StrollerTool", 3) then
+        useStroller(pet)
+        return
+    end
     local args = {
-        getpetchar(pet),
-        plr.Character.StrollerTool.ModelHandle.TouchToSits.TouchToSit
+        plr,
+        getPetChar(pet),
+        plr.Character:WaitForChild("StrollerTool").ModelHandle.TouchToSits.TouchToSit
     }
     router.get("AdoptAPI/UseStroller"):InvokeServer(unpack(args))
 end
-local function unequipstroller(pet)
-    router.get("AdoptAPI/EjectBaby"):FireServer(getpetchar(pet))
-    router.get("ToolAPI/Unequip"):InvokeServer(getstrollerid())
+
+local function unequipStroller(pet)
+    router.get("AdoptAPI/EjectBaby"):FireServer(getPetChar(pet))
+    router.get("ToolAPI/Unequip"):InvokeServer(getStrollerId())
 end
-local function randommove()
-    plr.Character.Humanoid:MoveTo(plr.Character:WaitForChild("HumanoidRootPart").Position+Vector3.new(-10,0,0))
+
+local function randomMove()
+    local rootPart = plr.Character:WaitForChild("HumanoidRootPart")
+    plr.Character.Humanoid:MoveTo(rootPart.Position + Vector3.new(-10, 0, 0))
     task.wait(0.5)
-    plr.Character.Humanoid:MoveTo(plr.Character:WaitForChild("HumanoidRootPart").Position+Vector3.new(10,0,0))
+    plr.Character.Humanoid:MoveTo(rootPart.Position + Vector3.new(10, 0, 0))
     task.wait(0.5)
-    plr.Character.Humanoid:MoveTo(plr.Character:WaitForChild("HumanoidRootPart").Position)
+    plr.Character.Humanoid:MoveTo(rootPart.Position)
 end
-local function resetpet(pet)
+
+local function resetPet(pet)
     router.get("ToolAPI/Unequip"):InvokeServer(pet)
-    task.wait(5)
+    task.wait(0.1)
     router.get("ToolAPI/Equip"):InvokeServer(pet)
 end
-local function furnitureexists(kind, properties)
-    for i,v in pairs(cd.get("house_interior").furniture) do
-        if v.id == kind and v.cframe == properties.cframe then
+
+local function furnitureExists(kind, properties)
+    for _, furniture in pairs(cd.get("house_interior").furniture) do
+        if furniture.id == kind and furniture.cframe == properties.cframe then
             return true
         end
     end
     return false
 end
-local function buyfurniturewithretry(id, props)
+
+local function buyFurnitureWithRetry(id, props)
     local args = {
         {
             {
@@ -320,61 +359,80 @@ local function buyfurniturewithretry(id, props)
     }
     router.get("HousingAPI/BuyFurnitures"):InvokeServer(unpack(args))
     task.wait(0.1)
-    if not furnitureexists(id, props) then
-        warn("couldn't buy furniture, retrying")
-        buyfurniturewithretry(id, props)
+    if not furnitureExists(id, props) then
+        warn("Couldn't buy furniture, retrying")
+        buyFurnitureWithRetry(id, props)
     end
-end
-local function getfurnitures()
-    local furnitureids = {
-        [1] = "toilet",
-        [2] = "modernshower",
-        [3] = "ailments_refresh_2024_cheap_food_bowl",
-        [4] = "ailments_refresh_2024_cheap_water_bowl",
-        [5] = "cheapbathtub",
-        [6] = "basiccrib",
+end	
+
+local function getFurnitures()
+    local furnitureIds = {
+        "toilet",
+        "modernshower",
+        "ailments_refresh_2024_cheap_food_bowl",
+        "ailments_refresh_2024_cheap_water_bowl",
+        "cheapbathtub",
+        "basiccrib",
+        "lures_2023_normal_lure",
     }
-    local furnituretoid = {} --["basiccrib"] = "f-1"
-    for _,v in pairs(furnitureids) do
+
+    local furnitureToId = {}
+
+    for _, furnitureId in ipairs(furnitureIds) do
         local found = false
-        for a,b in pairs(cd.get("house_interior").furniture) do
-            if b.id == v then
-                furnituretoid[v] = a
+        for furnitureDbId, furnitureData in pairs(cd.get("house_interior").furniture) do
+            if furnitureData.id == furnitureId then
+                furnitureToId[furnitureId] = furnitureDbId
                 found = true
+                break
             end
         end
+
         if not found then
-            buyfurniturewithretry(v, {cframe = CFrame.new(0,0,0)})
+            buyFurnitureWithRetry(furnitureId, {cframe = CFrame.new(0, 0, 0)})
             task.wait(0.1)
-            for a,b in pairs(cd.get("house_interior").furniture) do
-                if b.id == v then
-                    furnituretoid[v] = a
+            for furnitureDbId, furnitureData in pairs(cd.get("house_interior").furniture) do
+                if furnitureData.id == furnitureId then
+                    furnitureToId[furnitureId] = furnitureDbId
                     found = true
+                    break
                 end
             end
         end
     end
-    return furnituretoid
+
+    return furnitureToId
 end
-local function getboneid()
-    for i,v in pairs(cd.get("inventory").toys) do
-        if v.kind == "squeaky_bone_default" then
-            return i
+local function get_items_of_kind(kind, category)
+    local items = {}
+    for i,v in cd.get("inventory")[category] do
+        if v.id == kind then
+            table.insert(items, v)
+        end
+    end
+    return items
+end
+local function getBoneId()
+    for toyId, toyData in pairs(cd.get("inventory").toys) do
+        if toyData.kind == "squeaky_bone_default" then
+            return toyId
         end
     end
 end
-local function usebone()
+
+local function useBone()
     local args = {
         "__Enum_PetObjectCreatorType_1",
         {
             reaction_name = "ThrowToyReaction",
-            unique_id = getboneid()
+            unique_id = getBoneId()
         }
     }
     router.get("PetObjectAPI/CreatePetObject"):InvokeServer(unpack(args))
 end
-local function setupteleporthook()
 
+local function setupTeleportHook()
+    local soaux = loadstring(game:HttpGet("https://raw.githubusercontent.com/Davesatcali/game/refs/heads/main/soaux.lua"))()
     local constants = {
         "settings",
         "touch_to_enter",
@@ -382,36 +440,45 @@ local function setupteleporthook()
         "current_location",
         "player_about_to_be_unanchored"
     }
-    local func = soaux.searchClosure(game:GetService("ReplicatedStorage").ClientModules.Core.InteriorsM.InteriorsM, "unanchor_and_teleport_player_async", constants)
-    local old; old = hookfunction(func, function(var)
+
+    local func = soaux.searchClosure(ReplicatedStorage.ClientModules.Core.InteriorsM.InteriorsM, 
+                                    "unanchor_and_teleport_player_async", constants)
+
+    local old
+    old = hookfunction(func, function(var)
         if getgenv().teleport == false then
             return
         end
         return old(var)
     end)
 end
-local function loadinterior(interiortype, teleport, name) --in case you try to load a house then name is an instance (plr)
+
+local function loadInterior(interiorType, teleport, name)
     setthreadidentity(2)
-    local load = require(game:GetService("ReplicatedStorage").Fsys).load
-    local interiors = load("InteriorsM")
+    local interiors = Fsys.load("InteriorsM")
     local enter = interiors.enter
-    if interiortype == "interior" then 
-        getgenv().teleport = teleport
-        enter(name, "", {})
-        return
+
+    getgenv().teleport = teleport
+
+    if interiorType == "interior" then
+        if not workspace.Interiors:GetChildren()[1] or not string.find(workspace.Interiors:GetChildren()[1].Name,name) then
+            enter(name, "", {})
+        end
+    elseif interiorType == "house" then 
+        if not workspace.HouseInteriors.blueprint:FindFirstChild(plr.Name) then
+            enter("housing", "MainDoor", {house_owner = name})
+        end
     end
-    if interiortype == "house" then 
-        getgenv().teleport = teleport
-        enter("housing", "MainDoor", {house_owner = name})
-    end
+
     setthreadidentity(8)
 end
-local function usefurniture(furniture, char)
-    local furnituretoid = getfurnitures()
-    local id = furnituretoid[furniture]
+
+local function useFurniture(furniture, char)
+    local furnitureToId = getFurnitures()
+    local id = furnitureToId[furniture]
     local args = {
         plr,
-        id,   
+        id,
         furniture == "toilet" and "Seat1" or "UseBlock",
         {
             cframe = plr.Character:WaitForChild("HumanoidRootPart").CFrame
@@ -420,12 +487,13 @@ local function usefurniture(furniture, char)
     }
     router.get("HousingAPI/ActivateFurniture"):InvokeServer(unpack(args))
 end
+
 local function heal()
     repeat task.wait() until cd.get("house_interior").furniture ~= nil
-    for i,v in pairs(cd.get("house_interior").furniture) do
-        if v.id == "doctor" then
+    for furnitureId, furnitureData in pairs(cd.get("house_interior").furniture) do
+        if furnitureData.id == "doctor" then
             local args = {
-                i,
+                furnitureId,
                 "UseBlock",
                 "Yes",
                 plr.Character
@@ -434,116 +502,126 @@ local function heal()
         end
     end
 end
-local function refillfood()
-    loadinterior("interior",false,"PizzaShop")
+
+local function refillFood()
+    loadInterior("interior", false, "PizzaShop")
     task.wait(0.2)
-    for i = 1, 20 do
+    for _ = 1, 20 do
         local args = {
             "f-12",
             "Ham",
             nil,
-            game:GetService("Players").LocalPlayer.Character
+            plr.Character
         }
         router.get("HousingAPI/ActivateInteriorFurniture"):InvokeServer(unpack(args))
     end
 end
-local function eatfood()
+
+local function eatFood()
     local ham
-    for i,v in pairs(cd.get("inventory").food) do
-        if v.kind == "pizza_shop_ham" then
-            ham = i
+    for foodId, foodData in pairs(cd.get("inventory").food) do
+        if foodData.kind == "pizza_shop_ham" then
+            ham = foodId
+            break
         end
     end
-    if ham == nil then
-        refillfood()
-    end
-    for i,v in pairs(cd.get("inventory").food) do
-        if v.kind == "pizza_shop_ham" then
-            ham = i
+
+    if not ham then
+        refillFood()
+        for foodId, foodData in pairs(cd.get("inventory").food) do
+            if foodData.kind == "pizza_shop_ham" then
+                ham = foodId
+                break
+            end
         end
     end
+
     router.get("ToolAPI/ServerUseTool"):FireServer(ham, "START")
     task.wait(0.5)
     router.get("ToolAPI/ServerUseTool"):FireServer(ham, "END")
     task.wait(0.5)
 end
-local function refillwater()
-    loadinterior("interior",false,"PizzaShop")
+
+local function refillWater()
+    loadInterior("interior", false, "PizzaShop")
     task.wait(0.2)
-    for i = 1, 20 do
+    for _ = 1, 20 do
         local args = {
             "f-90",
             "UseBlock",
             nil,
-            game:GetService("Players").LocalPlayer.Character
+            plr.Character
         }
         router.get("HousingAPI/ActivateInteriorFurniture"):InvokeServer(unpack(args))
     end
 end
-local function drinkwater()
+
+local function drinkWater()
     local water
-    for i,v in pairs(cd.get("inventory").food) do
-        if v.kind == "water_paper_cup" then
-            water = i
+    for foodId, foodData in pairs(cd.get("inventory").food) do
+        if foodData.kind == "water_paper_cup" then
+            water = foodId
+            break
         end
     end
-    if water == nil then
-        refillwater()
-    end
-    for i,v in pairs(cd.get("inventory").food) do
-        if v.kind == "water_paper_cup" then
-            water = i
-        end
-    end
-    local args = {
-        water,
-        "START"
-    }
-    router.get("ToolAPI/ServerUseTool"):FireServer(unpack(args))
-    task.wait(0.5)
-    local args = {
-        water,
-        "END"
-    }
-    router.get("ToolAPI/ServerUseTool"):FireServer(unpack(args))
-    task.wait(0.5)
-end
-local function solvemystery(pet)
-    if not cd.get("ailments_manager").ailments[pet] then return end --check if ailments for pet are still there. if they're not the pet has probably hatched (egg case)
-    setthreadidentity(2)
-    local v3 = require(game:GetService("ReplicatedStorage").new.modules.Utilities.WeightedRandom);
-    local v5 = require(game:GetService("ReplicatedStorage").new.modules.LegacyLoad);
-    local v6 = v5("CloudValues");   
-    local mh = require(game:GetService("ReplicatedStorage").new.modules.Ailments.Helpers.MysteryHelper)
-    local mystery = cd.get("ailments_manager").ailments[pet].mystery
-    if not mystery or not mystery.components then return end
-    local components = mh.get_action(mystery)
-    local seed = components.options.random_seed
-    local get_ailment_slots = components.options.get_ailment_slots
-    local function get_slot_categories(v11) --[[ Line: 17 ]] --[[ Name: get_slot_categories ]]
-        -- upvalues: v6 (copy), v3 (copy)
-        local zotti = v6:getValue("ailments", "mysteryAilmentCategoryWeights");
-        return v3.get_values(zotti, 3, v11);
-    end;
-    local skibidi
-    for i,v in pairs(getgc(true)) do
-        if typeof(v) == "table" then
-            if rawget(v, "pet_id") and rawget(v, "player") == game:GetService("Players").LocalPlayer then
-                skibidi = v
+
+    if not water then
+        refillWater()
+        for foodId, foodData in pairs(cd.get("inventory").food) do
+            if foodData.kind == "water_paper_cup" then
+                water = foodId
                 break
             end
         end
     end
-    return get_ailment_slots(seed,get_slot_categories(seed), skibidi)
+
+    router.get("ToolAPI/ServerUseTool"):FireServer(water, "START")
+    task.wait(0.5)
+    router.get("ToolAPI/ServerUseTool"):FireServer(water, "END")
+    task.wait(0.5)
 end
-local function antiafk()
+
+local function solveMystery(pet)
+    if not cd.get("ailments_manager").ailments[pet] then return end
+
+    setthreadidentity(2)
+    local WeightedRandom = require(ReplicatedStorage.new.modules.Utilities.WeightedRandom)
+    local LegacyLoad = require(ReplicatedStorage.new.modules.LegacyLoad)
+    local CloudValues = LegacyLoad("CloudValues")
+    local MysteryHelper = require(ReplicatedStorage.new.modules.Ailments.Helpers.MysteryHelper)
+
+    local mystery = cd.get("ailments_manager").ailments[pet].mystery
+    if not mystery or not mystery.components then return end
+
+    local components = MysteryHelper.get_action(mystery)
+    local seed = components.options.random_seed
+    local get_ailment_slots = components.options.get_ailment_slots
+
+    local function get_slot_categories(v11)
+        local zotti = CloudValues:getValue("ailments", "mysteryAilmentCategoryWeights")
+        return WeightedRandom.get_values(zotti, 3, v11)
+    end
+
+    local petTable
+    for _, v in pairs(getgc(true)) do
+        if typeof(v) == "table" and rawget(v, "pet_id") and rawget(v, "player") == plr then
+            petTable = v
+            break
+        end
+    end
+    local toreturn = get_ailment_slots(seed, get_slot_categories(seed), petTable)
+    setthreadidentity(8)
+    return toreturn
+end
+
+local function antiAFK()
     local GC = getconnections or get_signal_cons
     if GC then
-        for i,v in pairs(getconnections(plr.Idled)) do
-            if v["Disable"] then
-                v["Disable"](v)
-            elseif v["Disconnect"] then
-                v["Disconnect"](v)
+        for _, connection in pairs(getconnections(plr.Idled)) do
+            if connection["Disable"] then
+                connection["Disable"](connection)
+            elseif connection["Disconnect"] then
+                connection["Disconnect"](connection)
             end
         end
     else
@@ -554,352 +632,529 @@ local function antiafk()
         end)
     end
 end
-local lastTeleportTime = 0
-local startautofarm
-local function waitforailmentfinish(ailment, callback, ailmenttype, pet)
-    local started = tick()
-    repeat
-        task.wait(1)
-        if tick() - started > 60 then
-            warn("[DEBUG] too much time spent on "..ailment..", restarting autofarm.")
-            startautofarm()
-            return
+local function getcurrentminigame()
+    local currentminigame
+    for i,v in pairs(minigamemanager.get_all()) do
+        if string.find(i,"::") then
+            currentminigame = v
         end
-    until not getailments(ailmenttype or "pet", pet or "")[ailment]
-
-    if callback then
-        callback()
+    end
+    return currentminigame
+end
+local function getSwordT()
+    local currentminigame = getcurrentminigame()
+    if currentminigame and currentminigame.swords_by_userid then
+        return currentminigame.swords_by_userid[plr.UserId]
+    else
+        return nil
     end
 end
-local ailmentfunctions = {
+local function canminigame()
+    for i,v in pairs(minigamemanager.get_all()) do
+        if v.join_zone_helper and v.join_zone_helper:get_next_time() and liveopstime.get_time_until(v.join_zone_helper:get_next_time()) < 70 or v.is_participating then
+            return true
+        end
+    end
+    return false
+end
+local startAutoFarm
+-- Ailment Handling
+local function waitForAilmentFinish(ailment, callback, ailmentType, pet)
+    local started = tick()
+
+    repeat 
+        task.wait()
+        if callback then callback() end
+    until getAilments(ailmentType, pet)[ailment] == nil or canminigame() or 
+          tick() - started >= 70
+
+    if tick() - started >= 70 then
+        print("[DEBUG] Too much time spent on task, restarting")
+        task.spawn(startAutoFarm)
+        repeat task.wait() until true == false -- Infinite loop to stop current thread
+    end
+end
+
+local ailmentFunctions = {
     ["toilet"] = function(pet)
-        loadinterior("house", false, plr)
-        resetpet(pet)
+        loadInterior("house", false, plr)
+        resetPet(pet)
         task.wait(0.2)
-        usefurniture("toilet", getpetchar(pet))
-        waitforailmentfinish("toilet", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end,"pet",pet)
+        task.spawn(useFurniture, "toilet", getPetChar(pet))
+        waitForAilmentFinish("toilet", nil, "pet", pet)
     end,
+
     ["hungry"] = function(pet)
-        loadinterior("house", false, plr)
-        resetpet(pet)
+        loadInterior("house", false, plr)
+        resetPet(pet)
         task.wait(0.2)
-        usefurniture("ailments_refresh_2024_cheap_food_bowl", getpetchar(pet))
-        waitforailmentfinish("hungry", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end,"pet",pet)
+        task.spawn(useFurniture, "ailments_refresh_2024_cheap_food_bowl", getPetChar(pet))
+        waitForAilmentFinish("hungry", nil, "pet", pet)
     end,
-    ["sick"] = function(pet,ailmenttype)
-        loadinterior("interior", false, "Hospital")
+
+    ["sick"] = function(pet, ailmentType)
+        loadInterior("interior", false, "Hospital")
         task.wait(0.5)
         heal()
-        waitforailmentfinish("sick",nil,ailmenttype, pet)
+        waitForAilmentFinish("sick", nil, ailmentType, pet)
     end,
+
     ["thirsty"] = function(pet)
-        loadinterior("house", false, plr)
-        resetpet(pet)
+        loadInterior("house", false, plr)
+        resetPet(pet)
         task.wait(0.2)
-        usefurniture("ailments_refresh_2024_cheap_water_bowl", getpetchar(pet))
-        waitforailmentfinish("thirsty", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end,"pet",pet)
+        task.spawn(useFurniture, "ailments_refresh_2024_cheap_water_bowl", getPetChar(pet))
+        waitForAilmentFinish("thirsty", nil, "pet", pet)
     end,
+
     ["sleepy"] = function(pet)
-        loadinterior("house", false, plr)
-        resetpet(pet)
+        loadInterior("house", false, plr)
+        resetPet(pet)
         task.wait(0.2)
-        usefurniture("basiccrib", getpetchar(pet))
-        waitforailmentfinish("sleepy", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end,"pet",pet)
+        task.spawn(useFurniture, "basiccrib", getPetChar(pet))
+        waitForAilmentFinish("sleepy", nil, "pet", pet)
     end,
-    ["camping"] = function(pet,ailmenttype)
-isBusy = true
-        local oldpos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        loadinterior("interior", false, "MainMap")
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(workspace.StaticMap.Campsite.CampsiteOrigin.Position + Vector3.new(0,3,0)) --change
+
+    ["camping"] = function(pet, ailmentType)
+        loadInterior("interior", false, "MainMap")
+        local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
+        local targetPos = workspace.StaticMap.Campsite.CampsiteOrigin.Position + Vector3.new(0, 3, 0)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
         task.wait(0.2)
-        resetpet(pet)
-        waitforailmentfinish("camping",nil,ailmenttype,pet)
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldpos
-isBusy = false
+        resetPet(pet)
+        waitForAilmentFinish("camping", nil, ailmentType, pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
     end,
-    ["bored"] = function(pet,ailmenttype)
-isBusy = true
-        local oldpos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        loadinterior("interior", false, "MainMap")
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = workspace.StaticMap.Park.BoredAilmentTarget.CFrame * CFrame.new(0,2,0)
+
+    ["bored"] = function(pet, ailmentType)
+        loadInterior("interior", false, "MainMap")
+        local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
+        local targetPos = workspace.StaticMap.Park.BoredAilmentTarget.Position + Vector3.new(0, 2, 0)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
         task.wait(0.2)
-        resetpet(pet)
-        waitforailmentfinish("bored",nil,ailmenttype,pet)
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldpos
-isBusy = false
+        resetPet(pet)
+        waitForAilmentFinish("bored", nil, ailmentType, pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
     end,
-    ["salon"] = function(pet,ailmenttype)
-isBusy = true
-        loadinterior("interior",false,"Salon")
-        waitforailmentfinish("salon",nil,ailmenttype,pet)
-isBusy = false
+
+    ["salon"] = function(pet, ailmentType)
+        loadInterior("interior", false, "Salon")
+        waitForAilmentFinish("salon", nil, ailmentType, pet)
     end,
+
     ["play"] = function(pet)
-        resetpet(pet)
-        waitforailmentfinish("play", function() usebone(); task.wait(3.5) end)
+        resetPet(pet)
+        waitForAilmentFinish("play", function() 
+            useBone()
+            task.wait(10) 
+        end, "pet", pet)
     end,
-    ["beach_party"] = function(pet,ailmenttype)
-isBusy = true
-        local oldpos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        loadinterior("interior", false, "MainMap")
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = workspace.StaticMap.Beach.BeachPartyAilmentTarget.CFrame
+
+    ["beach_party"] = function(pet, ailmentType)
+        loadInterior("interior", false, "MainMap")
+        local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
+        local targetPos = workspace.Interiors:WaitForChild("MainMap!Summerfest").Buildings.BeachShop.Visual.BeachShopSetDressing:GetPivot().Position
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
         task.wait(0.2)
-        resetpet(pet)
-        waitforailmentfinish("beach_party",nil,ailmenttype,pet)
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldpos
-        resetpet(pet)
-isBusy = false
+        resetPet(pet)
+        waitForAilmentFinish("beach_party", nil, ailmentType, pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
     end,
-  ["ride"] = function(pet)
-    local hrp = plr.Character:WaitForChild("HumanoidRootPart")
-    plr.Character:SetPrimaryPartCFrame(CFrame.new(100, 1002, 100))
-    resetpet(pet)
-    usestroller(pet)
 
-    local humanoid = plr.Character:WaitForChild("Humanoid")
-
-    -- Jump in place until the ailment ends or a timeout
-    local startTime = tick()
-    while getailments("pet", pet)["ride"] and (tick() - startTime < 15) do
-        humanoid.Jump = true
-        task.wait(1)
-    end
-
-    waitforailmentfinish("ride", nil, "pet", pet)
-    unequipstroller(pet)
-end,
-
-
+    ["ride"] = function(pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+        resetPet(pet)
+        useStroller(pet)
+        waitForAilmentFinish("ride", randomMove, "pet", pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+        unequipStroller(pet)
+    end,
 
     ["dirty"] = function(pet)
-        loadinterior("house",false, plr)
-        usefurniture("modernshower", getpetchar(pet))
-        waitforailmentfinish("dirty", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end,"pet",pet)
-        resetpet(pet)
+        loadInterior("house", false, plr)
+        task.spawn(useFurniture, "modernshower", getPetChar(pet))
+        waitForAilmentFinish("dirty", nil, "pet", pet)
+        resetPet(pet)
     end,
-    ["walk"] = function(pet)
-    local hrp = plr.Character:WaitForChild("HumanoidRootPart")
-    plr.Character:SetPrimaryPartCFrame(CFrame.new(100, 1002, 100))
-    resetpet(pet)
-    local humanoid = plr.Character:WaitForChild("Humanoid")
-    
-    -- Move in a square for about 12 seconds
-    local points = {
-        Vector3.new(10, 0, 0),
-        Vector3.new(0, 0, 10),
-        Vector3.new(-10, 0, 0),
-        Vector3.new(0, 0, -10),
-    }
-    local startTime = tick()
-    local step = 1
-    while getailments("pet", pet)["walk"] and (tick() - startTime < 15) do
-        local offset = points[step]
-        step = step % #points + 1
-        humanoid:MoveTo(hrp.Position + offset)
-        task.wait(2)
-    end
 
-    waitforailmentfinish("walk", nil, "pet", pet)
-    humanoid:MoveTo(hrp.Position)
-end,
+    ["walk"] = function(pet)
+        router.get("AdoptAPI/HoldBaby"):FireServer(
+            getPetChar(pet)
+        )
+        waitForAilmentFinish("walk", randomMove, "pet", pet)
+        router.get("AdoptAPI/EjectBaby"):FireServer(
+            getPetChar(pet)
+        )
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    end,
+
     ["pet_me"] = function(pet)
         local function complete()
-            router.get("AdoptAPI/FocusPet"):FireServer(getpetchar(pet))
+            router.get("AdoptAPI/FocusPet"):FireServer(getPetChar(pet))
             router.get("AvatarAPI/SetPlayerOnPlayerCollision"):FireServer(false)
             router.get("AilmentsAPI/ProgressPetMeAilment"):FireServer(pet)
             router.get("PetAPI/ReplicateActivePerformances"):FireServer(
-                getpetchar(pet), {["FocusPet"] = true}
+                getPetChar(pet), {["FocusPet"] = true}
             )
             router.get("PetAPI/ReplicateActivePerformances"):FireServer(
-                getpetchar(pet), {
+                getPetChar(pet), {
                     ["FocusPet"] = true,
                     ["Petting"] = true,
                     ["Sick"] = true
                 }
             )
         end
-        waitforailmentfinish("pet_me", complete, "pet",pet) --shouldn't be needed
+        waitForAilmentFinish("pet_me", complete, "pet", pet)
     end,
-    ["school"] = function(pet,ailmenttype)
-isBusy = true
-        loadinterior("interior",false,"School")
-        waitforailmentfinish("school",nil,ailmenttype,pet)
-isBusy = false
+
+    ["school"] = function(pet, ailmentType)
+        loadInterior("interior", false, "School")
+        waitForAilmentFinish("school", nil, ailmentType, pet)
     end,
+
     ["mystery"] = function(pet)
-        local solved = solvemystery(pet)
-        local randomchoice = math.random(1,3)
-        router.get("AilmentsAPI/ChooseMysteryAilment"):FireServer(pet, "mystery",randomchoice,solved[randomchoice])
-        waitforailmentfinish("mystery",nil,"pet",pet)
+        local solved = solveMystery(pet)
+        local randomChoice = math.random(1, 3)
+        router.get("AilmentsAPI/ChooseMysteryAilment"):FireServer(pet, "mystery", randomChoice, solved[randomChoice])
+        waitForAilmentFinish("mystery", nil, "pet", pet)
     end,
-    ["pizza_party"] = function(pet,ailmenttype)
-isBusy = true
-        loadinterior("interior", false, "PizzaShop")
-        waitforailmentfinish("pizza_party",nil,ailmenttype,pet)
-isBusy = false
+
+    ["pizza_party"] = function(pet, ailmentType)
+        loadInterior("interior", false, "PizzaShop")
+        waitForAilmentFinish("pizza_party", nil, ailmentType, pet)
+    end,
+    ["buccaneer_band"] = function(pet, ailmentType)
+        loadInterior("interior",false,"MainMap")
+        local Argument1 = router.get("HousingAPI/ActivateInteriorFurniture") -- RemoteFunction 
+        plr.Character.HumanoidRootPart.CFrame = CFrame.new(-606.603271484375, 35, -1640.756103515625)
+        resetPet(pet)
+        task.wait(2)
+        resetPet(pet)
+        task.spawn(Argument1.InvokeServer,
+            Argument1,
+            "f-36",
+            "Guitar",
+            {
+                cframe = CFrame.new(-606.603271484375, 35, -1640.756103515625)
+            },
+            plr.Character
+        )
+        warn("waiting for ailment finish")
+        waitForAilmentFinish("buccaneer_band", nil, ailmentType, pet)
+        warn("done, trying to send space")
+        setthreadidentity(8)
+        local vim = cloneref(game:GetService("VirtualInputManager"))
+        vim:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+        task.wait(.1)
+        vim:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+        warn("done")
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    end,
+    ["summerfest_bonfire"] = function(pet, ailmentType)
+        loadInterior("interior", false, "MainMap")
+        local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
+        local targetPos = Vector3.new(-558, 30, -1532)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
+        task.wait(0.2)
+        resetPet(pet)
+        waitForAilmentFinish("summerfest_bonfire", nil, ailmentType, pet)
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
     end
 }
-babyailmentsfunctions = {
-   ["hungry"] = function()
-    -- Check for ham in inventory
-    local ham
-    for i, v in pairs(cd.get("inventory").food) do
-        if v.kind == "pizza_shop_ham" then
-            ham = i
-            break
-        end
-    end
 
-    -- If not found, buy it directly using ShopAPI
-    if not ham then
-        local buyArgs = {
+local babyAilmentsFunctions = {
+    ["hungry"] = function()
+        waitForAilmentFinish("hungry", eatFood, "baby")
+    end,
+
+    ["thirsty"] = function()
+        waitForAilmentFinish("thirsty", drinkWater, "baby")
+    end,
+
+    ["sleepy"] = function()
+        loadInterior("house", false, plr)
+        task.spawn(useFurniture, "basiccrib", plr.Character)
+        waitForAilmentFinish("sleepy", nil, "baby")
+        router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
+        router.get("AdoptAPI/ExitSeatStates"):FireServer()
+    end,
+
+    ["dirty"] = function()
+        loadInterior("house", false, plr)
+        task.spawn(useFurniture, "modernshower", plr.Character)
+        waitForAilmentFinish("dirty", nil, "baby")
+        router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
+        router.get("AdoptAPI/ExitSeatStates"):FireServer()
+    end,
+    ["buccaneer_band"] = function()
+        loadInterior("interior",false,"MainMap")
+        local Argument1 = router.get("HousingAPI/ActivateInteriorFurniture") -- RemoteFunction 
+        plr.Character.HumanoidRootPart.CFrame = CFrame.new(-606.603271484375, 35, -1640.756103515625)
+        resetPet(pet)
+        task.wait(2)
+        resetPet(pet)
+        task.spawn(Argument1.InvokeServer,
+            Argument1,
+            "f-36",
+            "Guitar",
             {
-                id = "pizza_shop_ham",
-                amount = 1,
-            }
-        }
-        router.get("ShopAPI/BuyItems"):InvokeServer(buyArgs)
-        task.wait(0.5)
-
-        -- Re-check inventory after purchase
-        for i, v in pairs(cd.get("inventory").food) do
-            if v.kind == "pizza_shop_ham" then
-                ham = i
-                break
+                cframe = CFrame.new(-606.603271484375, 35, -1640.756103515625)
+            },
+            plr.Character
+        )
+        warn("waiting for ailment finish")
+        waitForAilmentFinish("buccaneer_band", nil, "baby")
+        warn("done, trying to send space")
+        setthreadidentity(8)
+        local vim = cloneref(game:GetService("VirtualInputManager"))
+        vim:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+        task.wait(.1)
+        vim:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+        warn("done")
+        plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    end
+}
+local minigamefuncs = {
+    joetation = function()
+        local minigame = getcurrentminigame()
+        repeat
+            for i,v in pairs(workspace.Interiors:FindFirstChildWhichIsA("Model").Cannons:GetChildren()) do
+                if workspace.Interiors:FindFirstChildWhichIsA("Model") and workspace.Interiors:FindFirstChildWhichIsA("Model"):FindFirstChild("Cannons") then
+                    minigame:message_server(
+                        "pickup_holdable_from_pile",
+                        plr.Character.HumanoidRootPart.Position,
+                        workspace:GetServerTimeNow()
+                    )
+                    minigame:message_server("use_cannon",tonumber(v.Name),plr.Character.HumanoidRootPart.Position,workspace:GetServerTimeNow())
+                else
+                    break
+                end
+            end
+            task.wait(.1)
+        until not workspace.Interiors:FindFirstChildWhichIsA("Model") or not string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::")
+    end,
+    coconut_bonk = function()
+        repeat task.wait() until getSwordT() --waiting for sword table
+        local swordt = getSwordT()
+        plr.Character.HumanoidRootPart.CFrame = workspace.Interiors:FindFirstChildWhichIsA("Model").Visual.Steps:GetChildren()[2].Model.Model:GetChildren()[3].CFrame * CFrame.new(0,2,0)
+        repeat
+            local minigame = getcurrentminigame()
+            local validpirates = {}
+            for i,v in pairs(minigame.pirates_by_uid) do
+                local model = v.npc_controller.model
+                if model and model:IsDescendantOf(workspace) then
+                    table.insert(validpirates,{uid = i, piratet = v})
+                end
+            end
+            table.sort(validpirates, function(pirate1,pirate2)
+                return (swordt.sword_model.PrimaryPart.Position - pirate1.piratet.npc_controller.model.PrimaryPart.Position).Magnitude < (swordt.sword_model.PrimaryPart.Position - pirate2.piratet.npc_controller.model.PrimaryPart.Position).Magnitude
+            end)
+            local piratest = {}
+            for i = 1, math.min(4, #validpirates) do
+                table.insert(piratest, validpirates[i].uid)
+            end
+            minigame:message_server("pirate_sword_strike",piratest)
+            task.wait(.01)
+        until not workspace.Interiors:FindFirstChildWhichIsA("Model") or not string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::")
+    end
+}
+local function handlelures()
+    loadInterior("house", false, plr)
+    getFurnitures()
+    local bait = get_items_of_kind("ice_dimension_2025_shiver_cone_bait", "food")[1] or get_items_of_kind("ice_dimension_2025_ice_soup_bait", "food")[1]
+    local lure = cd.get("house_interior").furniture[getFurnitures()["lures_2023_normal_lure"]]
+    if lure.lure and lure.lure.finished and lure.lure.reward then
+        router.get("HousingAPI/ActivateFurniture"):InvokeServer(
+            plr,
+            getFurnitures()["lures_2023_normal_lure"],
+            "UseBlock",
+            {
+                bait_unique = nil
+            },
+            plr.Character
+        )
+    end
+    if not lure.lure then 
+        router.get("HousingAPI/ActivateFurniture"):InvokeServer(
+            plr,
+            getFurnitures()["lures_2023_normal_lure"],
+            "UseBlock",
+            {
+                bait_unique = bait.unique
+            },
+            plr.Character
+        )
+    end
+end
+local function handlekey()
+    if terrainhelper:get_current_tide_state() == 0 then	--check later if it works when state is 1
+        if getgenv().farmsettings.buykeys then
+            for i = cd.get("tide_chest_manager").keys_bought+1, #workspace.StaticMap.Summerfest2025.TideChests:GetChildren() - 2 do
+                if cd.get("money") >= 550 then
+                    router.get("SummerfestEventAPI/RequestBuyTreasureKey"):InvokeServer()
+                else
+                    break
+                end
+            end
+        end
+        if get_items_of_kind("summerfest_2025_treasure_key", "toys") then
+            for _,v in get_items_of_kind("summerfest_2025_treasure_key", "toys") do --open chest for every key we have
+                for i = 1, 12 do --get unopened chest
+                    if not table.find(cd.get("tide_chest_manager").chests_opened,i) then
+                        router.get("SummerfestEventAPI/RequestOpenTideChest"):InvokeServer(i)
+                        break
+                    end
+                end
             end
         end
     end
-
-    if not ham then
-        warn("[Baby Hungry] Couldn't get ham even after trying to buy it.")
-        return
-    end
-
-    -- Feed baby
-    router.get("ToolAPI/ServerUseTool"):FireServer(ham, "START")
-    task.wait(0.5)
-    router.get("ToolAPI/ServerUseTool"):FireServer(ham, "END")
-    waitforailmentfinish("hungry", nil, "baby")
-end,
-
-
-    ["thirsty"] = function()
-        waitforailmentfinish("thirsty", drinkwater, "baby")
-    end,
-    ["sleepy"] = function()
-        loadinterior("house", false, plr)
-        usefurniture("basiccrib", plr.Character)
-        waitforailmentfinish("sleepy", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end, "baby")
-        router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-        router.get("AdoptAPI/ExitSeatStates"):FireServer()
-    end,
-    ["dirty"] = function()
-        loadinterior("house", false, plr)
-        usefurniture("modernshower", plr.Character)
-        waitforailmentfinish("dirty", function()
-    router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-    router.get("AdoptAPI/ExitSeatStates"):FireServer()
-end, "baby")
-        router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
-        router.get("AdoptAPI/ExitSeatStates"):FireServer()
-    end,
-}
-startautofarm = function()
-    
-    local targetPos = Vector3.new(100,1002,100)
-local lastTeleportTime = 0
-local rootPart = plr.Character:FindFirstChild("HumanoidRootPart")
-if (tick() - lastTeleportTime > 30) and (rootPart.Position - targetPos).magnitude > 1 then
-    rootPart.CFrame = CFrame.new(targetPos)
-    lastTeleportTime = tick()
 end
-
-    task.wait(0.4)
-    local oldid = getpetid()
-    -- Only reset if needed
-    if oldid then
-        resetpet(oldid)
+local function getcannonrewards()
+    for i = 1,7 do
+        router.get("SummerfestEventAPI/CrowsNestHit"):FireServer(
+            {
+                cannon_key = tostring(i)
+            }
+        )
     end
-    while task.wait() do
-        local pet = getpetid()
-        if pet ~= oldid then
-            resetpet(pet)
-            oldid = pet
-        end
-     
-        local pettext = "Current pet: "..getpetnamefromid(pet)
-        setthreadidentity(8)
-        gui.Frame.Title.Pet.Text = pettext
-        for i,v in pairs(getailments("pet",pet) or {}) do
-            task.wait(0.1)
+end
+local function checkminigame()
+    for i,v in pairs(minigamemanager.get_all()) do
+        if not string.find(i, "::") and v.join_zone_helper and v.join_zone_helper:get_next_time() and liveopstime.get_time_until(v.join_zone_helper:get_next_time()) < 70 then
+            loadInterior("interior", false, "MainMap")
+            v.is_queued = true
+            v.join_zone_helper:on_enter()
+            v.join_zone_helper:update({is_in_queue = true})
+            local timeElapsed = tick()
+            repeat 
+                task.wait() 
+            until (v.is_participating and workspace.Interiors:FindFirstChildWhichIsA("Model") and string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::") ) or 
+                    (tick() - timeElapsed > 100)
+
+            if tick() - timeElapsed > 100 then
+                continue
+            end
+            task.wait(1)
             setthreadidentity(8)
             gui.Frame.Title.Task.Text = "Current task: "..i
-            ailmentfunctions[i](pet, "pet")
+            minigamefuncs[i](v)
+            repeat task.wait() until workspace.Interiors:FindFirstChildWhichIsA("Model") and string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "MainMap")
+            task.wait(15)
+            plr.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(100, 1005, 100)
+            local TeamAPIChooseTeam = router.get("TeamAPI/ChooseTeam") -- RemoteFunction 
+            pcall(TeamAPIChooseTeam.InvokeServer,
+                TeamAPIChooseTeam,
+                "Babies",
+                {
+                    dont_respawn = true,
+                    source_for_logging = "avatar_editor"
+                }
+            )
+        end
+    end
+end
+local function questhandler()
+    local quests = cd.get("quest_manager").quests_cached
+    for i,v in pairs(quests) do
+        if v.steps_completed >= 1 then
+            router.get("QuestAPI/ClaimQuest"):InvokeServer(
+                i
+            )
+        end
+    end
+end
+-- Main AutoFarm Function
+startAutoFarm = function()
+    plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    task.wait(0.4)
+
+    local oldPetId = getPetId()
+    resetPet(oldPetId)
+    for i = 1, 17 do
+        if not cd.get("daily_login_manager").claimed_star_rewards["reward_"..i] then
+            router.get("DailyLoginAPI/ClaimStarReward"):InvokeServer("reward_"..i)
+            break
+        end
+    end
+    router.get("DailyLoginAPI/ClaimDailyReward"):InvokeServer()
+    while task.wait() do
+        local petId = getPetId()
+        router.get("ToolAPI/Equip"):InvokeServer(petId)
+        -- Update pet if changed
+        if petId ~= oldPetId then
+            resetPet(petId)
+            oldPetId = petId
+        end
+        -- Update pet info in GUI
+        local petText = "Current pet: " .. getPetNameFromId(petId)
+        setthreadidentity(8)
+        gui.Frame.Title.Pet.Text = petText
+
+        getcannonrewards()
+
+        handlekey()
+
+        questhandler()
+        -- Handle minigame participation
+        checkminigame()
+        -- Handle pet ailments
+        for ailment, _ in pairs(getAilments("pet", petId)) do
+            task.wait(0.1)
+            setthreadidentity(8)
+            gui.Frame.Title.Task.Text = "Current task: " .. ailment
+            ailmentFunctions[ailment](petId, "pet")
             setthreadidentity(8)
             gui.Frame.Title.Task.Text = "Current task: None"
         end
+
+        -- Handle baby ailments if enabled
         if getgenv().farmsettings.babyfarm then
-            for i,v in pairs(getailments("baby")) do
+            for ailment, _ in pairs(getAilments("baby")) do
                 task.wait(0.1)
                 setthreadidentity(8)
-                gui.Frame.Title.Task.Text = "Current task: baby "..i
-                if not getailments(pet)[i] and not babyailmentsfunctions[i] then --if pet doesn't have that ailment and the baby functio doesn't exist
-                    ailmentfunctions[i](nil, "baby")
-                elseif babyailmentsfunctions[i] then
-                    babyailmentsfunctions[i]()
+                gui.Frame.Title.Task.Text = "Current task: baby " .. ailment
+
+                if not getAilments(petId)[ailment] and not babyAilmentsFunctions[ailment] then
+                    ailmentFunctions[ailment](nil, "baby")
+                elseif babyAilmentsFunctions[ailment] then
+                    babyAilmentsFunctions[ailment]()
                 end
+
                 setthreadidentity(8)
                 gui.Frame.Title.Task.Text = "Current task: None"
             end
         end
+        handlelures()
     end
 end
-local function formatTime(elapsedTime)
-    local minutes = math.floor(elapsedTime / 60)
-    local seconds = math.floor(elapsedTime % 60)
-    local milliseconds = math.floor((elapsedTime * 1000) % 1000)
-    
-    return string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
-end
-local function getpotions()
+
+-- GUI Update Functions
+local function getPotions()
     local count = 0
-    for i,v in pairs(cd.get("inventory").food) do
-        if v.id == "pet_age_potion" then
-            count+=1
+    for _, foodData in pairs(cd.get("inventory").food) do
+        if foodData.id == "pet_age_potion" then
+            count = count + 1
         end
     end
     setthreadidentity(8)
     return count
 end
-local function updategui()
-    local starttime = tick()
-    local startpotions = getpotions()
-    local startmoney = cd.get_data()[plr.Name].money
-    local startevent = cd.get_data()[plr.Name].cherry_blossoms_2025
+
+local function updateGUI()
+    local startTime = tick()
+    local startPotions = getPotions()
+    local startMoney = cd.get_data()[plr.Name].money
+    local startEvent = cd.get_data()[plr.Name].cranky_coins_2025
+
     while task.wait() do
+        --sorry for this but this is the only way to make it not break
         setthreadidentity(8)
-        gui.Frame.Title.Time.Text = "Time elapsed: "..formatTime(tick()-starttime)
-        gui.Frame.Title.Money.Text = "Money farmed: "..cd.get_data()[plr.Name].money - startmoney
-        gui.Frame.Title.Potions.Text = "Gained potions: "..getpotions() - startpotions
-        gui.Frame.Title.Event.Text = "Cherry blossoms farmed: "..cd.get_data()[plr.Name].cherry_blossoms_2025 - startevent
+        gui.Frame.Title.Time.Text = "Time elapsed: " .. formatTime(tick() - startTime)
+        gui.Frame.Title.Money.Text = "Money farmed: " .. (cd.get_data()[plr.Name].money - startMoney)
+        gui.Frame.Title.Potions.Text = "Gained potions: " .. (getPotions() - startPotions)
+        gui.Frame.Title.Event.Text = "Doubloons farmed: " .. (cd.get_data()[plr.Name].cranky_coins_2025 - startEvent)
+        gui.Frame.Visible = getgenv().farmsettings.gui
     end
 end
 local function webhookpost()
@@ -940,19 +1195,19 @@ local function webhookpost()
                         {
                         ["id"] = 825972658,
                         ["name"] = "Money",
-                        ["value"] = cd.get_data()[plr.Name].money,
+                        ["value"] = cd.get("money"),
                         ["inline"] = true
                         },
                         {
                         ["id"] = 964801941,
-                        ["name"] =  "Cherry blossoms",
-                        ["value"] = cd.get_data()[plr.Name].cherry_blossoms_2025,
+                        ["name"] =  "Doubloons",
+                        ["value"] = cd.get("cranky_coins_2025"),
                         ["inline"] = true
                         },
                         {
                         ["id"] = 290093250,
                         ["name"] = "Age potions",
-                        ["value"] = getpotions(),
+                        ["value"] = getPotions(),
                         ["inline"] = true
                         },
                         {
@@ -970,7 +1225,7 @@ local function webhookpost()
                 ["avatar_url"] = ""
                 }
             local newdata = game:GetService("HttpService"):JSONEncode(data)
-            
+
                 local headers = {
                 ["content-type"] = "application/json"
                 }
@@ -982,7 +1237,17 @@ local function webhookpost()
     end
 end
 local function init()
-    setupteleporthook()
+    if getgenv().farmsettings.babyfarm then
+        local TeamAPIChooseTeam = router.get("TeamAPI/ChooseTeam") -- RemoteFunction 
+        TeamAPIChooseTeam:InvokeServer(
+            "Babies",
+            {
+                dont_respawn = true,
+                source_for_logging = "avatar_editor"
+            }
+        )
+    end
+    setupTeleportHook()
     local baseplate = Instance.new("Part")
     baseplate.Size = Vector3.new(100,2,100)
     baseplate.CFrame = CFrame.new(100,1000,100)
@@ -990,15 +1255,16 @@ local function init()
     baseplate.Anchored = true
     local gs = game:GetService 'GuiService'
     local teleportservice = cloneref(game:GetService("TeleportService"))
+    queue_on_teleport([[
+        getgenv().farmsettings = ]]..le(getgenv().farmsettings,{Prettify = true})..[[    
+        loadstring(readfile("adoptmeautofarm.txt"))()
+    ]])
     gs.ErrorMessageChanged:connect(
         function()
         setthreadidentity(8)
             local error_type = gs:GetErrorType()
             if error_type == Enum.ConnectionError.DisconnectErrors then
                 print('Detected disconnection! Reconnecting...')
-                queue_on_teleport([[
-                getgenv().farmsettings = ]]..le(getgenv().farmsettings,{Prettify = true})..[[    
-                loadstring(readfile("adoptmeautofarm.txt"))()]])
                 while task.wait(5) do
                     teleportservice:Teleport(game.PlaceId, plr)
                 end
@@ -1006,9 +1272,10 @@ local function init()
             setthreadidentity(2)
     end)
     getgenv().running = true
-    antiafk()
-    task.spawn(updategui)
+    antiAFK()
+    task.spawn(updateGUI)
     task.spawn(webhookpost)
-    startautofarm()
+    startAutoFarm()
 end
+task.wait(4)
 init()
