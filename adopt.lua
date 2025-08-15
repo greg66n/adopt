@@ -148,6 +148,12 @@ local function formatTime(elapsedTime)
 end
 
 local function getPetKind()
+    -- Handle Aztec Egg specifically
+    if getgenv().farmsettings.pet and string.lower(getgenv().farmsettings.pet) == "aztec egg" then
+        return "aztec_egg_2025_aztec_egg"
+    end
+    
+    -- Original logic for other pets
     for id, petData in pairs(inventorydb.pets) do
         if petData and petData.name and getgenv().farmsettings.pet and string.lower(petData.name) == string.lower(getgenv().farmsettings.pet) then
             return id
@@ -174,38 +180,134 @@ local function isPetOwner(kind)
     return false
 end
 
+local function buyAztecEggs()
+    -- Only run if we want Aztec Eggs
+    if not getgenv().farmsettings.pet or string.lower(getgenv().farmsettings.pet) ~= "aztec egg" then
+        print("Not buying eggs - pet setting is not 'Aztec Egg'")
+        return
+    end
+    
+    -- Check if we already have Aztec eggs
+    local hasAztecEgg = false
+    local aztecEggCount = 0
+    
+    for petId, petData in pairs(cd.get("inventory").pets) do
+        if petData.kind == "aztec_egg_2025_aztec_egg" then
+            hasAztecEgg = true
+            aztecEggCount = aztecEggCount + 1
+        end
+    end
+    
+    print("Current Aztec eggs in inventory:", aztecEggCount)
+    
+    -- Only buy if we have less than 5 eggs (or whatever minimum you want)
+    if aztecEggCount >= 5 then
+        print("Already have enough Aztec eggs (" .. aztecEggCount .. "), skipping purchase")
+        return
+    end
+    
+    local eggsToBuy = 10 - aztecEggCount -- Buy up to 10 total
+    print("Buying " .. eggsToBuy .. " Aztec eggs...")
+    
+    local args = {
+        [1] = "pets",
+        [2] = "aztec_egg_2025_aztec_egg",
+        [3] = {}
+    }
+    
+    for i = 1, eggsToBuy do
+        local success = pcall(function()
+            game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+        end)
+        
+        if success then
+            print("Bought Aztec egg " .. i .. "/" .. eggsToBuy)
+        else
+            warn("Failed to buy Aztec egg " .. i .. " - stopping purchase")
+            break
+        end
+        
+        task.wait(0.1)
+    end
+    
+    task.wait(2) -- Wait for inventory to update
+    print("Finished buying Aztec eggs")
+end
+
 local function getPetId()
     local currentPets = cd.get("inventory").pets
     local targetKind = getPetKind()
     
-    -- If we have a specific pet type set and it's an egg, prioritize it
-    if targetKind ~= "" then
+    -- Check if we have any Aztec eggs when that's our target
+    if targetKind == "aztec_egg_2025_aztec_egg" then
+        local hasAztecEgg = false
         for petId, petData in pairs(currentPets) do
-            if petData.kind == targetKind and inventorydb.pets[petData.kind].is_egg then
+            if petData.kind == targetKind then
+                hasAztecEgg = true
+                break
+            end
+        end
+        
+        -- Buy eggs if we don't have any
+        if not hasAztecEgg then
+            buyAztecEggs()
+            task.wait(1) -- Wait for inventory to update
+        end
+    end
+    
+    -- Rest of your existing getPetId() logic...
+    local highestAge = 0
+    local highestFriendship = 0
+    
+    -- Prioritize eggs if enabled
+    if getgenv().farmsettings.prioritizeeggs then
+        for petId, petData in pairs(currentPets) do
+            if inventorydb.pets[petData.kind].is_egg then
                 return petId
             end
         end
     end
     
-    -- Prioritize eggs if enabled (find the first egg consistently)
-    if getgenv().farmsettings.prioritizeeggs then
-        local eggIds = {}
-        for petId, petData in pairs(currentPets) do
-            if inventorydb.pets[petData.kind].is_egg and petData.id ~= "practice_dog" then
-                table.insert(eggIds, petId)
-            end
+    -- Continue with your existing logic...
+    if #currentPets == 1 then
+        return next(currentPets)
+    end
+    
+    -- Find highest age and friendship levels
+    for _, petData in pairs(currentPets) do
+        if petData.properties.age > highestAge and petData.id ~= "practice_dog" then
+            highestAge = petData.properties.age
         end
-        -- Sort to ensure consistent selection
-        if #eggIds > 0 then
-            table.sort(eggIds)
-            return eggIds[1]
+        if petData.properties.friendship_level > highestFriendship then
+            highestFriendship = petData.properties.friendship_level
         end
     end
     
-    -- Rest of your existing logic...
-    -- (keep the existing fallback logic for non-egg selection)
+    -- Select appropriate pet
+    for petId, petData in pairs(currentPets) do
+        if targetKind ~= "" and petData.kind == targetKind then
+            return petId
+        elseif targetKind ~= "" and isPetOwner(targetKind) then
+            continue
+        end
+        
+        if highestFriendship > 0 then
+            if petData.properties.friendship_level == highestFriendship then
+                return petId
+            else
+                continue
+            end
+        end
+        
+        if petData.properties.age == 6 and not getgenv().farmsettings.switchpetsongrown and petData.id ~= "practice_dog" then
+            return petId
+        elseif highestAge == 0 and petData.id ~= "practice_dog" then
+            return petId
+        elseif highestAge == petData.properties.age and petData.id ~= "practice_dog" then
+            return petId
+        end
+    end
 end
-
 local function getAilments(ailmentType, pet)
     if ailmentType == "baby" then
         return cd.get("ailments_manager").baby_ailments or {}
@@ -874,8 +976,13 @@ startAutoFarm = function()
     plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
     task.wait(0.4)
     
+    -- Call the egg buying function here
+    buyAztecEggs()
+    
     local oldPetId = getPetId()
     resetPet(oldPetId)
+    
+    -- ... rest of your existing code
     for i = 1, 17 do
 		if not cd.get("daily_login_manager").claimed_star_rewards["reward_"..i] then
 			router.get("DailyLoginAPI/ClaimStarReward"):InvokeServer("reward_"..i)
