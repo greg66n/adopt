@@ -273,27 +273,13 @@ end
 
 print("--- Script Finished ---")
 wait(5)
-local args = {
-    [1] = "pets",
-    [2] = "aztec_egg_2025_aztec_egg",
-    [3] = {}
-}
-
--- Loop 100 times
-for i = 1, 100 do
-    -- Invoke the server with the defined arguments
-    game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-    -- Optional: Add a small wait here if you don't want to spam the server too quickly
-    -- wait(0.1)
-end
-wait(1)
--- Adopt Me Zotti Autofarm 
+-- Adopt Me Zotti Autofarm by 0_Void
 getgenv().farmsettings = {
+
     pet = "Aztec Egg", -- Leave blank for auto-select
     babyfarm = true,
     switchpetsongrown = false, -- False for age potions
 	prioritizeeggs = true,
-	buykeys = true,
     webhook = "",
 	gui = true,
 }
@@ -303,6 +289,9 @@ if getgenv().running then
     return 
 end
 getgenv().running = true
+
+getgenv().currentActivePet = nil
+getgenv().petSwitchCooldown = 0
 
 repeat task.wait() until game:IsLoaded()
 local t = require(game:GetService("ReplicatedStorage"):WaitForChild("ClientModules").Game.Tutorial.LegacyTutorial)
@@ -354,7 +343,7 @@ if plr.Character == nil then
         firesignal(playbutton.MouseButton1Down)
         firesignal(playbutton.MouseButton1Up)
         firesignal(playbutton.MouseButton1Click)
-        task.wait(2)
+        task.wait(1)
 		if game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Visible then
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Info.Response:GetChildren()[8].MouseButton1Down)
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Info.Response:GetChildren()[8].MouseButton1Up)
@@ -362,7 +351,11 @@ if plr.Character == nil then
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Buttons.ButtonTemplate.MouseButton1Down)
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Buttons.ButtonTemplate.MouseButton1Up)
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.ThemeColorDialog.Buttons.ButtonTemplate.MouseButton1Click)
-        end
+        else
+			firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.SpawnChooserDialog.UpperCardContainer.ChoicesContent.Choices.Home.Button.MouseButton1Down)
+			firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.SpawnChooserDialog.UpperCardContainer.ChoicesContent.Choices.Home.Button.MouseButton1Up)
+			firesignal(game:GetService("Players").LocalPlayer.PlayerGui.DialogApp.Dialog.SpawnChooserDialog.UpperCardContainer.ChoicesContent.Choices.Home.Button.MouseButton1Click)
+		end
     until not (plr.Character == nil)
 end
 -- GUI Creation
@@ -456,24 +449,62 @@ local function isPetOwner(kind)
     return false
 end
 
+local function buyAztecEggs()
+    local args = {
+        [1] = "pets",
+        [2] = "aztec_egg_2025_aztec_egg",
+        [3] = {}
+    }
+    
+    print("No Aztec eggs found, buying 50...")
+    for i = 1, 50 do
+        game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+        task.wait(0.1) -- Small delay to avoid spam
+    end
+    print("Finished buying Aztec eggs")
+end
+
 local function getPetId()
+    local currentPets = cd.get("inventory").pets
+    local targetKind = getPetKind()
+    
+    -- Check if we have any Aztec eggs when that's our target
+    if targetKind == "aztec_egg_2025_aztec_egg" then
+        local hasAztecEgg = false
+        for petId, petData in pairs(currentPets) do
+            if petData.kind == targetKind then
+                hasAztecEgg = true
+                break
+            end
+        end
+        
+        -- Buy eggs if we don't have any
+        if not hasAztecEgg then
+            buyAztecEggs()
+            task.wait(1) -- Wait for inventory to update
+        end
+    end
+    
+    -- Rest of your existing getPetId() logic...
     local highestAge = 0
     local highestFriendship = 0
-    local petKind = getPetKind()
     
     -- Prioritize eggs if enabled
     if getgenv().farmsettings.prioritizeeggs then
-        for petId, petData in pairs(cd.get("inventory").pets) do
+        for petId, petData in pairs(currentPets) do
             if inventorydb.pets[petData.kind].is_egg then
                 return petId
             end
         end
     end
-    if #cd.get("inventory").pets == 1 then
-		return next(cd.get("inventory").pets)
-	end
+    
+    -- Continue with your existing logic...
+    if #currentPets == 1 then
+        return next(currentPets)
+    end
+    
     -- Find highest age and friendship levels
-    for _, petData in pairs(cd.get("inventory").pets) do
+    for _, petData in pairs(currentPets) do
         if petData.properties.age > highestAge and petData.id ~= "practice_dog" then
             highestAge = petData.properties.age
         end
@@ -483,10 +514,10 @@ local function getPetId()
     end
     
     -- Select appropriate pet
-    for petId, petData in pairs(cd.get("inventory").pets) do
-        if petKind ~= "" and petData.kind == petKind then
+    for petId, petData in pairs(currentPets) do
+        if targetKind ~= "" and petData.kind == targetKind then
             return petId
-        elseif petKind ~= "" and isPetOwner(petKind) then
+        elseif targetKind ~= "" and isPetOwner(targetKind) then
             continue
         end
         
@@ -500,14 +531,13 @@ local function getPetId()
         
         if petData.properties.age == 6 and not getgenv().farmsettings.switchpetsongrown and petData.id ~= "practice_dog" then
             return petId
-        elseif highestAge == 0 and petData.id ~= "practice_dog" then -- All pets full grown
+        elseif highestAge == 0 and petData.id ~= "practice_dog" then
             return petId
         elseif highestAge == petData.properties.age and petData.id ~= "practice_dog" then
             return petId
         end
     end
 end
-
 local function getAilments(ailmentType, pet)
     if ailmentType == "baby" then
         return cd.get("ailments_manager").baby_ailments or {}
@@ -550,6 +580,19 @@ end
 local function unequipStroller(pet)
     router.get("AdoptAPI/EjectBaby"):FireServer(getPetChar(pet))
     router.get("ToolAPI/Unequip"):InvokeServer(getStrollerId())
+end
+
+local function debugPetSelection()
+    print("=== Pet Selection Debug ===")
+    for petId, petData in pairs(cd.get("inventory").pets) do
+        local isEgg = inventorydb.pets[petData.kind].is_egg
+        local petName = inventorydb.pets[petData.kind].name
+        print(string.format("Pet ID: %s, Name: %s, Is Egg: %s, Kind: %s", 
+            petId, petName, tostring(isEgg), petData.kind))
+    end
+    print("Current target kind:", getPetKind())
+    print("Selected pet:", getPetId())
+    print("===========================")
 end
 
 local function randomMove()
@@ -974,14 +1017,14 @@ local ailmentFunctions = {
         resetPet(pet)
         waitForAilmentFinish("play", function() 
             useBone()
-            task.wait(10) 
+            task.wait(8) 
         end, "pet", pet)
     end,
     
     ["beach_party"] = function(pet, ailmentType)
         loadInterior("interior", false, "MainMap")
 		local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        local targetPos = workspace.Interiors:WaitForChild("MainMap!Summerfest").Buildings.BeachShop.Visual.BeachShopSetDressing:GetPivot().Position
+        local targetPos = workspace.Interiors:FindFirstChildWhichIsA("Model").Buildings.BeachShop.Visual.BeachShopSetDressing:GetPivot().Position
 		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
         task.wait(0.2)
         resetPet(pet)
@@ -1050,44 +1093,7 @@ local ailmentFunctions = {
     ["pizza_party"] = function(pet, ailmentType)
         loadInterior("interior", false, "PizzaShop")
         waitForAilmentFinish("pizza_party", nil, ailmentType, pet)
-    end,
-	["buccaneer_band"] = function(pet, ailmentType)
-		loadInterior("interior",false,"MainMap")
-		local Argument1 = router.get("HousingAPI/ActivateInteriorFurniture") -- RemoteFunction 
-		plr.Character.HumanoidRootPart.CFrame = CFrame.new(-606.603271484375, 35, -1640.756103515625)
-		resetPet(pet)
-		task.wait(2)
-		resetPet(pet)
-		task.spawn(Argument1.InvokeServer,
-			Argument1,
-			"f-36",
-			"Guitar",
-			{
-				cframe = CFrame.new(-606.603271484375, 35, -1640.756103515625)
-			},
-			plr.Character
-		)
-		warn("waiting for ailment finish")
-		waitForAilmentFinish("buccaneer_band", nil, ailmentType, pet)
-		warn("done, trying to send space")
-		setthreadidentity(8)
-		local vim = cloneref(game:GetService("VirtualInputManager"))
-		vim:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
-		task.wait(.1)
-		vim:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
-		warn("done")
-		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
-	end,
-	["summerfest_bonfire"] = function(pet, ailmentType)
-        loadInterior("interior", false, "MainMap")
-		local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        local targetPos = Vector3.new(-558, 30, -1532)
-		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(targetPos)
-        task.wait(0.2)
-        resetPet(pet)
-		waitForAilmentFinish("summerfest_bonfire", nil, ailmentType, pet)
-		plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
-	end
+    end
 }
 
 local babyAilmentsFunctions = {
@@ -1113,73 +1119,9 @@ local babyAilmentsFunctions = {
         waitForAilmentFinish("dirty", nil, "baby")
         router.get("PetAPI/ExitFurnitureUseStates"):InvokeServer()
         router.get("AdoptAPI/ExitSeatStates"):FireServer()
-    end,
-	["buccaneer_band"] = function()
-		loadInterior("interior",false,"MainMap")
-		local Argument1 = router.get("HousingAPI/ActivateInteriorFurniture") -- RemoteFunction 
-		plr.Character.HumanoidRootPart.CFrame = CFrame.new(-606.603271484375, 35, -1640.756103515625)
-		resetPet(pet)
-		task.wait(2)
-		resetPet(pet)
-		task.spawn(Argument1.InvokeServer,
-			Argument1,
-			"f-36",
-			"Guitar",
-			{
-				cframe = CFrame.new(-606.603271484375, 35, -1640.756103515625)
-			},
-			plr.Character
-		)
-		waitForAilmentFinish("buccaneer_band", nil, "baby")
-		setthreadidentity(8)
-		router.get("AdoptAPI/ExitSeatStates"):FireServer()
-		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
-	end
+    end
 }
-local minigamefuncs = {
-	joetation = function()
-		local minigame = getcurrentminigame()
-		repeat
-			for i,v in pairs(workspace.Interiors:FindFirstChildWhichIsA("Model").Cannons:GetChildren()) do
-				if workspace.Interiors:FindFirstChildWhichIsA("Model") and workspace.Interiors:FindFirstChildWhichIsA("Model"):FindFirstChild("Cannons") then
-					minigame:message_server(
-						"pickup_holdable_from_pile",
-						plr.Character.HumanoidRootPart.Position,
-						workspace:GetServerTimeNow()
-					)
-					minigame:message_server("use_cannon",tonumber(v.Name),plr.Character:WaitForChild("HumanoidRootPart").Position,workspace:GetServerTimeNow())
-				else
-					break
-				end
-			end
-			task.wait(.1)
-		until not workspace.Interiors:FindFirstChildWhichIsA("Model") or not string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::")
-	end,
-	coconut_bonk = function()
-		repeat task.wait() until getSwordT() --waiting for sword table
-		local swordt = getSwordT()
-		plr.Character.HumanoidRootPart.CFrame = workspace.Interiors:FindFirstChildWhichIsA("Model").Visual.Steps:GetChildren()[2].Model.Model:GetChildren()[3].CFrame * CFrame.new(0,2,0)
-		repeat
-			local minigame = getcurrentminigame()
-			local validpirates = {}
-			for i,v in pairs(minigame.pirates_by_uid) do
-				local model = v.npc_controller.model
-				if model and model:IsDescendantOf(workspace) then
-					table.insert(validpirates,{uid = i, piratet = v})
-				end
-			end
-			table.sort(validpirates, function(pirate1,pirate2)
-				return (swordt.sword_model.PrimaryPart.Position - pirate1.piratet.npc_controller.model.PrimaryPart.Position).Magnitude < (swordt.sword_model.PrimaryPart.Position - pirate2.piratet.npc_controller.model.PrimaryPart.Position).Magnitude
-			end)
-			local piratest = {}
-			for i = 1, math.min(4, #validpirates) do
-				table.insert(piratest, validpirates[i].uid)
-			end
-			minigame:message_server("pirate_sword_strike",piratest)
-			task.wait(.01)
-		until not workspace.Interiors:FindFirstChildWhichIsA("Model") or not string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::")
-	end
-}
+local minigamefuncs = {}
 local function handlelures()
 	loadInterior("house", false, plr)
 	getFurnitures()
@@ -1208,42 +1150,6 @@ local function handlelures()
 		)
 	end
 end
-local function handlekey()
-	if terrainhelper:get_current_tide_state() == 0 then	--check later if it works when state is 1
-		if getgenv().farmsettings.buykeys then
-			for i = cd.get("tide_chest_manager").keys_bought+1, #workspace.StaticMap.Summerfest2025.TideChests:GetChildren() - 2 do
-				if cd.get("money") >= 550 then
-					router.get("SummerfestEventAPI/RequestBuyTreasureKey"):InvokeServer()
-				else
-					break
-				end
-			end
-		end
-		if get_items_of_kind("summerfest_2025_treasure_key", "toys") then
-			for _,v in get_items_of_kind("summerfest_2025_treasure_key", "toys") do --open chest for every key we have
-				for i = 1, 12 do --get unopened chest
-					if not table.find(cd.get("tide_chest_manager").chests_opened,i) then
-						router.get("SummerfestEventAPI/RequestOpenTideChest"):InvokeServer(i)
-						break
-					end
-				end
-			end
-		end
-	end
-end
-local function getcannonrewards()
-	if not cd.get("crows_nest_cannons_manager").claimed_cannon_keys_set["1"] then
-		loadInterior("interior", false, "MainMap")
-		for i = 1,7 do
-			router.get("SummerfestEventAPI/CrowsNestHit"):FireServer(
-				{
-					cannon_key = tostring(i)
-				}
-			)
-		end
-		loadInterior("house", false, plr)
-	end
-end
 local function checkminigame()
 	for i,v in pairs(minigamemanager.get_all()) do
 		if not string.find(i, "::") and v.join_zone_helper and v.join_zone_helper:get_next_time() and liveopstime.get_time_until(v.join_zone_helper:get_next_time()) < 70 then
@@ -1266,7 +1172,9 @@ local function checkminigame()
 			gui.Frame.Title.Task.Text = "Current task: "..i
 			minigamefuncs[i](v)
 			repeat task.wait() until workspace.Interiors:FindFirstChildWhichIsA("Model") and string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "MainMap") and not plr.Character.HumanoidRootPart.Anchored
-			task.wait(3)
+			plr.Character.HumanoidRootPart.Anchored = true
+			task.wait(8)
+			plr.Character.HumanoidRootPart.Anchored = false
 			plr.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
 			plr.Character.HumanoidRootPart.CFrame = CFrame.new(100, 1005, 100)
 			local TeamAPIChooseTeam = router.get("TeamAPI/ChooseTeam") -- RemoteFunction 
@@ -1293,35 +1201,6 @@ local function questhandler()
 		end
 	end
 end
-local function shrimphandler()
-	local jewels = get_items_of_kind("summerfest_2025_priceless_jewel", "toys")
-	for i = 1, math.floor(#jewels/6) do
-		if not (#get_items_of_kind("summer_2025_emperor_shrimp","pets") > 0) then
-			local args = {
-				"pets",
-				"summer_2025_emperor_shrimp",
-				{
-					buy_count = 1
-				}
-			}
-			router.get("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-		end
-		local selectedjewels = {["r_1"] = get_items_of_kind("summer_2025_emperor_shrimp","pets")[1].unique}
-		local iteration = 1
-		for i = #jewels, #jewels-4, -1 do
-			iteration+=1
-			selectedjewels["r_"..tostring(iteration)] = jewels[i].unique
-		end
-		loadInterior("interior", false, "MainMap")
-		local args = {
-			"f-41",
-			"UseBlock",
-			selectedjewels,
-			plr.Character
-		}
-		router.get("HousingAPI/ActivateInteriorFurniture"):InvokeServer(unpack(args))
-	end
-end
 -- Main AutoFarm Function
 startAutoFarm = function()
     plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
@@ -1336,26 +1215,22 @@ startAutoFarm = function()
 		end
 	end
 	router.get("DailyLoginAPI/ClaimDailyReward"):InvokeServer()
-    while task.wait() do
+while task.wait() do
         local petId = getPetId()
-        router.get("ToolAPI/Equip"):InvokeServer(petId)
-        -- Update pet if changed
-        if petId ~= oldPetId then
+        
+        -- Only switch pets if necessary and not on cooldown
+        if petId ~= getgenv().currentActivePet and tick() > getgenv().petSwitchCooldown then
+            router.get("ToolAPI/Equip"):InvokeServer(petId)
             resetPet(petId)
-            oldPetId = petId
+            getgenv().currentActivePet = petId
+            getgenv().petSwitchCooldown = tick() + 5 -- 5 second cooldown
+            
+            local petText = "Current pet: " .. getPetNameFromId(petId)
+            setthreadidentity(8)
+            gui.Frame.Title.Pet.Text = petText
         end
-        -- Update pet info in GUI
-        local petText = "Current pet: " .. getPetNameFromId(petId)
-        setthreadidentity(8)
-        gui.Frame.Title.Pet.Text = petText
 
-        getcannonrewards()
-
-        handlekey()
-
-		questhandler()
-
-		shrimphandler()
+        questhandler()
         -- Handle minigame participation
 		checkminigame()
         -- Handle pet ailments
@@ -1407,7 +1282,7 @@ local function updateGUI()
     local startTime = tick()
     local startPotions = getPotions()
     local startMoney = cd.get_data()[plr.Name].money
-    
+    local startEvent = cd.get_data()[plr.Name].cranky_coins_2025
     
     while task.wait() do
 		--sorry for this but this is the only way to make it not break
@@ -1415,7 +1290,7 @@ local function updateGUI()
         gui.Frame.Title.Time.Text = "Time elapsed: " .. formatTime(tick() - startTime)
 		gui.Frame.Title.Money.Text = "Money farmed: " .. (cd.get_data()[plr.Name].money - startMoney)
 		gui.Frame.Title.Potions.Text = "Gained potions: " .. (getPotions() - startPotions)
-		
+		gui.Frame.Title.Event.Text = "Doubloons farmed: " .. (cd.get_data()[plr.Name].cranky_coins_2025 - startEvent)
 		gui.Frame.Visible = getgenv().farmsettings.gui
     end
 end
@@ -1461,7 +1336,12 @@ local function webhookpost()
                         ["inline"] = true
                         },
                         {
-                        
+                        ["id"] = 964801941,
+                        ["name"] =  "Doubloons",
+                        ["value"] = cd.get("cranky_coins_2025"),
+                        ["inline"] = true
+                        },
+                        {
                         ["id"] = 290093250,
                         ["name"] = "Age potions",
                         ["value"] = getPotions(),
