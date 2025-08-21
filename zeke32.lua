@@ -3,6 +3,15 @@ local args = {
 }
 game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("HousingAPI/BuyFurnitureToStorage"):InvokeServer(unpack(args))
 
+local args = {
+	"pets",
+	"aztec_egg_2025_royal_aztec_egg",
+	{
+		buy_count = 1
+	}
+}
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+
 
 script_key="wuPUyNrPKcRDssQugQwsbVEsUbeVlCrC";
 getgenv().Config = {
