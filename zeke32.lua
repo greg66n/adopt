@@ -1,3 +1,9 @@
+local args = {
+	"aztec_egg_2025_aztec_fountain"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("HousingAPI/BuyFurnitureToStorage"):InvokeServer(unpack(args))
+
+
 script_key="wuPUyNrPKcRDssQugQwsbVEsUbeVlCrC";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
