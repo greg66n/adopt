@@ -1,3 +1,22 @@
+
+script_key="WorkFine";
+getgenv().Config = {
+    ["PetAMountToBuy"] = "0", -- can be 999
+    ["PetRemoteToBuy"] = "moon_2025_egg",
+
+    ["PetFarmAutoSwitchFullGrown"] = false,
+    ["PetFarmActive"] = false,
+    ["LitePetFarmActive"] = true,
+    ["EggFarmActive"] = false,
+    
+    ["HideUselessGui"] = true,
+    ["Blur_username"] = true,
+    ["Blazing_Lion_Log"] = false,
+    ["DiscordId"] = "123456",
+    ["Webhook"] = "",
+}
+loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
+wait(1)
 wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(0.1)
@@ -22,20 +41,3 @@ while true do
     task.wait(30)
 end
 wait(1)
-script_key="WorkFine";
-getgenv().Config = {
-    ["PetAMountToBuy"] = "0", -- can be 999
-    ["PetRemoteToBuy"] = "moon_2025_egg",
-
-    ["PetFarmAutoSwitchFullGrown"] = false,
-    ["PetFarmActive"] = false,
-    ["LitePetFarmActive"] = true,
-    ["EggFarmActive"] = false,
-    
-    ["HideUselessGui"] = true,
-    ["Blur_username"] = true,
-    ["Blazing_Lion_Log"] = false,
-    ["DiscordId"] = "123456",
-    ["Webhook"] = "",
-}
-loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/66567bfd337b57eb059b58dbe1badb89.lua"))()
