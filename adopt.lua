@@ -1,8 +1,6 @@
 wait(10)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-
 wait(0.1)
-
 -- Define the core function to claim the reward
 local function claimReward(tier)
     local args = {
