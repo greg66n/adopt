@@ -1,46 +1,4 @@
 
-Skip to content
-Navigation Menu
-greg66n
-adopt
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-
-    Settings
-
-Files
-t
-
-3272.lua
-adopt.lua
-adopt1.lua
-copy
-copy1.lua
-obfuscated.lua
-serverhop.lua
-serverhopwithoutbird.lua
-voidcherryfarm.lua
-
-    zeke32.lua
-
-    adopt
-
-/adopt1.lua
-greg66n
-greg66n
-Update adopt1.lua
-f8e25cc
- · 
-now
-
-715 lines (704 loc) · 24.6 KB
 setthreadidentity(2)
 local router = require(game:GetService("ReplicatedStorage").ClientModules.Core.RouterClient.RouterClient)
 local cd = require(game:GetService("ReplicatedStorage").ClientModules.Core.ClientData)
@@ -756,5 +714,4 @@ while true do
     task.wait(30)
 end
 wait(1)
-adopt/adopt1.lua at main · greg66n/adopt
- 
+
