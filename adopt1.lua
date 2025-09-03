@@ -1,4 +1,4 @@
--- Adopt Me Zotti Autofarm by 0_Void
+-- Adopt Me Zotti Autofarm by 
 getgenv().farmsettings = {
     pet = "", -- Leave blank for auto-select
     babyfarm = true,
@@ -41,6 +41,28 @@ repeat task.wait() until game:IsLoaded()
 task.wait(2.5)
 setthreadidentity(2)
 -- Services and modules
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+wait(0.1)
+-- Define the core function to claim the reward
+local function claimReward(tier)
+    local args = {
+        "house_pets_2025_pass_1",
+        tier
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("BattlePassAPI/ClaimReward"):InvokeServer(unpack(args))
+end
+
+-- Main loop to run the script
+while true do
+    -- Loop from 1 to 20 for the reward tiers
+    for i = 1, 20 do
+        claimReward(i)
+        -- Wait 0.5 seconds before the next claim
+        task.wait(0.5)
+    end
+    -- Wait 30 seconds before starting the cycle again
+    task.wait(30)
+end
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
@@ -1152,7 +1174,6 @@ startAutoFarm = function()
         gui.Frame.Title.Pet.Text = petText
 
         questhandler()
-handleTaskboardTasks()
         
         -- Handle pet ailments
         setthreadidentity(8)
@@ -1238,7 +1259,7 @@ local function webhookpost()
                     ["description"] = "Current stats about your account:\n",
                     ["color"] = 2326507,
                     ["footer"] = {
-                        ["text"] = "made by Void "
+                        ["text"] = "made by "
                     },
                     ["author"] = {
                         ["name"] = plr.Name,
@@ -1348,4 +1369,3 @@ local function init()
 end
 task.wait(7)
 init()
-
