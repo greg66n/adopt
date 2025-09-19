@@ -919,24 +919,7 @@ local ailmentFunctions = {
 		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
     end,
     
-    ["pet_me"] = function(pet)
-        local function complete()
-            router.get("AdoptAPI/FocusPet"):FireServer(getPetChar(pet))
-            router.get("AvatarAPI/SetPlayerOnPlayerCollision"):FireServer(false)
-            router.get("AilmentsAPI/ProgressPetMeAilment"):FireServer(pet)
-            router.get("PetAPI/ReplicateActivePerformances"):FireServer(
-                getPetChar(pet), {["FocusPet"] = true}
-            )
-            router.get("PetAPI/ReplicateActivePerformances"):FireServer(
-                getPetChar(pet), {
-                    ["FocusPet"] = true,
-                    ["Petting"] = true,
-                    ["Sick"] = true
-                }
-            )
-        end
-        waitForAilmentFinish("pet_me", complete, "pet", pet)
-    end,
+  
     
     ["school"] = function(pet, ailmentType)
         loadInterior("interior", false, "School")
