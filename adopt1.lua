@@ -1,5 +1,5 @@
-local soaux = loadstring(game:HttpGet("https://raw.githubusercontent.com/0Void2391/Sulfoxide/refs/heads/main/soaux.lua"))()
-local le = loadstring(game:HttpGet("https://github.com/0Void2391/Sulfoxide/raw/refs/heads/main/modules/luaencode.lua"))()
+local soaux = loadstring(game:HttpGet("https://raw.githubusercontent.com/Davesatcali/game/refs/heads/main/soaux.lua"))()
+local le = loadstring(game:HttpGet("https://raw.githubusercontent.com/Davesatcali/game/refs/heads/main/luaencode.lua"))()
 local plr = game:GetService("Players").LocalPlayer
 setthreadidentity(2)
 if plr.Character == nil then
