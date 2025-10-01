@@ -441,6 +441,62 @@ local function resetPet(pet)
     until getPetChar(pet) ~= nil
 end
 
+local function autoCashOut()
+    -- Watch for the PlaytimePayoutsApp GUI being added
+    plr.PlayerGui.ChildAdded:Connect(function(child)
+        if child.Name == "PlaytimePayoutsApp" then
+            task.wait(0.1) -- Small delay for GUI to fully load
+            pcall(function()
+                local cashOutButton = child.Frame.Container.CashOutContainer.CashOutButton
+                if cashOutButton then
+                    -- Watch for the button becoming visible
+                    cashOutButton:GetPropertyChangedSignal("Visible"):Connect(function()
+                        if cashOutButton.Visible then
+                            warn("[AutoCashOut] Cash out button became visible, clicking...")
+                            firesignal(cashOutButton.MouseButton1Down)
+                            firesignal(cashOutButton.MouseButton1Up)
+                            firesignal(cashOutButton.MouseButton1Click)
+                        end
+                    end)
+                    
+                    -- Also check immediately in case it's already visible
+                    if cashOutButton.Visible then
+                        warn("[AutoCashOut] Cash out button already visible, clicking...")
+                        firesignal(cashOutButton.MouseButton1Down)
+                        firesignal(cashOutButton.MouseButton1Up)
+                        firesignal(cashOutButton.MouseButton1Click)
+                    end
+                end
+            end)
+        end
+    end)
+    
+    -- Also check if it already exists when the script starts
+    pcall(function()
+        local existingGui = plr.PlayerGui:FindFirstChild("PlaytimePayoutsApp")
+        if existingGui then
+            local cashOutButton = existingGui.Frame.Container.CashOutContainer.CashOutButton
+            if cashOutButton then
+                cashOutButton:GetPropertyChangedSignal("Visible"):Connect(function()
+                    if cashOutButton.Visible then
+                        warn("[AutoCashOut] Cash out button became visible, clicking...")
+                        firesignal(cashOutButton.MouseButton1Down)
+                        firesignal(cashOutButton.MouseButton1Up)
+                        firesignal(cashOutButton.MouseButton1Click)
+                    end
+                end)
+                
+                if cashOutButton.Visible then
+                    warn("[AutoCashOut] Cash out button already visible, clicking...")
+                    firesignal(cashOutButton.MouseButton1Down)
+                    firesignal(cashOutButton.MouseButton1Up)
+                    firesignal(cashOutButton.MouseButton1Click)
+                end
+            end
+        end
+    end)
+end
+
 local function furnitureExists(kind, properties)
     for _, furniture in pairs(cd.get("house_interior").furniture) do
         if furniture.id == kind and furniture.cframe == properties.cframe then
