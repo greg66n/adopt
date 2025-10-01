@@ -486,7 +486,23 @@ local function getPetChar(pet)
     return nil
 end
 
-
+local function autoCashOut()
+    task.spawn(function()
+        while task.wait(1) do
+            pcall(function()
+                local cashOutButton = plr.PlayerGui.PlaytimePayoutsApp.Frame.Container.CashOutContainer.CashOutButton
+                
+                if cashOutButton and cashOutButton.Visible then
+                    warn("[AutoCashOut] Clicking cash out button...")
+                    firesignal(cashOutButton.MouseButton1Down)
+                    firesignal(cashOutButton.MouseButton1Up)
+                    firesignal(cashOutButton.MouseButton1Click)
+                    task.wait(2) -- Wait after clicking to avoid spam
+                end
+            end)
+        end
+    end)
+end
 local function furnitureExists(kind, properties)
     for _, furniture in pairs(cd.get("house_interior").furniture) do
         if furniture.id == kind and furniture.cframe == properties.cframe then
@@ -1142,15 +1158,8 @@ startAutoFarm = function()
     task.wait(0.4)
     
     local currentPetId = getPetId()
-    
-    if not currentPetId then
-        warn("[startAutoFarm] ERROR: No pet found! Cannot start autofarm.")
-        task.wait(5)
-        return task.spawn(startAutoFarm)
-    end
-    
-    local stickToPet = true
-    resetPet(currentPetId)  -- Now this is safe because we checked if it's nil
+    local stickToPet = true -- Flag to stick with current pet
+    resetPet(currentPetId)
 
     
     for i = 1, 17 do
@@ -1220,29 +1229,20 @@ startAutoFarm = function()
             end
         end
         
-       if shouldSwitchPet then
-    local newPetId = getPetId()
-    if newPetId and newPetId ~= currentPetId then
-        warn("[DEBUG] Switching from pet " .. currentPetId .. " to " .. newPetId)
-        resetPet(newPetId)
-        currentPetId = newPetId
-    elseif not newPetId then
-        warn("[DEBUG] No suitable pet found!")
-        -- Don't call resetPet with nil!
-        if currentPetId then
-            router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
+        if shouldSwitchPet then
+            local newPetId = getPetId()
+            if newPetId and newPetId ~= currentPetId then
+                warn("[DEBUG] Switching from pet " .. currentPetId .. " to " .. newPetId)
+                resetPet(newPetId)
+                currentPetId = newPetId
+            elseif not newPetId then
+                warn("[DEBUG] No suitable pet found, keeping current pet")
+                router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
+            end
         else
-            warn("[DEBUG] CRITICAL: No current pet available, restarting autofarm...")
-            task.wait(5)
-            return task.spawn(startAutoFarm)
+            -- Stick with current pet, just make sure it's equipped
+            router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
         end
-    end
-else
-    -- Stick with current pet, just make sure it's equipped
-    if currentPetId then
-        router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
-    end
-end
         
         -- Update pet info in GUI
         local petText = "Current pet: " .. getPetNameFromId(currentPetId)
