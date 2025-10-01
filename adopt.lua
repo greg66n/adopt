@@ -426,105 +426,11 @@ local function randomMove()
 end
 
 local function resetPet(pet)
-    warn("[resetPet] Starting reset for pet: " .. tostring(pet))
-    
     router.get("ToolAPI/Unequip"):InvokeServer(pet)
-    task.wait(0.3)
-    
-    warn("[resetPet] Equipping pet...")
+    task.wait(0.1)
     router.get("ToolAPI/Equip"):InvokeServer(pet)
-    task.wait(0.2)
-    
-    -- Wait for pet character to actually spawn
-    local startTime = tick()
-    local petChar = nil
-    
-    repeat 
-        task.wait(0.1)
-        petChar = getPetChar(pet)
-        
-        if petChar then
-            warn("[resetPet] Pet character found after " .. string.format("%.2f", tick() - startTime) .. " seconds")
-            break
-        end
-        
-        if tick() - startTime > 5 then
-            warn("[resetPet] TIMEOUT: Pet character not found after 5 seconds, retrying equip...")
-            -- Try equipping again
-            router.get("ToolAPI/Equip"):InvokeServer(pet)
-            task.wait(0.3)
-        end
-        
-        if tick() - startTime > 10 then
-            warn("[resetPet] CRITICAL: Pet character still not found after 10 seconds, giving up")
-            break
-        end
-    until petChar ~= nil or (tick() - startTime > 10)
-    
-    if not petChar then
-        warn("[resetPet] WARNING: Reset completed but pet character still not found!")
-    end
 end
 
-local function getPetChar(pet)
-    local petEntities = debug.getupvalue(petentitymanager.get_pet_entity, 1)
-    local targetId = pet.."-"..tostring(plr.UserId)
-    
-    warn("[getPetChar] Looking for pet with ID: " .. targetId)
-    warn("[getPetChar] Total pet entities: " .. tostring(petEntities and #petEntities or 0))
-    
-    if petEntities then
-        for char, entity in pairs(petEntities) do
-            if entity.unique_id == targetId then
-                warn("[getPetChar] Found pet character!")
-                return char
-            end
-        end
-    end
-    
-    warn("[getPetChar] Pet character NOT found")
-    return nil
-end
-
-local function autoCashOut()
-    task.spawn(function()
-        while task.wait(1) do
-            pcall(function()
-                local gui = plr.PlayerGui:FindFirstChild("PlaytimePayoutsApp")
-                if gui then
-                    local button = gui:FindFirstChild("Frame", true)
-                    if button then
-                        button = button:FindFirstChild("Container", true)
-                        if button then
-                            button = button:FindFirstChild("CashOutContainer", true)
-                            if button then
-                                button = button:FindFirstChild("CashOutButton", true)
-                                if button and button.Visible then
-                                    warn("[AutoCashOut] Found visible cash out button, clicking with VIM...")
-                                    
-                                    -- Get button position on screen
-                                    local absPos = button.AbsolutePosition
-                                    local absSize = button.AbsoluteSize
-                                    local centerX = absPos.X + (absSize.X / 2)
-                                    local centerY = absPos.Y + (absSize.Y / 2)
-                                    
-                                    -- Click using VirtualInputManager
-                                    local vim = game:GetService("VirtualInputManager")
-                                    vim:SendMouseButtonEvent(centerX, centerY, 0, true, game, 1)
-                                    task.wait(0.05)
-                                    vim:SendMouseButtonEvent(centerX, centerY, 0, false, game, 1)
-                                    
-                                    warn("[AutoCashOut] Clicked!")
-                                    task.wait(3) -- Wait after clicking
-                                end
-                            end
-                        end
-                    end
-                end
-            end)
-        end
-    end)
-end
 local function furnitureExists(kind, properties)
     for _, furniture in pairs(cd.get("house_interior").furniture) do
         if furniture.id == kind and furniture.cframe == properties.cframe then
@@ -1026,7 +932,6 @@ local ailmentFunctions = {
             local petPos = petChar.HumanoidRootPart.Position
             local viewportPoint = camera:WorldToViewportPoint(petPos)
             
-            -- Click the pet to focus
             pcall(function()
                 local vim = game:GetService("VirtualInputManager")
                 vim:SendMouseButtonEvent(viewportPoint.X, viewportPoint.Y, 0, true, game, 1)
@@ -1041,20 +946,24 @@ local ailmentFunctions = {
     
     waitForAilmentFinish("pet_me", complete, "pet", pet)
     
-    -- Click the back button to unfocus
-    task.wait(0.3)
-    local success, err = pcall(function()
-        local backButton = plr.PlayerGui.FocusPetApp.Frame.BackButton
-        if backButton then
-            warn("[pet_me] Clicking back button to unfocus")
-            firesignal(backButton.MouseButton1Down)
-            firesignal(backButton.MouseButton1Up)
-            firesignal(backButton.MouseButton1Click)
+    -- DEBUG: Print all visible GUIs
+    warn("[pet_me] Searching for back button...")
+    for _, gui in ipairs(plr.PlayerGui:GetChildren()) do
+        local isEnabled = false
+        if gui:IsA("ScreenGui") then
+            isEnabled = gui.Enabled
+        else
+            isEnabled = true -- Folders are always "enabled"
         end
-    end)
-    
-    if not success then
-        warn("[pet_me] Failed to click back button: " .. tostring(err))
+        
+        if isEnabled then
+            warn("[pet_me] Visible GUI: " .. gui.Name .. " (" .. gui.ClassName .. ")")
+            for _, button in ipairs(gui:GetDescendants()) do
+                if (button:IsA("TextButton") or button:IsA("ImageButton")) and button.Visible then
+                    warn("[pet_me]   Button: " .. button:GetFullName() .. " | Text: " .. tostring(button.Text or button.Name))
+                end
+            end
+        end
     end
 end,
     
