@@ -427,8 +427,18 @@ end
 
 local function resetPet(pet)
     router.get("ToolAPI/Unequip"):InvokeServer(pet)
-    task.wait(0.1)
+    task.wait(0.2)
     router.get("ToolAPI/Equip"):InvokeServer(pet)
+    
+    -- Wait for pet character to actually spawn
+    local startTime = tick()
+    repeat 
+        task.wait(0.1)
+        if tick() - startTime > 5 then
+            warn("[resetPet] Timeout waiting for pet character to spawn")
+            break
+        end
+    until getPetChar(pet) ~= nil
 end
 
 local function furnitureExists(kind, properties)
