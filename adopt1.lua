@@ -490,36 +490,14 @@ local function autoCashOut()
     task.spawn(function()
         while task.wait(1) do
             pcall(function()
-                local gui = plr.PlayerGui:FindFirstChild("PlaytimePayoutsApp")
-                if gui then
-                    local button = gui:FindFirstChild("Frame", true)
-                    if button then
-                        button = button:FindFirstChild("Container", true)
-                        if button then
-                            button = button:FindFirstChild("CashOutContainer", true)
-                            if button then
-                                button = button:FindFirstChild("CashOutButton", true)
-                                if button and button.Visible then
-                                    warn("[AutoCashOut] Found visible cash out button, clicking with VIM...")
-                                    
-                                    -- Get button position on screen
-                                    local absPos = button.AbsolutePosition
-                                    local absSize = button.AbsoluteSize
-                                    local centerX = absPos.X + (absSize.X / 2)
-                                    local centerY = absPos.Y + (absSize.Y / 2)
-                                    
-                                    -- Click using VirtualInputManager
-                                    local vim = game:GetService("VirtualInputManager")
-                                    vim:SendMouseButtonEvent(centerX, centerY, 0, true, game, 1)
-                                    task.wait(0.05)
-                                    vim:SendMouseButtonEvent(centerX, centerY, 0, false, game, 1)
-                                    
-                                    warn("[AutoCashOut] Clicked!")
-                                    task.wait(3) -- Wait after clicking
-                                end
-                            end
-                        end
-                    end
+                local cashOutButton = plr.PlayerGui.PlaytimePayoutsApp.Frame.Container.CashOutContainer.CashOutButton
+                
+                if cashOutButton and cashOutButton.Visible then
+                    warn("[AutoCashOut] Clicking cash out button...")
+                    firesignal(cashOutButton.MouseButton1Down)
+                    firesignal(cashOutButton.MouseButton1Up)
+                    firesignal(cashOutButton.MouseButton1Click)
+                    task.wait(2) -- Wait after clicking to avoid spam
                 end
             end)
         end
