@@ -426,19 +426,64 @@ local function randomMove()
 end
 
 local function resetPet(pet)
+    warn("[resetPet] Starting reset for pet: " .. tostring(pet))
+    
     router.get("ToolAPI/Unequip"):InvokeServer(pet)
-    task.wait(0.2)
+    task.wait(0.3)
+    
+    warn("[resetPet] Equipping pet...")
     router.get("ToolAPI/Equip"):InvokeServer(pet)
+    task.wait(0.2)
     
     -- Wait for pet character to actually spawn
     local startTime = tick()
+    local petChar = nil
+    
     repeat 
         task.wait(0.1)
-        if tick() - startTime > 5 then
-            warn("[resetPet] Timeout waiting for pet character to spawn")
+        petChar = getPetChar(pet)
+        
+        if petChar then
+            warn("[resetPet] Pet character found after " .. string.format("%.2f", tick() - startTime) .. " seconds")
             break
         end
-    until getPetChar(pet) ~= nil
+        
+        if tick() - startTime > 5 then
+            warn("[resetPet] TIMEOUT: Pet character not found after 5 seconds, retrying equip...")
+            -- Try equipping again
+            router.get("ToolAPI/Equip"):InvokeServer(pet)
+            task.wait(0.3)
+        end
+        
+        if tick() - startTime > 10 then
+            warn("[resetPet] CRITICAL: Pet character still not found after 10 seconds, giving up")
+            break
+        end
+    until petChar ~= nil or (tick() - startTime > 10)
+    
+    if not petChar then
+        warn("[resetPet] WARNING: Reset completed but pet character still not found!")
+    end
+end
+
+local function getPetChar(pet)
+    local petEntities = debug.getupvalue(petentitymanager.get_pet_entity, 1)
+    local targetId = pet.."-"..tostring(plr.UserId)
+    
+    warn("[getPetChar] Looking for pet with ID: " .. targetId)
+    warn("[getPetChar] Total pet entities: " .. tostring(petEntities and #petEntities or 0))
+    
+    if petEntities then
+        for char, entity in pairs(petEntities) do
+            if entity.unique_id == targetId then
+                warn("[getPetChar] Found pet character!")
+                return char
+            end
+        end
+    end
+    
+    warn("[getPetChar] Pet character NOT found")
+    return nil
 end
 
 local function autoCashOut()
