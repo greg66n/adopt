@@ -1,4 +1,4 @@
-script_key="TEldwxNsQHqqpHxBLteSOJUExppoESKz";
+script_key="WorkFine";
 getgenv().Config = {
     ["PetFarmAutoSwitchFullGrown"] = false,
     ["PetFarmActive"] = true,
