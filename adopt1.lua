@@ -1138,7 +1138,7 @@ end
 -- Main AutoFarm Function
 -- Main AutoFarm Function
 startAutoFarm = function()
-  plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
     task.wait(0.4)
     
     local currentPetId = getPetId()
@@ -1146,11 +1146,11 @@ startAutoFarm = function()
     if not currentPetId then
         warn("[startAutoFarm] ERROR: No pet found! Cannot start autofarm.")
         task.wait(5)
-        return task.spawn(startAutoFarm) -- Retry after delay
+        return task.spawn(startAutoFarm)
     end
     
-    resetPet(currentPetId)
-    -- ... rest of function
+    local stickToPet = true
+    resetPet(currentPetId)  -- Now this is safe because we checked if it's nil
 
     
     for i = 1, 17 do
