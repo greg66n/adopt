@@ -486,23 +486,7 @@ local function getPetChar(pet)
     return nil
 end
 
-local function autoCashOut()
-    task.spawn(function()
-        while task.wait(1) do
-            pcall(function()
-                local cashOutButton = plr.PlayerGui.PlaytimePayoutsApp.Frame.Container.CashOutContainer.CashOutButton
-                
-                if cashOutButton and cashOutButton.Visible then
-                    warn("[AutoCashOut] Clicking cash out button...")
-                    firesignal(cashOutButton.MouseButton1Down)
-                    firesignal(cashOutButton.MouseButton1Up)
-                    firesignal(cashOutButton.MouseButton1Click)
-                    task.wait(2) -- Wait after clicking to avoid spam
-                end
-            end)
-        end
-    end)
-end
+
 local function furnitureExists(kind, properties)
     for _, furniture in pairs(cd.get("house_interior").furniture) do
         if furniture.id == kind and furniture.cframe == properties.cframe then
