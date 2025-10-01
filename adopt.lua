@@ -920,23 +920,51 @@ local ailmentFunctions = {
     end,
     
 ["pet_me"] = function(pet)
+    plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    resetPet(pet)
+    task.wait(0.5)
+    
     local petChar = getPetChar(pet)
     
     local function complete()
-        -- Equip pet
-        router.get("ToolAPI/Equip"):InvokeServer(pet)
-        task.wait(0.2)
-        
-        -- Focus and progress multiple times
-        for i = 1, 3 do
-            router.get("AdoptAPI/FocusPet"):FireServer(petChar)
+        if petChar and petChar:FindFirstChild("HumanoidRootPart") then
+            local camera = workspace.CurrentCamera
+            local petPos = petChar.HumanoidRootPart.Position
+            local viewportPoint = camera:WorldToViewportPoint(petPos)
+            
+            pcall(function()
+                local vim = game:GetService("VirtualInputManager")
+                vim:SendMouseButtonEvent(viewportPoint.X, viewportPoint.Y, 0, true, game, 1)
+                task.wait(0.05)
+                vim:SendMouseButtonEvent(viewportPoint.X, viewportPoint.Y, 0, false, game, 1)
+            end)
+            
             task.wait(0.3)
             router.get("AilmentsAPI/ProgressPetMeAilment"):FireServer(pet)
-            task.wait(0.2)
         end
     end
     
     waitForAilmentFinish("pet_me", complete, "pet", pet)
+    
+    -- DEBUG: Print all visible GUIs
+    warn("[pet_me] Searching for back button...")
+    for _, gui in ipairs(plr.PlayerGui:GetChildren()) do
+        local isEnabled = false
+        if gui:IsA("ScreenGui") then
+            isEnabled = gui.Enabled
+        else
+            isEnabled = true -- Folders are always "enabled"
+        end
+        
+        if isEnabled then
+            warn("[pet_me] Visible GUI: " .. gui.Name .. " (" .. gui.ClassName .. ")")
+            for _, button in ipairs(gui:GetDescendants()) do
+                if (button:IsA("TextButton") or button:IsA("ImageButton")) and button.Visible then
+                    warn("[pet_me]   Button: " .. button:GetFullName() .. " | Text: " .. tostring(button.Text or button.Name))
+                end
+            end
+        end
+    end
 end,
     
     ["school"] = function(pet, ailmentType)
