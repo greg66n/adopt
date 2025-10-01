@@ -1154,12 +1154,19 @@ end
 -- Main AutoFarm Function
 -- Main AutoFarm Function
 startAutoFarm = function()
-    plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+  plr.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
     task.wait(0.4)
     
     local currentPetId = getPetId()
-    local stickToPet = true -- Flag to stick with current pet
+    
+    if not currentPetId then
+        warn("[startAutoFarm] ERROR: No pet found! Cannot start autofarm.")
+        task.wait(5)
+        return task.spawn(startAutoFarm) -- Retry after delay
+    end
+    
     resetPet(currentPetId)
+    -- ... rest of function
 
     
     for i = 1, 17 do
@@ -1229,20 +1236,29 @@ startAutoFarm = function()
             end
         end
         
-        if shouldSwitchPet then
-            local newPetId = getPetId()
-            if newPetId and newPetId ~= currentPetId then
-                warn("[DEBUG] Switching from pet " .. currentPetId .. " to " .. newPetId)
-                resetPet(newPetId)
-                currentPetId = newPetId
-            elseif not newPetId then
-                warn("[DEBUG] No suitable pet found, keeping current pet")
-                router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
-            end
-        else
-            -- Stick with current pet, just make sure it's equipped
+       if shouldSwitchPet then
+    local newPetId = getPetId()
+    if newPetId and newPetId ~= currentPetId then
+        warn("[DEBUG] Switching from pet " .. currentPetId .. " to " .. newPetId)
+        resetPet(newPetId)
+        currentPetId = newPetId
+    elseif not newPetId then
+        warn("[DEBUG] No suitable pet found!")
+        -- Don't call resetPet with nil!
+        if currentPetId then
             router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
+        else
+            warn("[DEBUG] CRITICAL: No current pet available, restarting autofarm...")
+            task.wait(5)
+            return task.spawn(startAutoFarm)
         end
+    end
+else
+    -- Stick with current pet, just make sure it's equipped
+    if currentPetId then
+        router.get("ToolAPI/Equip"):InvokeServer(currentPetId)
+    end
+end
         
         -- Update pet info in GUI
         local petText = "Current pet: " .. getPetNameFromId(currentPetId)
