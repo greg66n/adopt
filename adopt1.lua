@@ -1,3 +1,32 @@
+
+Skip to content
+Navigation Menu
+greg66n
+adopt
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+    adopt
+
+/adopt.lua
+t
+greg66n
+greg66n
+Update adopt.lua
+6279388
+ · 
+now
+
+1375 lines (1217 loc) · 49.6 KB
 -- Adopt Me Zotti Autofarm by 0_Void
 getgenv().farmsettings = {
     pet = "", -- Leave blank for auto-select
@@ -932,6 +961,7 @@ local ailmentFunctions = {
             local petPos = petChar.HumanoidRootPart.Position
             local viewportPoint = camera:WorldToViewportPoint(petPos)
             
+            -- Click the pet to focus
             pcall(function()
                 local vim = game:GetService("VirtualInputManager")
                 vim:SendMouseButtonEvent(viewportPoint.X, viewportPoint.Y, 0, true, game, 1)
@@ -946,24 +976,20 @@ local ailmentFunctions = {
     
     waitForAilmentFinish("pet_me", complete, "pet", pet)
     
-    -- DEBUG: Print all visible GUIs
-    warn("[pet_me] Searching for back button...")
-    for _, gui in ipairs(plr.PlayerGui:GetChildren()) do
-        local isEnabled = false
-        if gui:IsA("ScreenGui") then
-            isEnabled = gui.Enabled
-        else
-            isEnabled = true -- Folders are always "enabled"
+    -- Click the back button to unfocus
+    task.wait(0.3)
+    local success, err = pcall(function()
+        local backButton = plr.PlayerGui.FocusPetApp.Frame.BackButton
+        if backButton then
+            warn("[pet_me] Clicking back button to unfocus")
+            firesignal(backButton.MouseButton1Down)
+            firesignal(backButton.MouseButton1Up)
+            firesignal(backButton.MouseButton1Click)
         end
-        
-        if isEnabled then
-            warn("[pet_me] Visible GUI: " .. gui.Name .. " (" .. gui.ClassName .. ")")
-            for _, button in ipairs(gui:GetDescendants()) do
-                if (button:IsA("TextButton") or button:IsA("ImageButton")) and button.Visible then
-                    warn("[pet_me]   Button: " .. button:GetFullName() .. " | Text: " .. tostring(button.Text or button.Name))
-                end
-            end
-        end
+    end)
+    
+    if not success then
+        warn("[pet_me] Failed to click back button: " .. tostring(err))
     end
 end,
     
@@ -1376,3 +1402,5 @@ local function init()
 end
 task.wait(7)
 init()
+adopt/adopt.lua at main · greg66n/adopt
+ 
