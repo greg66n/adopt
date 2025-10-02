@@ -1,32 +1,3 @@
-
-Skip to content
-Navigation Menu
-greg66n
-adopt
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-
-    Settings
-
-    adopt
-
-/adopt.lua
-t
-greg66n
-greg66n
-Update adopt.lua
-6279388
- · 
-now
-
-1375 lines (1217 loc) · 49.6 KB
 -- Adopt Me Zotti Autofarm by 0_Void
 getgenv().farmsettings = {
     pet = "", -- Leave blank for auto-select
@@ -1402,5 +1373,3 @@ local function init()
 end
 task.wait(7)
 init()
-adopt/adopt.lua at main · greg66n/adopt
- 
