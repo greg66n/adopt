@@ -1,3 +1,46 @@
+
+Skip to content
+Navigation Menu
+greg66n
+adopt
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+Files
+t
+
+3272.lua
+adopt.lua
+adopt1.lua
+copy
+copy1.lua
+obfuscated.lua
+serverhop.lua
+serverhopwithoutbird.lua
+voidcherryfarm.lua
+
+    zeke32.lua
+
+    adopt
+
+/adopt.lua
+greg66n
+greg66n
+Update adopt.lua
+c19c343
+ · 
+now
+
+1688 lines (1480 loc) · 61.9 KB
 -- Adopt Me Zotti Autofarm by 0_Void
 getgenv().farmsettings = {
     pet = "", -- Leave blank for auto-select
@@ -996,13 +1039,14 @@ local function waitForAilmentFinish(ailment, callback, ailmentType, pet)
 end
 
 local ailmentFunctions = {
-["scale_the_organ"] = function(pet, ailmentType)
+["scale_the_organ"] = function()
+    -- Define the player locally for Delta/Exploit compatibility
     local plr = game.Players.LocalPlayer
 
     loadInterior("interior", false, "MainMap!Fall")
     task.wait(0.5)
 
-    -- YOUR 28 CAPTURED COORDINATES
+    -- YOUR 28 CAPTURED COORDINATES (now 29)
     local step_positions = {
         Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
         Vector3.new(-338.49, 34.48, -1447.55),
@@ -1040,19 +1084,18 @@ local ailmentFunctions = {
     
     local oldPos = rootPart.CFrame
 
-    resetPet(pet)
-    task.wait(0.5)
-
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.4) -- Wait 0.4 seconds between each step
+        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
     end
 
+    -- Call the required function to clear the ailment.
+    -- The game sometimes registers the completion after a short wait at the top.
     task.wait(1) 
     
-    -- Wait for the ailment to finish
-    waitForAilmentFinish("scale_the_organ", nil, ailmentType, pet)
+    -- Corrected ailment name and wait
+    waitForAilmentFinish("scale_the_organ", nil, "baby")
     
     -- Return to original spot
     rootPart.CFrame = oldPos
@@ -1274,7 +1317,7 @@ local babyAilmentsFunctions = {
     loadInterior("interior", false, "MainMap!Fall")
     task.wait(0.5)
 
-    -- YOUR 28 CAPTURED COORDINATES
+    -- YOUR 28 CAPTURED COORDINATES (now 29)
     local step_positions = {
         Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
         Vector3.new(-338.49, 34.48, -1447.55),
@@ -1315,7 +1358,7 @@ local babyAilmentsFunctions = {
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.4) -- Wait 0.4 seconds between each step for animation
+        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
     end
 
     -- Call the required function to clear the ailment.
@@ -1686,3 +1729,4 @@ local function init()
 end
 task.wait(7)
 init()
+adopt/adopt.lua at main · greg66n/adopt
