@@ -1,46 +1,3 @@
-
-Skip to content
-Navigation Menu
-greg66n
-adopt
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-
-    Settings
-
-Files
-t
-
-3272.lua
-adopt.lua
-adopt1.lua
-copy
-copy1.lua
-obfuscated.lua
-serverhop.lua
-serverhopwithoutbird.lua
-voidcherryfarm.lua
-
-    zeke32.lua
-
-    adopt
-
-/adopt.lua
-greg66n
-greg66n
-Update adopt.lua
-c19c343
- · 
-now
-
-1688 lines (1480 loc) · 61.9 KB
 -- Adopt Me Zotti Autofarm by 0_Void
 getgenv().farmsettings = {
     pet = "", -- Leave blank for auto-select
@@ -1040,65 +997,65 @@ end
 
 local ailmentFunctions = {
 ["scale_the_organ"] = function()
-    -- Define the player locally for Delta/Exploit compatibility
-    local plr = game.Players.LocalPlayer
+    -- Define the player locally for Delta/Exploit compatibility
+    local plr = game.Players.LocalPlayer
 
-    loadInterior("interior", false, "MainMap!Fall")
-    task.wait(0.5)
+    loadInterior("interior", false, "MainMap!Fall")
+    task.wait(0.5)
 
-    -- YOUR 28 CAPTURED COORDINATES (now 29)
-    local step_positions = {
-        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
-        Vector3.new(-338.49, 34.48, -1447.55),
-        Vector3.new(-343.19, 36.64, -1446.23),
-        Vector3.new(-345.65, 38.63, -1442.83),
-        Vector3.new(-349.2, 40.55, -1439.78),
-        Vector3.new(-350.44, 42.8, -1435.09),
-        Vector3.new(-351.23, 44.26, -1431.61),
-        Vector3.new(-350.76, 46.42, -1426.64),
-        Vector3.new(-348.43, 48.89, -1421.59),
-        Vector3.new(-345.55, 50.33, -1419.6),
-        Vector3.new(-341.97, 52.25, -1417.48),
-        Vector3.new(-337.78, 54.32, -1415.81),
-        Vector3.new(-333.76, 56.16, -1414.92),
-        Vector3.new(-328.45, 58.66, -1415.77),
-        Vector3.new(-324.91, 60.22, -1417),
-        Vector3.new(-321.42, 62.31, -1420.06),
-        Vector3.new(-319.07, 64.12, -1423.32),
-        Vector3.new(-318.95, 65.77, -1426.79),
-        Vector3.new(-318.72, 68.21, -1431.8),
-        Vector3.new(-318.53, 70.24, -1436.03),
-        Vector3.new(-319.19, 71.85, -1439.38),
-        Vector3.new(-321.86, 74.05, -1443.46),
-        Vector3.new(-325.87, 76.42, -1446.56),
-        Vector3.new(-329.74, 78.31, -1448.4),
-        Vector3.new(-333.65, 80.09, -1449.11),
-        Vector3.new(-337.63, 82.19, -1446.86),
-        Vector3.new(-341.83, 84.57, -1444.76),
-        Vector3.new(-345.98, 86.8, -1442.68), 
-        Vector3.new(-350.2, 89.1, -1440.5),
-    }
+    -- YOUR 28 CAPTURED COORDINATES (now 29)
+    local step_positions = {
+        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
+        Vector3.new(-338.49, 34.48, -1447.55),
+        Vector3.new(-343.19, 36.64, -1446.23),
+        Vector3.new(-345.65, 38.63, -1442.83),
+        Vector3.new(-349.2, 40.55, -1439.78),
+        Vector3.new(-350.44, 42.8, -1435.09),
+        Vector3.new(-351.23, 44.26, -1431.61),
+        Vector3.new(-350.76, 46.42, -1426.64),
+        Vector3.new(-348.43, 48.89, -1421.59),
+        Vector3.new(-345.55, 50.33, -1419.6),
+        Vector3.new(-341.97, 52.25, -1417.48),
+        Vector3.new(-337.78, 54.32, -1415.81),
+        Vector3.new(-333.76, 56.16, -1414.92),
+        Vector3.new(-328.45, 58.66, -1415.77),
+        Vector3.new(-324.91, 60.22, -1417),
+        Vector3.new(-321.42, 62.31, -1420.06),
+        Vector3.new(-319.07, 64.12, -1423.32),
+        Vector3.new(-318.95, 65.77, -1426.79),
+        Vector3.new(-318.72, 68.21, -1431.8),
+        Vector3.new(-318.53, 70.24, -1436.03),
+        Vector3.new(-319.19, 71.85, -1439.38),
+        Vector3.new(-321.86, 74.05, -1443.46),
+        Vector3.new(-325.87, 76.42, -1446.56),
+        Vector3.new(-329.74, 78.31, -1448.4),
+        Vector3.new(-333.65, 80.09, -1449.11),
+        Vector3.new(-337.63, 82.19, -1446.86),
+        Vector3.new(-341.83, 84.57, -1444.76),
+        Vector3.new(-345.98, 86.8, -1442.68), 
+        Vector3.new(-350.2, 89.1, -1440.5),
+    }
 
-    local character = plr.Character or plr.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    
-    local oldPos = rootPart.CFrame
+    local character = plr.Character or plr.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    local oldPos = rootPart.CFrame
 
-    -- Sequentially teleport up each step
-    for _, position in ipairs(step_positions) do
-        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
-    end
+    -- Sequentially teleport up each step
+    for _, position in ipairs(step_positions) do
+        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
+        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
+    end
 
-    -- Call the required function to clear the ailment.
-    -- The game sometimes registers the completion after a short wait at the top.
-    task.wait(1) 
-    
-    -- Corrected ailment name and wait
-    waitForAilmentFinish("scale_the_organ", nil, "baby")
-    
-    -- Return to original spot
-    rootPart.CFrame = oldPos
+    -- Call the required function to clear the ailment.
+    -- The game sometimes registers the completion after a short wait at the top.
+    task.wait(1) 
+    
+    -- Corrected ailment name and wait
+    waitForAilmentFinish("scale_the_organ", nil, "baby")
+    
+    -- Return to original spot
+    rootPart.CFrame = oldPos
 end,
     ["toilet"] = function(pet)
         loadInterior("house", false, plr)
@@ -1311,65 +1268,65 @@ end,
 
 local babyAilmentsFunctions = {
 ["scale_the_organ"] = function()
-    -- Define the player locally for Delta/Exploit compatibility
-    local plr = game.Players.LocalPlayer
+    -- Define the player locally for Delta/Exploit compatibility
+    local plr = game.Players.LocalPlayer
 
-    loadInterior("interior", false, "MainMap!Fall")
-    task.wait(0.5)
+    loadInterior("interior", false, "MainMap!Fall")
+    task.wait(0.5)
 
-    -- YOUR 28 CAPTURED COORDINATES (now 29)
-    local step_positions = {
-        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
-        Vector3.new(-338.49, 34.48, -1447.55),
-        Vector3.new(-343.19, 36.64, -1446.23),
-        Vector3.new(-345.65, 38.63, -1442.83),
-        Vector3.new(-349.2, 40.55, -1439.78),
-        Vector3.new(-350.44, 42.8, -1435.09),
-        Vector3.new(-351.23, 44.26, -1431.61),
-        Vector3.new(-350.76, 46.42, -1426.64),
-        Vector3.new(-348.43, 48.89, -1421.59),
-        Vector3.new(-345.55, 50.33, -1419.6),
-        Vector3.new(-341.97, 52.25, -1417.48),
-        Vector3.new(-337.78, 54.32, -1415.81),
-        Vector3.new(-333.76, 56.16, -1414.92),
-        Vector3.new(-328.45, 58.66, -1415.77),
-        Vector3.new(-324.91, 60.22, -1417),
-        Vector3.new(-321.42, 62.31, -1420.06),
-        Vector3.new(-319.07, 64.12, -1423.32),
-        Vector3.new(-318.95, 65.77, -1426.79),
-        Vector3.new(-318.72, 68.21, -1431.8),
-        Vector3.new(-318.53, 70.24, -1436.03),
-        Vector3.new(-319.19, 71.85, -1439.38),
-        Vector3.new(-321.86, 74.05, -1443.46),
-        Vector3.new(-325.87, 76.42, -1446.56),
-        Vector3.new(-329.74, 78.31, -1448.4),
-        Vector3.new(-333.65, 80.09, -1449.11),
-        Vector3.new(-337.63, 82.19, -1446.86),
-        Vector3.new(-341.83, 84.57, -1444.76),
-        Vector3.new(-345.98, 86.8, -1442.68), 
-        Vector3.new(-350.2, 89.1, -1440.5),
-    }
+    -- YOUR 28 CAPTURED COORDINATES (now 29)
+    local step_positions = {
+        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
+        Vector3.new(-338.49, 34.48, -1447.55),
+        Vector3.new(-343.19, 36.64, -1446.23),
+        Vector3.new(-345.65, 38.63, -1442.83),
+        Vector3.new(-349.2, 40.55, -1439.78),
+        Vector3.new(-350.44, 42.8, -1435.09),
+        Vector3.new(-351.23, 44.26, -1431.61),
+        Vector3.new(-350.76, 46.42, -1426.64),
+        Vector3.new(-348.43, 48.89, -1421.59),
+        Vector3.new(-345.55, 50.33, -1419.6),
+        Vector3.new(-341.97, 52.25, -1417.48),
+        Vector3.new(-337.78, 54.32, -1415.81),
+        Vector3.new(-333.76, 56.16, -1414.92),
+        Vector3.new(-328.45, 58.66, -1415.77),
+        Vector3.new(-324.91, 60.22, -1417),
+        Vector3.new(-321.42, 62.31, -1420.06),
+        Vector3.new(-319.07, 64.12, -1423.32),
+        Vector3.new(-318.95, 65.77, -1426.79),
+        Vector3.new(-318.72, 68.21, -1431.8),
+        Vector3.new(-318.53, 70.24, -1436.03),
+        Vector3.new(-319.19, 71.85, -1439.38),
+        Vector3.new(-321.86, 74.05, -1443.46),
+        Vector3.new(-325.87, 76.42, -1446.56),
+        Vector3.new(-329.74, 78.31, -1448.4),
+        Vector3.new(-333.65, 80.09, -1449.11),
+        Vector3.new(-337.63, 82.19, -1446.86),
+        Vector3.new(-341.83, 84.57, -1444.76),
+        Vector3.new(-345.98, 86.8, -1442.68), 
+        Vector3.new(-350.2, 89.1, -1440.5),
+    }
 
-    local character = plr.Character or plr.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    
-    local oldPos = rootPart.CFrame
+    local character = plr.Character or plr.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    local oldPos = rootPart.CFrame
 
-    -- Sequentially teleport up each step
-    for _, position in ipairs(step_positions) do
-        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
-    end
+    -- Sequentially teleport up each step
+    for _, position in ipairs(step_positions) do
+        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
+        task.wait(0.5) -- Changed from 0.4 to 0.5 seconds
+    end
 
-    -- Call the required function to clear the ailment.
-    -- The game sometimes registers the completion after a short wait at the top.
-    task.wait(1) 
-    
-    -- Corrected ailment name and wait
-    waitForAilmentFinish("scale_the_organ", nil, "baby")
-    
-    -- Return to original spot
-    rootPart.CFrame = oldPos
+    -- Call the required function to clear the ailment.
+    -- The game sometimes registers the completion after a short wait at the top.
+    task.wait(1) 
+    
+    -- Corrected ailment name and wait
+    waitForAilmentFinish("scale_the_organ", nil, "baby")
+    
+    -- Return to original spot
+    rootPart.CFrame = oldPos
 end,
     ["hungry"] = function()
         waitForAilmentFinish("hungry", eatFood, "baby")
@@ -1729,4 +1686,3 @@ local function init()
 end
 task.wait(7)
 init()
-adopt/adopt.lua at main · greg66n/adopt
