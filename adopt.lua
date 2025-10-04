@@ -104,7 +104,7 @@ local function createGUI()
     title.TextColor3 = Color3.fromRGB(50, 150, 255) -- Lighter blue font
     title.Size = UDim2.new(0, 260, 0, 82)
     title.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    title.Text = "Zotti autofarm"
+    title.Text = ""
     title.Name = "Title"
     title.Position = UDim2.new(0.45, 0, 0.116, 0)
 
@@ -218,6 +218,195 @@ local function formatTime(elapsedTime)
     local seconds = math.floor(elapsedTime % 60)
     local milliseconds = math.floor((elapsedTime * 1000) % 1000)
     return string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
+end
+-- Define minigame helper functions based on your script's structure
+-- The most common and robust way to execute these system calls.
+local function loadInteriorForJoin(name)
+    -- 1. Ensure the thread has elevated privileges for system calls
+    setthreadidentity(2) 
+    
+    local Fsys = game:GetService("ReplicatedStorage"):WaitForChild("Fsys", 5)
+    if not Fsys then warn("[Hauntlet] Fsys module not found.") end
+    
+    -- 2. Execute the module loading and entry in a single, reliable block
+    local success, result = pcall(function()
+        local FsysModule = require(Fsys)
+        local load = FsysModule.load
+        local interiors = load("InteriorsM")
+        local enter = interiors.enter
+        
+        -- Directly call 'enter' on the current thread, passing necessary arguments
+        -- task.spawn is often unreliable for passing remote arguments
+        enter(name, "", {})
+        
+        return true
+    end)
+
+    if not success or not result then
+        warn(string.format("[Hauntlet] CRITICAL FAILURE: Interior load failed! Error: %s", tostring(result)))
+    end
+    
+    -- 3. Reset identity immediately after the operation
+    setthreadidentity(8) 
+end
+
+-- New primary function to be called inside your main farming loop.
+local function checkAndJoinHauntlet()
+    -- Ensure minigame functions are available (assuming global scope based on your script)
+    if not liveopstime or not getminigametable then
+        return 
+    end
+
+    local minigamet = getminigametable()
+    
+    -- Check if the minigame join window is approaching (e.g., less than 30 seconds)
+    local timeUntilJoin = liveopstime.get_time_until(minigamet.join_zone_helper:get_next_time())
+    
+    if timeUntilJoin and timeUntilJoin > 0 and timeUntilJoin < 30 then
+        warn(string.format("[Hauntlet] Join window detected (Time until next join: %d seconds). Initiating join sequence.", timeUntilJoin))
+
+        -- Execute the join sequence:
+        loadInteriorForJoin("MainMap!Fall")
+        task.wait(2) -- Wait for the map to load and character to be placed
+        
+        -- INVOKE SERVER JOIN
+        local joinRemote = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("HalloweenEventAPI/JoinMinigame", 5)
+        if joinRemote then
+            local success, result = pcall(function()
+                joinRemote:InvokeServer() 
+            end)
+
+            if success and result and result.success then
+                warn("[Hauntlet] Server Invocation SUCCESS! You should be teleporting now.")
+            else
+                warn("[Hauntlet] Server Invocation FAILED. Result: " .. tostring(result))
+            end
+        end
+        
+        -- Now, we force the main thread to WAIT for the minigame to end.
+        local waitTime = 7 * 60 + 30 
+        warn(string.format("[Hauntlet] Join sequence complete. Thread sleeping for ~%d seconds until minigame is over...", waitTime))
+        
+        task.wait(waitTime) 
+        
+        warn("[Hauntlet] Minigame wait complete. Resuming autofarm loop.")
+        return true
+    end
+    
+    return false
+end
+
+local function tryJoinHauntlet()
+    local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
+    
+    warn("[Hauntlet ACTION] Executing interior load and join.")
+    
+    -- 1. Load the interior map (This is the "teleport")
+    loadInteriorForJoin("MainMap!Fall")
+    task.wait(1) 
+    
+    -- 2. INVOKE SERVER JOIN
+    local joinRemote = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("HalloweenEventAPI/JoinMinigame", 5)
+    if joinRemote then
+        local success, result = pcall(function()
+            joinRemote:InvokeServer() 
+        end)
+
+        if success and result and result.success then
+            warn("[Hauntlet] Server Invocation SUCCESS! Entering minigame.")
+            -- We now let the main autofarm loop and your waitforailmentfinish logic handle the rest!
+            return true
+        else
+            warn("[Hauntlet] Server Invocation FAILED. Result: " .. tostring(result))
+        end
+    end
+    
+    -- Failsafe: return to old position if join failed or remote not found
+    plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
+    return false
+end
+local function autoClaimTreatBag()
+    -- Function to execute the remote bypass and claim logic
+    local function claimBag()
+        warn("[TreatBag] Executing remote bypass and claiming Treat Bag...")
+        
+        -- Bypass/Execution Code
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+        task.wait(0.1)
+        
+        -- Invoke the server to claim the bag
+        local success, result = pcall(function()
+            game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("HalloweenEventAPI/ClaimTreatBag"):InvokeServer()
+        end)
+        
+        if success and result ~= nil then
+             warn("[TreatBag] Claim successful.")
+        elseif not success then
+             warn("[TreatBag] Claim failed (Bypass may not be loaded or remote changed): " .. tostring(result))
+        else
+             warn("[TreatBag] Claim completed (Response unknown).")
+        end
+    end
+
+    -- 1. Execute once at the start
+    claimBag()
+
+    -- 2. Loop and execute every 10 minutes (600 seconds)
+    while task.wait(600) do
+        claimBag()
+    end
+end
+
+-- Helper function defined once outside the main loop
+local function loadInteriorForJoin(name)
+    -- Setting identity is often required to access and call internal modules/remotes
+    setthreadidentity(2) 
+    
+    local Fsys = game:GetService("ReplicatedStorage"):WaitForChild("Fsys", 5)
+    if not Fsys then warn("[Hauntlet] Fsys module not found. Cannot load interior.") return end
+    
+    local success, load = pcall(function() return require(Fsys).load end)
+    if not success or not load then warn("[Hauntlet] Fsys.load failed.") return end
+
+    local interiors = load("InteriorsM")
+    local enter = interiors.enter
+    
+    -- Execute the interior load on a new thread
+    task.spawn(enter, name, "", {}) 
+    
+    -- Reset identity after execution
+    setthreadidentity(8) 
+end
+
+local function autoJoinPoller()
+    local MinigameAPI = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("MinigameAPI", 5)
+    local minigameService = require(MinigameAPI)
+    
+    -- We assume the functions are globally defined based on your snippet.
+    -- If 'liveopstime' and 'getminigametable' are not defined globally, this will fail.
+    if not liveopstime or not getminigametable then
+        warn("[Hauntlet] ERROR: liveopstime or getminigametable not defined. Cannot poll minigame timer.")
+        return 
+    end
+    
+    while task.wait(5) do
+        local minigamet = getminigametable()
+        
+        -- Check if the timer is approaching the join window (e.g., within 30 seconds of joining)
+        local timeUntilJoin = liveopstime.get_time_until(minigamet.join_zone_helper:get_next_time())
+        
+        if timeUntilJoin and timeUntilJoin <= 30 then
+            -- Attempt to join
+            local joined = tryJoinHauntlet()
+            
+            if joined then
+                warn("[Hauntlet] Successfully joined minigame. Poller suspended for 8 minutes.")
+                task.wait(8 * 60) -- Wait for the minigame to fully finish before checking again
+            else
+                warn("[Hauntlet] Join failed. Continuing to poll.")
+            end
+        end
+    end
 end
 
 local function getPetKind()
@@ -807,6 +996,67 @@ local function waitForAilmentFinish(ailment, callback, ailmentType, pet)
 end
 
 local ailmentFunctions = {
+["scale_the_organ"] = function(pet, ailmentType)
+    local plr = game.Players.LocalPlayer
+
+    loadInterior("interior", false, "MainMap!Fall")
+    task.wait(0.5)
+
+    -- YOUR 28 CAPTURED COORDINATES
+    local step_positions = {
+        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
+        Vector3.new(-338.49, 34.48, -1447.55),
+        Vector3.new(-343.19, 36.64, -1446.23),
+        Vector3.new(-345.65, 38.63, -1442.83),
+        Vector3.new(-349.2, 40.55, -1439.78),
+        Vector3.new(-350.44, 42.8, -1435.09),
+        Vector3.new(-351.23, 44.26, -1431.61),
+        Vector3.new(-350.76, 46.42, -1426.64),
+        Vector3.new(-348.43, 48.89, -1421.59),
+        Vector3.new(-345.55, 50.33, -1419.6),
+        Vector3.new(-341.97, 52.25, -1417.48),
+        Vector3.new(-337.78, 54.32, -1415.81),
+        Vector3.new(-333.76, 56.16, -1414.92),
+        Vector3.new(-328.45, 58.66, -1415.77),
+        Vector3.new(-324.91, 60.22, -1417),
+        Vector3.new(-321.42, 62.31, -1420.06),
+        Vector3.new(-319.07, 64.12, -1423.32),
+        Vector3.new(-318.95, 65.77, -1426.79),
+        Vector3.new(-318.72, 68.21, -1431.8),
+        Vector3.new(-318.53, 70.24, -1436.03),
+        Vector3.new(-319.19, 71.85, -1439.38),
+        Vector3.new(-321.86, 74.05, -1443.46),
+        Vector3.new(-325.87, 76.42, -1446.56),
+        Vector3.new(-329.74, 78.31, -1448.4),
+        Vector3.new(-333.65, 80.09, -1449.11),
+        Vector3.new(-337.63, 82.19, -1446.86),
+        Vector3.new(-341.83, 84.57, -1444.76),
+        Vector3.new(-345.98, 86.8, -1442.68), 
+        Vector3.new(-350.2, 89.1, -1440.5),
+    }
+
+    local character = plr.Character or plr.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    local oldPos = rootPart.CFrame
+
+    resetPet(pet)
+    task.wait(0.5)
+
+    -- Sequentially teleport up each step
+    for _, position in ipairs(step_positions) do
+        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
+        task.wait(0.4) -- Wait 0.4 seconds between each step
+    end
+
+    task.wait(1) 
+    
+    -- Wait for the ailment to finish
+    waitForAilmentFinish("scale_the_organ", nil, ailmentType, pet)
+    
+    -- Return to original spot
+    rootPart.CFrame = oldPos
+end,
     ["toilet"] = function(pet)
         loadInterior("house", false, plr)
         resetPet(pet)
@@ -1017,6 +1267,67 @@ end,
 }
 
 local babyAilmentsFunctions = {
+["scale_the_organ"] = function()
+    -- Define the player locally for Delta/Exploit compatibility
+    local plr = game.Players.LocalPlayer
+
+    loadInterior("interior", false, "MainMap!Fall")
+    task.wait(0.5)
+
+    -- YOUR 28 CAPTURED COORDINATES
+    local step_positions = {
+        Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
+        Vector3.new(-338.49, 34.48, -1447.55),
+        Vector3.new(-343.19, 36.64, -1446.23),
+        Vector3.new(-345.65, 38.63, -1442.83),
+        Vector3.new(-349.2, 40.55, -1439.78),
+        Vector3.new(-350.44, 42.8, -1435.09),
+        Vector3.new(-351.23, 44.26, -1431.61),
+        Vector3.new(-350.76, 46.42, -1426.64),
+        Vector3.new(-348.43, 48.89, -1421.59),
+        Vector3.new(-345.55, 50.33, -1419.6),
+        Vector3.new(-341.97, 52.25, -1417.48),
+        Vector3.new(-337.78, 54.32, -1415.81),
+        Vector3.new(-333.76, 56.16, -1414.92),
+        Vector3.new(-328.45, 58.66, -1415.77),
+        Vector3.new(-324.91, 60.22, -1417),
+        Vector3.new(-321.42, 62.31, -1420.06),
+        Vector3.new(-319.07, 64.12, -1423.32),
+        Vector3.new(-318.95, 65.77, -1426.79),
+        Vector3.new(-318.72, 68.21, -1431.8),
+        Vector3.new(-318.53, 70.24, -1436.03),
+        Vector3.new(-319.19, 71.85, -1439.38),
+        Vector3.new(-321.86, 74.05, -1443.46),
+        Vector3.new(-325.87, 76.42, -1446.56),
+        Vector3.new(-329.74, 78.31, -1448.4),
+        Vector3.new(-333.65, 80.09, -1449.11),
+        Vector3.new(-337.63, 82.19, -1446.86),
+        Vector3.new(-341.83, 84.57, -1444.76),
+        Vector3.new(-345.98, 86.8, -1442.68), 
+        Vector3.new(-350.2, 89.1, -1440.5),
+    }
+
+    local character = plr.Character or plr.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    local oldPos = rootPart.CFrame
+
+    -- Sequentially teleport up each step
+    for _, position in ipairs(step_positions) do
+        rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
+        task.wait(0.4) -- Wait 0.4 seconds between each step for animation
+    end
+
+    -- Call the required function to clear the ailment.
+    -- The game sometimes registers the completion after a short wait at the top.
+    task.wait(1) 
+    
+    -- Corrected ailment name and wait
+    waitForAilmentFinish("scale_the_organ", nil, "baby")
+    
+    -- Return to original spot
+    rootPart.CFrame = oldPos
+end,
     ["hungry"] = function()
         waitForAilmentFinish("hungry", eatFood, "baby")
     end,
@@ -1352,6 +1663,8 @@ local function init()
     antiAFK()
     task.spawn(updateGUI)
     task.spawn(webhookpost)
+    task.spawn(autoClaimTreatBag)
+    task.spawn(autoJoinPoller)
 	if not (#get_items_of_kind("trade_license", "toys") > 0) then
 		loadInterior("interior", true, "SafetyHub")
 		router.get("SettingsAPI/SetBooleanFlag"):FireServer(
