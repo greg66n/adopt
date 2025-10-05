@@ -998,10 +998,8 @@ end
 local ailmentFunctions = {
 ["scale_the_organ"] = function(pet, ailmentType)
     local plr = game.Players.LocalPlayer
-
     loadInterior("interior", false, "MainMap!Fall")
     task.wait(0.5)
-
     -- YOUR 28 CAPTURED COORDINATES
     local step_positions = {
         Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
@@ -1034,21 +1032,17 @@ local ailmentFunctions = {
         Vector3.new(-345.98, 86.8, -1442.68), 
         Vector3.new(-350.2, 89.1, -1440.5),
     }
-
     local character = plr.Character or plr.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     
     local oldPos = rootPart.CFrame
-
     resetPet(pet)
     task.wait(0.5)
-
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.4) -- Wait 0.4 seconds between each step
+        task.wait(1) -- Wait 1 second between each step
     end
-
     task.wait(1) 
     
     -- Wait for the ailment to finish
@@ -1268,12 +1262,9 @@ end,
 
 local babyAilmentsFunctions = {
 ["scale_the_organ"] = function()
-    -- Define the player locally for Delta/Exploit compatibility
     local plr = game.Players.LocalPlayer
-
     loadInterior("interior", false, "MainMap!Fall")
     task.wait(0.5)
-
     -- YOUR 28 CAPTURED COORDINATES
     local step_positions = {
         Vector3.new(-335.31, 33.05, -1448.59), -- Step 1
@@ -1306,24 +1297,21 @@ local babyAilmentsFunctions = {
         Vector3.new(-345.98, 86.8, -1442.68), 
         Vector3.new(-350.2, 89.1, -1440.5),
     }
-
     local character = plr.Character or plr.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     
     local oldPos = rootPart.CFrame
-
+    resetPet(pet)
+    task.wait(0.5)
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(0.4) -- Wait 0.4 seconds between each step for animation
+        task.wait(1) -- Wait 1 second between each step
     end
-
-    -- Call the required function to clear the ailment.
-    -- The game sometimes registers the completion after a short wait at the top.
     task.wait(1) 
     
-    -- Corrected ailment name and wait
-    waitForAilmentFinish("scale_the_organ", nil, "baby")
+    -- Wait for the ailment to finish
+    waitForAilmentFinish("scale_the_organ", nil, ailmentType, pet)
     
     -- Return to original spot
     rootPart.CFrame = oldPos
