@@ -1041,7 +1041,7 @@ local ailmentFunctions = {
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(1) -- Wait 1 second between each step
+        task.wait(1.5) -- Wait 1 second between each step
     end
     task.wait(1) 
     
@@ -1306,7 +1306,7 @@ local babyAilmentsFunctions = {
     -- Sequentially teleport up each step
     for _, position in ipairs(step_positions) do
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(1) -- Wait 1 second between each step
+        task.wait(1.5) -- Wait 1 second between each step
     end
     task.wait(1) 
     
