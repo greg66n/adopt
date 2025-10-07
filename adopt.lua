@@ -378,36 +378,6 @@ local function loadInteriorForJoin(name)
     setthreadidentity(8) 
 end
 
-local function autoJoinPoller()
-    local MinigameAPI = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("MinigameAPI", 5)
-    local minigameService = require(MinigameAPI)
-    
-    -- We assume the functions are globally defined based on your snippet.
-    -- If 'liveopstime' and 'getminigametable' are not defined globally, this will fail.
-    if not liveopstime or not getminigametable then
-        warn("[Hauntlet] ERROR: liveopstime or getminigametable not defined. Cannot poll minigame timer.")
-        return 
-    end
-    
-    while task.wait(5) do
-        local minigamet = getminigametable()
-        
-        -- Check if the timer is approaching the join window (e.g., within 30 seconds of joining)
-        local timeUntilJoin = liveopstime.get_time_until(minigamet.join_zone_helper:get_next_time())
-        
-        if timeUntilJoin and timeUntilJoin <= 30 then
-            -- Attempt to join
-            local joined = tryJoinHauntlet()
-            
-            if joined then
-                warn("[Hauntlet] Successfully joined minigame. Poller suspended for 8 minutes.")
-                task.wait(8 * 60) -- Wait for the minigame to fully finish before checking again
-            else
-                warn("[Hauntlet] Join failed. Continuing to poll.")
-            end
-        end
-    end
-end
 
 local function getPetKind()
     for id, petData in pairs(inventorydb.pets) do
