@@ -947,7 +947,7 @@ local ailmentFunctions = {
     for i = 2, #step_positions do -- Start loop at index 2
         local position = step_positions[i]
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(1.5) -- Wait 1.5 seconds between each step
+        task.wait(2) -- Wait 1.5 seconds between each step
     end
     
     task.wait(1)
