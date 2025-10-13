@@ -51,7 +51,7 @@ local router = require(ReplicatedStorage.ClientModules.Core.RouterClient.RouterC
 local cd = require(ReplicatedStorage.ClientModules.Core.ClientData)
 local petentitymanager = require(ReplicatedStorage.ClientModules.Game.PetEntities.PetEntityManager)
 local inventorydb = require(ReplicatedStorage.ClientDB.Inventory.InventoryDB)
-
+local minigamemanager = require(game:GetService("ReplicatedStorage").ClientModules.Game.MinigameClientManager)
 local terrainhelper = require(game:GetService("ReplicatedStorage").SharedModules.TerrainHelper)
 local Fsys = require(ReplicatedStorage.Fsys)
 local liveopstime = Fsys.load("LiveOpsTime")
@@ -219,112 +219,9 @@ local function formatTime(elapsedTime)
     local milliseconds = math.floor((elapsedTime * 1000) % 1000)
     return string.format("%02d:%02d.%03d", minutes, seconds, milliseconds)
 end
--- Define minigame helper functions based on your script's structure
--- The most common and robust way to execute these system calls.
-local function loadInteriorForJoin(name)
-    -- 1. Ensure the thread has elevated privileges for system calls
-    setthreadidentity(2) 
-    
-    local Fsys = game:GetService("ReplicatedStorage"):WaitForChild("Fsys", 5)
-    if not Fsys then warn("[Hauntlet] Fsys module not found.") end
-    
-    -- 2. Execute the module loading and entry in a single, reliable block
-    local success, result = pcall(function()
-        local FsysModule = require(Fsys)
-        local load = FsysModule.load
-        local interiors = load("InteriorsM")
-        local enter = interiors.enter
-        
-        -- Directly call 'enter' on the current thread, passing necessary arguments
-        -- task.spawn is often unreliable for passing remote arguments
-        enter(name, "", {})
-        
-        return true
-    end)
 
-    if not success or not result then
-        warn(string.format("[Hauntlet] CRITICAL FAILURE: Interior load failed! Error: %s", tostring(result)))
-    end
-    
-    -- 3. Reset identity immediately after the operation
-    setthreadidentity(8) 
-end
 
--- New primary function to be called inside your main farming loop.
-local function checkAndJoinHauntlet()
-    -- Ensure minigame functions are available (assuming global scope based on your script)
-    if not liveopstime or not getminigametable then
-        return 
-    end
-
-    local minigamet = getminigametable()
-    
-    -- Check if the minigame join window is approaching (e.g., less than 30 seconds)
-    local timeUntilJoin = liveopstime.get_time_until(minigamet.join_zone_helper:get_next_time())
-    
-    if timeUntilJoin and timeUntilJoin > 0 and timeUntilJoin < 30 then
-        warn(string.format("[Hauntlet] Join window detected (Time until next join: %d seconds). Initiating join sequence.", timeUntilJoin))
-
-        -- Execute the join sequence:
-        loadInteriorForJoin("MainMap!Fall")
-        task.wait(2) -- Wait for the map to load and character to be placed
-        
-        -- INVOKE SERVER JOIN
-        local joinRemote = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("HalloweenEventAPI/JoinMinigame", 5)
-        if joinRemote then
-            local success, result = pcall(function()
-                joinRemote:InvokeServer() 
-            end)
-
-            if success and result and result.success then
-                warn("[Hauntlet] Server Invocation SUCCESS! You should be teleporting now.")
-            else
-                warn("[Hauntlet] Server Invocation FAILED. Result: " .. tostring(result))
-            end
-        end
-        
-        -- Now, we force the main thread to WAIT for the minigame to end.
-        local waitTime = 7 * 60 + 30 
-        warn(string.format("[Hauntlet] Join sequence complete. Thread sleeping for ~%d seconds until minigame is over...", waitTime))
-        
-        task.wait(waitTime) 
-        
-        warn("[Hauntlet] Minigame wait complete. Resuming autofarm loop.")
-        return true
-    end
-    
-    return false
-end
-
-local function tryJoinHauntlet()
-    local oldPos = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-    
-    warn("[Hauntlet ACTION] Executing interior load and join.")
-    
-    -- 1. Load the interior map (This is the "teleport")
-    loadInteriorForJoin("MainMap!Fall")
-    task.wait(1) 
-    
-    -- 2. INVOKE SERVER JOIN
-    local joinRemote = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("HalloweenEventAPI/JoinMinigame", 5)
-    if joinRemote then
-        local success, result = pcall(function()
-            joinRemote:InvokeServer() 
-        end)
-
-        if success and result and result.success then
-            warn("[Hauntlet] Server Invocation SUCCESS! Entering minigame.")
-            -- We now let the main autofarm loop and your waitforailmentfinish logic handle the rest!
-            return true
-        else
-            warn("[Hauntlet] Server Invocation FAILED. Result: " .. tostring(result))
-        end
-    end
-    
-    -- Failsafe: return to old position if join failed or remote not found
-    plr.Character:WaitForChild("HumanoidRootPart").CFrame = oldPos
-    return false
-end
+   
 local function autoClaimTreatBag()
     -- Function to execute the remote bypass and claim logic
     local function claimBag()
@@ -357,57 +254,9 @@ local function autoClaimTreatBag()
     end
 end
 
--- Helper function defined once outside the main loop
-local function loadInteriorForJoin(name)
-    -- Setting identity is often required to access and call internal modules/remotes
-    setthreadidentity(2) 
-    
-    local Fsys = game:GetService("ReplicatedStorage"):WaitForChild("Fsys", 5)
-    if not Fsys then warn("[Hauntlet] Fsys module not found. Cannot load interior.") return end
-    
-    local success, load = pcall(function() return require(Fsys).load end)
-    if not success or not load then warn("[Hauntlet] Fsys.load failed.") return end
 
-    local interiors = load("InteriorsM")
-    local enter = interiors.enter
-    
-    -- Execute the interior load on a new thread
-    task.spawn(enter, name, "", {}) 
-    
-    -- Reset identity after execution
-    setthreadidentity(8) 
-end
 
-local function autoJoinPoller()
-    local MinigameAPI = game:GetService("ReplicatedStorage"):WaitForChild("API", 5):WaitForChild("MinigameAPI", 5)
-    local minigameService = require(MinigameAPI)
-    
-    -- We assume the functions are globally defined based on your snippet.
-    -- If 'liveopstime' and 'getminigametable' are not defined globally, this will fail.
-    if not liveopstime or not getminigametable then
-        warn("[Hauntlet] ERROR: liveopstime or getminigametable not defined. Cannot poll minigame timer.")
-        return 
-    end
-    
-    while task.wait(5) do
-        local minigamet = getminigametable()
-        
-        -- Check if the timer is approaching the join window (e.g., within 30 seconds of joining)
-        local timeUntilJoin = liveopstime.get_time_until(minigamet.join_zone_helper:get_next_time())
-        
-        if timeUntilJoin and timeUntilJoin <= 30 then
-            -- Attempt to join
-            local joined = tryJoinHauntlet()
-            
-            if joined then
-                warn("[Hauntlet] Successfully joined minigame. Poller suspended for 8 minutes.")
-                task.wait(8 * 60) -- Wait for the minigame to fully finish before checking again
-            else
-                warn("[Hauntlet] Join failed. Continuing to poll.")
-            end
-        end
-    end
-end
+
 
 local function getPetKind()
     for id, petData in pairs(inventorydb.pets) do
@@ -969,8 +818,57 @@ local function antiAFK()
     end
 end
 
+local function getcurrentminigame()
+    local currentminigame
+    for i,v in pairs(minigamemanager.get_all()) do
+        if string.find(i,"::") then
+            currentminigame = v
+        end
+    end
+    return currentminigame
+end
+
+local function canminigame()
+    for i,v in pairs(minigamemanager.get_all()) do
+        if v.join_zone_helper and v.join_zone_helper:get_next_time() and liveopstime.get_time_until(v.join_zone_helper:get_next_time()) < 70 or v.is_participating then
+            return true
+        end
+    end
+    return false
+end
+
+
 
 local startAutoFarm
+-- Check for upcoming minigames (Hauntlet, Ghost Hunt, etc.)
+if canminigame() then
+    for name, gameData in pairs(minigamemanager.get_all()) do
+        if gameData.join_zone_helper 
+           and gameData.join_zone_helper.get_next_time 
+           and liveopstime.get_time_until(gameData.join_zone_helper:get_next_time()) < 15 then
+
+            warn("[MINIGAME] Joining upcoming event: " .. tostring(name))
+            
+            -- Try to queue for the event
+            pcall(function()
+                gameData.join_zone_helper:on_enter()
+                gameData.join_zone_helper:update({is_in_queue = true})
+            end)
+
+            -- Wait until we’ve joined or the interior loads
+            local start = tick()
+            repeat
+                task.wait(0.5)
+                if gameData.is_participating 
+                   or workspace.Interiors:FindFirstChildWhichIsA("Model") then
+                    warn("[MINIGAME] Successfully joined: " .. tostring(name))
+                    break
+                end
+            until tick() - start > 25  -- failsafe timeout
+        end
+    end
+end
+
 -- Ailment Handling
 -- Fix for the waitForAilmentFinish function - this is likely where the syntax error is
 local function waitForAilmentFinish(ailment, callback, ailmentType, pet)
@@ -1029,7 +927,7 @@ local ailmentFunctions = {
         Vector3.new(-333.65, 80.09, -1449.11),
         Vector3.new(-337.63, 82.19, -1446.86),
         Vector3.new(-341.83, 84.57, -1444.76),
-        Vector3.new(-345.98, 86.8, -1442.68), 
+        Vector3.new(-345.98, 86.8, -1442.68),
         Vector3.new(-350.2, 89.1, -1440.5),
     }
     local character = plr.Character or plr.CharacterAdded:Wait()
@@ -1038,12 +936,21 @@ local ailmentFunctions = {
     local oldPos = rootPart.CFrame
     resetPet(pet)
     task.wait(0.5)
-    -- Sequentially teleport up each step
-    for _, position in ipairs(step_positions) do
+    
+    -- Teleport to the FIRST step (Step 1)
+    rootPart.CFrame = CFrame.new(step_positions[1]) + Vector3.new(0, 3, 0)
+    
+    -- ADDED: Wait for 5 seconds on the first step
+    task.wait(5)
+    
+    -- Sequentially teleport up the REMAINING steps (starting from Step 2)
+    for i = 2, #step_positions do -- Start loop at index 2
+        local position = step_positions[i]
         rootPart.CFrame = CFrame.new(position) + Vector3.new(0, 3, 0)
-        task.wait(1.5) -- Wait 1 second between each step
+        task.wait(1.5) -- Wait 1.5 seconds between each step
     end
-    task.wait(1) 
+    
+    task.wait(1)
     
     -- Wait for the ailment to finish
     waitForAilmentFinish("scale_the_organ", nil, ailmentType, pet)
@@ -1154,6 +1061,17 @@ end,
     
     ["walk"] = function(pet)
 		router.get("AdoptAPI/HoldBaby"):FireServer(
+    		getPetChar(pet)
+		)
+        waitForAilmentFinish("walk", randomMove, "pet", pet)
+		router.get("AdoptAPI/EjectBaby"):FireServer(
+			getPetChar(pet)
+		)
+		plr.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(100, 1002, 100)
+    end,
+
+["wear_scare"] = function(pet)
+router.get("AdoptAPI/HoldBaby"):FireServer(
     		getPetChar(pet)
 		)
         waitForAilmentFinish("walk", randomMove, "pet", pet)
@@ -1340,6 +1258,33 @@ end,
         router.get("AdoptAPI/ExitSeatStates"):FireServer()
     end
 }
+-- Main autofarm loop
+function startAutoFarm()
+    warn("[FARM] Starting auto farm loop...")
+    antiAFK()
+
+    while task.wait(1) do
+        local petId = getPetId()
+        if not petId then
+            warn("[FARM] No valid pet found, waiting...")
+            task.wait(10)
+            continue
+        end
+
+        local ailments = getAilments("pet", petId)
+        for ailment, _ in pairs(ailments) do
+            if ailmentFunctions[ailment] then
+                warn("[FARM] Handling ailment: " .. ailment)
+                ailmentFunctions[ailment](petId, "pet")
+            else
+                warn("[FARM] Unknown ailment: " .. tostring(ailment))
+            end
+        end
+    end
+end
+
+task.spawn(startAutoFarm)
+
 local function handlelures()
 	loadInterior("house", false, plr)
 	getFurnitures()
@@ -1368,6 +1313,44 @@ local function handlelures()
 		)
 	end
 end
+local function checkminigame()
+    for i, v in pairs(minigamemanager.get_all()) do
+        if not string.find(i, "::") and v.join_zone_helper and v.join_zone_helper:get_next_time() and liveopstime.get_time_until(v.join_zone_helper:get_next_time()) < 70 then
+            loadInterior("interior", false, "MainMap")
+            v.is_queued = true
+            v.join_zone_helper:on_enter()
+            v.join_zone_helper:update({is_in_queue = true})
+            local timeElapsed = tick()
+            repeat 
+                task.wait() 
+            until (v.is_participating and workspace.Interiors:FindFirstChildWhichIsA("Model") and string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "::")) or 
+                    (tick() - timeElapsed > 100)
+            
+            if tick() - timeElapsed > 100 then
+                -- Continue to next iteration
+            else
+                task.wait(1)
+                setthreadidentity(8)
+                gui.Frame.Title.Task.Text = "Current task: " .. i
+                minigamefuncs[i](v)
+                repeat task.wait() until workspace.Interiors:FindFirstChildWhichIsA("Model") and string.find(workspace.Interiors:FindFirstChildWhichIsA("Model").Name, "MainMap")
+                task.wait(5)
+                plr.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                plr.Character.HumanoidRootPart.CFrame = CFrame.new(100, 1005, 100)
+                local TeamAPIChooseTeam = router.get("TeamAPI/ChooseTeam")
+                pcall(TeamAPIChooseTeam.InvokeServer,
+                    TeamAPIChooseTeam,
+                    "Babies",
+                    {
+                        dont_respawn = true,
+                        source_for_logging = "avatar_editor"
+                    }
+                )
+            end
+        end
+    end
+end
+
 local function questhandler()
 	local quests = cd.get("quest_manager").quests_cached
 	for i,v in pairs(quests) do
@@ -1491,23 +1474,34 @@ startAutoFarm = function()
         end
         
         -- Handle baby ailments if enabled
+               -- Handle baby ailments if enabled
         if getgenv().farmsettings.babyfarm then
-            for ailment, _ in pairs(getAilments("baby")) do
+            local babyAilments = getAilments("baby")
+
+            for ailment, _ in pairs(babyAilments) do
                 task.wait(0.1)
                 setthreadidentity(8)
                 gui.Frame.Title.Task.Text = "Current task: baby " .. ailment
-                
-                if not getAilments(currentPetId)[ailment] and not babyAilmentsFunctions[ailment] then
-                    ailmentFunctions[ailment](nil, "baby")
-                elseif babyAilmentsFunctions[ailment] then
+
+                if babyAilmentsFunctions[ailment] then
+                    -- use the dedicated baby function
                     babyAilmentsFunctions[ailment]()
+                elseif ailmentFunctions[ailment] then
+                    -- fallback to general ailment function if baby version missing
+                    ailmentFunctions[ailment](nil, "baby")
+                else
+                    warn("[BABY] Unknown baby ailment: " .. tostring(ailment))
                 end
-                
+
                 setthreadidentity(8)
                 gui.Frame.Title.Task.Text = "Current task: None"
             end
         end
+
         handlelures()
+
+
+
     end
 end
 -- GUI Update Functions
@@ -1652,7 +1646,7 @@ local function init()
     task.spawn(updateGUI)
     task.spawn(webhookpost)
     task.spawn(autoClaimTreatBag)
-    task.spawn(autoJoinPoller)
+    task.spawn(checkminigame)
 	if not (#get_items_of_kind("trade_license", "toys") > 0) then
 		loadInterior("interior", true, "SafetyHub")
 		router.get("SettingsAPI/SetBooleanFlag"):FireServer(
