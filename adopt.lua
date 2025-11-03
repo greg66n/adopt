@@ -1,5 +1,5 @@
 
-f plr.Character == nil then
+if plr.Character == nil then
     repeat 
         local playbutton = game:GetService("Players").LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame.Buttons.PlayButton
         firesignal(playbutton.MouseButton1Down)
