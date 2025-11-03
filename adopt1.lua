@@ -1,6 +1,11 @@
-----------------------------------------------------------
--- ONE-SHOT PURCHASE RUNNER (no infinite loop / no hang)
-----------------------------------------------------------
+if plr.Character == nil then
+    repeat 
+        local playbutton = game:GetService("Players").LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame.Buttons.PlayButton
+        firesignal(playbutton.MouseButton1Down)
+        firesignal(playbutton.MouseButton1Up)
+        firesignal(playbutton.MouseButton1Click)
+        task.wait(2)
+    until not (plr.Character == nil)
 if getgenv()._purchaseRunnerStarted then return end
 getgenv()._purchaseRunnerStarted = true
 
