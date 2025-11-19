@@ -1,15 +1,4 @@
-wait(5)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-wait(0.1)
-local args = {
-    "pet_accessories",
-    "watermelon_backpack", 
-    {
-        buy_count = 50
-    }
-}
-game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
-wait(1)
+
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --[[
