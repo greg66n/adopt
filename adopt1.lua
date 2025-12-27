@@ -1,4 +1,4 @@
-
+wait(900)
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --[[
