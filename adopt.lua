@@ -24,7 +24,7 @@ getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 2,
 
-    FOCUS_FARM_AGE_POTION = true, 
+    FOCUS_FARM_AGE_POTION = false, 
 
     PETS_TO_AGE_IN_PEN = {
         "pet_recycler_2025_basic_egg",
@@ -46,9 +46,9 @@ getgenv().SETTINGS = {
         "aztec_egg_2025_aztec_egg", 
     },
 
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
-        "moon_2025_glormy_dolphin",
+        "2d_tuesdays_2025_2d_kitty",
     },
 
     ENABLE_TRADE_COLLECTOR = true,
