@@ -19,7 +19,7 @@ repeat task.wait() until game:IsLoaded()
 
 -- Set default settings if not provided
 getgenv().farmsettings = getgenv().farmsettings or {
-    pet = "",
+    pet = "2d_tuesdays_2025_2d_kitty",
     babyfarm = true,
     switchpetsongrown = false,
     prioritizeeggs = false,
