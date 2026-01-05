@@ -9,6 +9,9 @@ local shoppingList = {
   ["gifts"] = {
         ["winter_2025_angus_box"] = 30,
         ["winter_2025_sticker_pack"] = 300
+        ["winter_2025_sticker_pack"] = 2
+    ["winter_2025_sticker_pack"] = 1
+    ["winter_2025_sticker_pack"] = 1
     
     },
     ["strollers"] = {
