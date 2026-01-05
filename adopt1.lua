@@ -9,6 +9,9 @@ local shoppingList = {
   ["gifts"] = {
         ["winter_2025_angus_box"] = 30,
         ["winter_2025_sticker_pack"] = 300
+        ["winter_2025_sticker_pack"] = 2
+    ["winter_2025_sticker_pack"] = 1
+    ["winter_2025_sticker_pack"] = 1
     
     },
     ["strollers"] = {
@@ -43,7 +46,15 @@ local shoppingList = {
     ["pets"] = {
         ["winter_2025_japanese_snow_fairy"] = 40, 
         ["winter_2025_samoyed"] = 40,
-        ["winter_2025_maine_coon"] = 32,
+        ["winter_2025_maine_coon"] = 4,
+     ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
+    ["winter_2025_maine_coon"] = 4,
         ["winter_2025_christmas_spirit"] = 2,
         ["winter_2025_humbug"] = 16,
         ["winter_2025_angus_bull"] = 1,
