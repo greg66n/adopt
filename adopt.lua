@@ -1,3 +1,89 @@
+wait(10)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+task.wait(0.5)
+
+local ShopAPI = game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitForChild("ShopAPI/BuyItem")
+
+-- SET QUANTITIES BELOW:
+local shoppingList = {
+  ["gifts"] = {
+        ["winter_2025_angus_box"] = 30,
+        ["winter_2025_sticker_pack"] = 300
+    
+    },
+    ["strollers"] = {
+        ["winter_2025_santas_helper_stroller"] = 1,
+        ["winter_2025_humbug_stroller"] = 1
+    },
+    ["transport"] = {
+        ["winter_2025_laser_disco_skates"] = 1,
+        ["winter_2025_gift_dropper_copter"] = 1
+    },
+    ["toys"] = {
+        ["winter_2025_star_topper_plush"] = 1,
+        ["winter_2025_golden_rings_flying_disc"] = 1,
+        ["winter_2025_holly_leash"] = 1,
+        ["winter_2025_mistletroll_friend_plush"] = 1,
+        ["winter_2025_badly_wrapped_toy_sword"] = 1
+    },
+    ["pet_accessories"] = {
+        ["winter_2025_santa_beard"] = 1,
+        ["winter_2025_snowstorm_hat"] = 1,
+        ["winter_2025_yarn_beanie_hat"] = 1,
+        ["winter_2025_ice_tiara"] = 1,
+        ["winter_2025_festive_striped_scarf"] = 1,
+        ["winter_2025_snowflake_earmuffs"] = 1,
+        ["winter_2025_nutcracker_hat"] = 1,
+        ["winter_2025_festive_antlers"] = 1,
+        ["winter_2025_bauble_necklace"] = 1,
+        ["winter_2025_toasty_mittens"] = 1,
+        ["winter_2025_2026_nye_glasses"] = 1,
+        ["winter_2025_gold_shimmery_cape"] = 1
+    },
+    ["pets"] = {
+        ["winter_2025_samoyed"] = 40,
+        ["winter_2025_maine_coon"] = 32,
+        ["winter_2025_christmas_spirit"] = 2,
+        ["winter_2025_humbug"] = 16,
+        ["winter_2025_angus_bull"] = 1,
+        ["winter_2025_turtle_doves"] = 16,
+        ["winter_2025_bunny_swirl"] = 1,
+        
+        ["winter_2025_mrs_whiskerpips"] = 1,
+        ["winter_2025_cozy_mistletroll"] = 8,
+        ["winter_2025_arctic_dusk_dragon"] = 1,
+        ["winter_2025_old_king_coal"] = 1,
+        ["winter_2025_xmas_tree_sasquatch"] = 1,
+        
+        ["winter_2025_snowball_pug"] = 1,
+        ["winter_2025_angus_calf"] = 1,
+        ["winter_2025_angus_cow"] = 1
+    }
+}
+
+--- Processing Loop ---
+print("Starting purchase sequence...")
+
+for category, items in pairs(shoppingList) do
+    for itemName, quantity in pairs(items) do
+        if quantity > 0 then
+            local args = {
+                category,
+                itemName,
+                { buy_count = quantity }
+            }
+            
+            -- Execution
+            ShopAPI:InvokeServer(unpack(args))
+            print("Purchased " .. quantity .. "x " .. itemName)
+            
+            -- Brief wait in between each item as requested
+            task.wait(0.1) 
+        end
+    end
+end
+
+print("All items processed successfully.")
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --[[
