@@ -41,6 +41,7 @@ local shoppingList = {
         ["winter_2025_gold_shimmery_cape"] = 1
     },
     ["pets"] = {
+        ["winter_2025_japanese_snow_fairy"] = 60, 
         ["winter_2025_samoyed"] = 40,
         ["winter_2025_maine_coon"] = 32,
         ["winter_2025_christmas_spirit"] = 2,
