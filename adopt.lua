@@ -8,19 +8,19 @@ local ShopAPI = game:GetService("ReplicatedStorage"):WaitForChild("API"):WaitFor
 local shoppingList = {
   ["gifts"] = {
         ["winter_2025_angus_box"] = 30,
-        ["winter_2025_sticker_pack"] = 300
-        ["winter_2025_sticker_pack"] = 2
-    ["winter_2025_sticker_pack"] = 1
-    ["winter_2025_sticker_pack"] = 1
+        ["winter_2025_sticker_pack"] = 300,
+        ["winter_2025_sticker_pack"] = 2,
+    ["winter_2025_sticker_pack"] = 1,
+    ["winter_2025_sticker_pack"] = 1,
     
     },
     ["strollers"] = {
         ["winter_2025_santas_helper_stroller"] = 1,
-        ["winter_2025_humbug_stroller"] = 1
+        ["winter_2025_humbug_stroller"] = 1,
     },
     ["transport"] = {
         ["winter_2025_laser_disco_skates"] = 1,
-        ["winter_2025_gift_dropper_copter"] = 1
+        ["winter_2025_gift_dropper_copter"] = 1,
     },
     ["toys"] = {
         ["winter_2025_star_topper_plush"] = 1,
@@ -41,7 +41,7 @@ local shoppingList = {
         ["winter_2025_bauble_necklace"] = 1,
         ["winter_2025_toasty_mittens"] = 1,
         ["winter_2025_2026_nye_glasses"] = 1,
-        ["winter_2025_gold_shimmery_cape"] = 1
+        ["winter_2025_gold_shimmery_cape"] = 1,
     },
     ["pets"] = {
         ["winter_2025_japanese_snow_fairy"] = 40, 
@@ -69,7 +69,7 @@ local shoppingList = {
         
         ["winter_2025_snowball_pug"] = 1,
         ["winter_2025_angus_calf"] = 1,
-        ["winter_2025_angus_cow"] = 1
+        ["winter_2025_angus_cow"] = 1,
     }
 }
 
