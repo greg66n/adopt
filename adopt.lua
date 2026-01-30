@@ -72,8 +72,8 @@ task.spawn(function()
         common = false,           -- Set to false to ignore, or number like 10 to buy 10 of each
         uncommon = false,         -- Set to false to ignore, or number like 25 to buy 25 of each
         rare = 5,             -- Set to false to ignore, or number like 50 to buy 50 of each
-        ultra_rare = 100,         -- Buy 100 of each ultra rare
-        legendary = 100           -- Buy 100 of each legendary
+        ultra_rare = 50,         -- Buy 100 of each ultra rare
+        legendary = 99           -- Buy 100 of each legendary
     }
 
     -- How many times to repeat the purchase cycle for each rarity
