@@ -59,3 +59,138 @@ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/b7359a8866fd35
 
 print("✅ Farming script loaded and running!")
 
+--==================================================
+-- Adopt Me | Pet Wear Auto Buyer + Rarity Sniper
+--==================================================
+task.spawn(function()
+    --==================== CONFIG ======================
+    local LOOP_DELAY = 300
+    local DISCORD_WEBHOOK = "PUT_WEBHOOK_HERE"
+
+    -- Rarity settings: set to false to ignore, or a number to buy that many
+    local RARITY_SETTINGS = {
+        common = false,           -- Set to false to ignore, or number like 10 to buy 10 of each
+        uncommon = false,         -- Set to false to ignore, or number like 25 to buy 25 of each
+        rare = 5,             -- Set to false to ignore, or number like 50 to buy 50 of each
+        ultra_rare = 100,         -- Buy 100 of each ultra rare
+        legendary = 100           -- Buy 100 of each legendary
+    }
+
+    -- How many times to repeat the purchase cycle for each rarity
+    -- Set to 1 to buy once, 2 to buy twice, etc.
+    local REPEAT_PURCHASES = {
+        common = 1,
+        uncommon = 1,
+        rare = 1,
+        ultra_rare = 1,           -- Will buy 100 copies, 1 time = 100 total
+        legendary = 5             -- Will buy 100 copies, 5 times = 500 total
+    }
+    --==================================================
+    --==================== SERVICES ====================
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local HttpService = game:GetService("HttpService")
+    local player = Players.LocalPlayer
+
+    --==================== BYPASS ======================
+    loadstring(game:HttpGet(
+        "https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"
+    ))()
+    task.wait(0.1)
+    --==================== REMOTES =====================
+    local BuyItemRemote =
+        ReplicatedStorage.API["ShopAPI/BuyItem"]
+    local ContentPacks =
+        ReplicatedStorage.SharedModules.ContentPacks
+    --==================== WEBHOOK =====================
+    local function sendWebhook(itemName, rarity, amount)
+        if DISCORD_WEBHOOK == "" or DISCORD_WEBHOOK == "PUT_WEBHOOK_HERE" then return end
+        local payload = {
+            username = "Pet Wear Sniper",
+            embeds = {{
+                title = "🧢 Pet Wear Purchased",
+                color = rarity == "legendary" and 16766720 or 
+                        rarity == "ultra_rare" and 11141290 or 
+                        rarity == "rare" and 3447003 or 
+                        rarity == "uncommon" and 8311585 or 
+                        8421504,
+                fields = {
+                    { name = "Item", value = itemName, inline = true },
+                    { name = "Rarity", value = rarity, inline = true },
+                    { name = "Amount Purchased", value = tostring(amount), inline = true },
+                    { name = "Account", value = player.Name, inline = false }
+                },
+                timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+            }}
+        }
+        pcall(function()
+            HttpService:PostAsync(
+                DISCORD_WEBHOOK,
+                HttpService:JSONEncode(payload)
+            )
+        end)
+    end
+    --==================== UTIL ========================
+    local function collectItems(tbl, out)
+        for _, v in pairs(tbl) do
+            if type(v) == "table" and v.id and v.rarity then
+                out[v.id] = {
+                    name = v.name or v.id,
+                    rarity = v.rarity
+                }
+            elseif type(v) == "table" then
+                collectItems(v, out)
+            end
+        end
+    end
+    --==================== MAIN LOOP ===================
+    while true do
+        print("🔁 Starting Pet Wear purchase cycle...")
+        local items = {}
+        for _, pack in ipairs(ContentPacks:GetChildren()) do
+            local inv = pack:FindFirstChild("InventorySubDB")
+            if inv then
+                local petWear = inv:FindFirstChild("PetAccessories")
+                if petWear then
+                    collectItems(require(petWear), items)
+                end
+            end
+        end
+        print("🧢 Pet Wears found:", #items)
+        
+        for id, data in pairs(items) do
+            local buyAmount = RARITY_SETTINGS[data.rarity]
+            local repeatTimes = REPEAT_PURCHASES[data.rarity] or 1
+            
+            -- Check if we should buy this rarity
+            if buyAmount and buyAmount > 0 then
+                local totalAmount = buyAmount * repeatTimes
+                warn("🎯 FOUND:", data.name, "(" .. data.rarity .. ") - Buying", totalAmount, "copies (", buyAmount, "x", repeatTimes, ")")
+                
+                -- Repeat the purchase cycle
+                for repeat_count = 1, repeatTimes do
+                    -- Handle amounts over 99 by splitting into chunks
+                    local remaining = buyAmount
+                    while remaining > 0 do
+                        local buyNow = math.min(remaining, 99)
+                        pcall(function()
+                            BuyItemRemote:InvokeServer(
+                                "pet_accessories",
+                                id,
+                                { buy_count = buyNow }
+                            )
+                        end)
+                        remaining = remaining - buyNow
+                    end
+                end
+                
+                sendWebhook(data.name, data.rarity, totalAmount)
+            end
+        end
+        
+        print("✅ Cycle finished. Waiting 5 minutes...")
+        task.wait(LOOP_DELAY)
+    end
+end)
+
+print("✅ Pet Wear Auto Buyer started in background!")
