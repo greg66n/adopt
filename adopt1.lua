@@ -3,9 +3,9 @@
 --==================================================
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
-getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "endangered_2026_endangered_egg", MaxAmount = 25},
-}
+--getgenv().BUY_BEFORE_FARMING = {
+    --{NameId = "endangered_2026_endangered_egg", MaxAmount = 25},
+--}
 --]]
 --[[
 getgenv().OPEN_ITEMS_BEFORE_FARMING = {
