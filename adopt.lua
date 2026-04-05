@@ -2,9 +2,9 @@
 -- PRE-FARMING SCRIPT (Runs First)
 --==================================================
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
---[[
+[[
 getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
+    {NameId = "endangered_2026_endangered_egg", MaxAmount = 25},
 }
 --]]
 --[[
@@ -20,7 +20,7 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 2,
-    FOCUS_FARM_AGE_POTION = true, 
+    FOCUS_FARM_AGE_POTION = false, 
     PETS_TO_AGE_IN_PEN = {
         "pet_recycler_2025_basic_egg",
         "aztec_egg_2025_tegu",
@@ -38,9 +38,9 @@ getgenv().SETTINGS = {
     HATCH_EGG_PRIORITY_NAMES = {
         "aztec_egg_2025_aztec_egg", 
     },
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
-        "moon_2025_glormy_dolphin",
+        "endangered_2026_endangered_egg",
     },
     ENABLE_TRADE_COLLECTOR = true,
     TRADE_ONLY_NEON_LUMINOUS_AND_MEGA = true,
