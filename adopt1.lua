@@ -34,11 +34,11 @@ getgenv().SETTINGS = {
     PET_AUTO_FUSION = false,
     DEBUG_MODE = false,
     POTATO_MODE = true,
-    HATCH_EGG_PRIORITY = true,
+    HATCH_EGG_PRIORITY = false,
     HATCH_EGG_PRIORITY_NAMES = {
         "endangered_2026_endangered_egg", 
     },
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
         "endangered_2026_endangered_egg",
     },
