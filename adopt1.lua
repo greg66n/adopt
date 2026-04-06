@@ -3,6 +3,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-Remote
 wait(0.1)
 game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
+
 --[[
 getgenv().BUY_BEFORE_FARMING = {
     {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
