@@ -46,17 +46,13 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
-    SET_FPS = 2,
+    SET_FPS = 20,
 
     FOCUS_FARM_AGE_POTION = true, 
 
     PETS_TO_AGE_IN_PEN = {
-        "pet_recycler_2025_basic_egg",
-        "aztec_egg_2025_tegu",
-        "aztec_egg_2025_jungle_frog",
-        "aztec_egg_2025_ahuizotl",
-        "aztec_egg_2025_xiucohtl",
-        "aztec_egg_2025_ehecatl"
+        "cracked_egg",
+        
     },
 
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
