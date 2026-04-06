@@ -49,9 +49,9 @@ getgenv().SETTINGS = {
         "cracked_egg", 
     },
 
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
-        "moon_2025_glormy_dolphin",
+        "cracked_egg",
     },
 
     ENABLE_TRADE_COLLECTOR = true,
