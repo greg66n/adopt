@@ -5,9 +5,9 @@ game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChil
 wait(0.1)
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
---getgenv().BUY_BEFORE_FARMING = {
-    --{NameId = "endangered_2026_endangered_egg", MaxAmount = 25},
---}
+getgenv().BUY_BEFORE_FARMING = {
+    {NameId = "cracked_egg", MaxAmount = 100},
+}
 --]]
 --[[
 getgenv().OPEN_ITEMS_BEFORE_FARMING = {
@@ -24,12 +24,10 @@ getgenv().SETTINGS = {
     SET_FPS = 2,
     FOCUS_FARM_AGE_POTION = true, 
     PETS_TO_AGE_IN_PEN = {
-        "pet_recycler_2025_basic_egg",
-        "endangered_2026_endangered_egg",
-        "aztec_egg_2025_jungle_frog",
-        "aztec_egg_2025_ahuizotl",
-        "aztec_egg_2025_xiucohtl",
-        "aztec_egg_2025_ehecatl"
+        "cracked_egg",
+       "pet_egg",
+        "royal_egg",
+        
     },
     
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
