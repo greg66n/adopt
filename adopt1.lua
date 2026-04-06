@@ -21,12 +21,13 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 --]]
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
-    SET_FPS = 2,
+    SET_FPS = 20,
     FOCUS_FARM_AGE_POTION = false, 
     PETS_TO_AGE_IN_PEN = {
         "cracked_egg",
-       "pet_egg",
-        "royal_egg",
+       "cracked_egg",
+        "cracked_egg",
+        "cracked_egg",
         },
     
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
@@ -37,7 +38,7 @@ getgenv().SETTINGS = {
     HATCH_EGG_PRIORITY_NAMES = {
         "cracked_egg", 
     },
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
         "cracked_egg",
     },
