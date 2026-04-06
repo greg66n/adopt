@@ -27,8 +27,7 @@ getgenv().SETTINGS = {
         "cracked_egg",
        "pet_egg",
         "royal_egg",
-        
-    },
+        },
     
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
     PET_AUTO_FUSION = false,
