@@ -6,7 +6,7 @@ wait(0.1)
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "cracked_egg", MaxAmount = 25},
+    {NameId = "cracked_egg", MaxAmount = 5},
 }
 --]]
 --[[
