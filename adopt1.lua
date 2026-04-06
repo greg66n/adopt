@@ -30,12 +30,12 @@ getgenv().SETTINGS = {
     FOCUS_FARM_AGE_POTION = true, 
 
     PETS_TO_AGE_IN_PEN = {
-        "cracked_egg",
-        "cracked_egg",
-        "cracked_egg",
-        "cracked_egg",
-        "pet_egg",
-        "royal_egg"
+        "endangered_2026_endangered_egg", 
+        "endangered_2026_endangered_egg", 
+        "endangered_2026_endangered_egg", 
+        "endangered_2026_endangered_egg", 
+        "endangered_2026_endangered_egg", 
+        "endangered_2026_endangered_egg", 
     },
 
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
@@ -46,12 +46,12 @@ getgenv().SETTINGS = {
 
     HATCH_EGG_PRIORITY = true,
     HATCH_EGG_PRIORITY_NAMES = {
-        "cracked_egg", 
+        "endangered_2026_endangered_egg", 
     },
 
     PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
-        "cracked_egg",
+        "endangered_2026_endangered_egg", 
     },
 
     ENABLE_TRADE_COLLECTOR = true,
