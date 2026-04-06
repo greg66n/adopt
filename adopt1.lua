@@ -2,6 +2,7 @@ wait(5)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 wait(0.1)
 game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
+script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 --[[
 getgenv().BUY_BEFORE_FARMING = {
     {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
@@ -20,7 +21,7 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 }
 --]]
 
-script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
+
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 20,
