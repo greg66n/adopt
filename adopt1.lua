@@ -27,7 +27,7 @@ getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 20,
 
-    FOCUS_FARM_AGE_POTION = true, 
+    FOCUS_FARM_AGE_POTION = false, 
 
     PETS_TO_AGE_IN_PEN = {
         "endangered_2026_endangered_egg", 
