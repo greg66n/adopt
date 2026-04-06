@@ -20,7 +20,7 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 }
 --]]
 
-
+script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 20,
