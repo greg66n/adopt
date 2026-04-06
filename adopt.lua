@@ -1,6 +1,8 @@
---==================================================
--- PRE-FARMING SCRIPT (Runs First)
---==================================================
+wait(5)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+wait(0.1)
+game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
+wait(0.1)
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
 --getgenv().BUY_BEFORE_FARMING = {
