@@ -42,7 +42,7 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 2,
-    FOCUS_FARM_AGE_POTION = false, 
+    FOCUS_FARM_AGE_POTION = true, 
     PETS_TO_AGE_IN_PEN = {
         "cracked_egg",
         "endangered_2026_endangered_egg",
