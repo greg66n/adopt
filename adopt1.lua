@@ -48,7 +48,7 @@ getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 20,
 
-    FOCUS_FARM_AGE_POTION = true, 
+    FOCUS_FARM_AGE_POTION = false, 
 
     PETS_TO_AGE_IN_PEN = {
         "cracked_egg",
@@ -61,9 +61,9 @@ getgenv().SETTINGS = {
     DEBUG_MODE = false,
     POTATO_MODE = true,
 
-    HATCH_EGG_PRIORITY = false,
+    HATCH_EGG_PRIORITY = true,
     HATCH_EGG_PRIORITY_NAMES = {
-        "aztec_egg_2025_aztec_egg", 
+        "cracked_egg", 
     },
 
     PET_ONLY_PRIORITY = false,
