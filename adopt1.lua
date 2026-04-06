@@ -1,14 +1,10 @@
-wait(5)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
-wait(0.1)
-game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
-
+--[[
 getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "endangered_2026_endangered_egg", MaxAmount = 20},
+    {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
 }
-
+--]]
 
 --[[
 getgenv().OPEN_ITEMS_BEFORE_FARMING = {
@@ -25,17 +21,17 @@ getgenv().AGE_PETS_BEFORE_FARMING = {
 
 getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
-    SET_FPS = 20,
+    SET_FPS = 2,
 
-    FOCUS_FARM_AGE_POTION = false, 
+    FOCUS_FARM_AGE_POTION = true, 
 
     PETS_TO_AGE_IN_PEN = {
-        "endangered_2026_endangered_egg", 
-        "endangered_2026_endangered_egg", 
-        "endangered_2026_endangered_egg", 
-        "endangered_2026_endangered_egg", 
-        "endangered_2026_endangered_egg", 
-        "endangered_2026_endangered_egg", 
+        "pet_recycler_2025_basic_egg",
+        "aztec_egg_2025_tegu",
+        "aztec_egg_2025_jungle_frog",
+        "aztec_egg_2025_ahuizotl",
+        "aztec_egg_2025_xiucohtl",
+        "aztec_egg_2025_ehecatl"
     },
 
     ENABLE_RELEASE_PETS = false, -- if true it will use the pets in PETS_TO_AGE_IN_PEN to RELEASE
@@ -44,14 +40,14 @@ getgenv().SETTINGS = {
     DEBUG_MODE = false,
     POTATO_MODE = true,
 
-    HATCH_EGG_PRIORITY = true,
+    HATCH_EGG_PRIORITY = false,
     HATCH_EGG_PRIORITY_NAMES = {
-        "endangered_2026_endangered_egg", 
+        "aztec_egg_2025_aztec_egg", 
     },
 
-    PET_ONLY_PRIORITY = true,
+    PET_ONLY_PRIORITY = false,
     PET_ONLY_PRIORITY_NAMES = {
-        "endangered_2026_endangered_egg", 
+        "moon_2025_glormy_dolphin",
     },
 
     ENABLE_TRADE_COLLECTOR = true,
@@ -71,4 +67,3 @@ getgenv().SETTINGS = {
 }
 
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/b7359a8866fd351cc305781fb0b0ecfc.lua"))()
-
