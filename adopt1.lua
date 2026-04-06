@@ -25,9 +25,9 @@ end)
 -- loadstring(game:HttpGet("LuaArmor_Link_Here"))()
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
---[[
+
 getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
+    {NameId = "cracked_egg", MaxAmount = 100},
 }
 --]]
 
@@ -48,7 +48,7 @@ getgenv().SETTINGS = {
     ENABLE_AUTO_FARM = true,
     SET_FPS = 20,
 
-    FOCUS_FARM_AGE_POTION = false, 
+    FOCUS_FARM_AGE_POTION = true, 
 
     PETS_TO_AGE_IN_PEN = {
         "cracked_egg",
