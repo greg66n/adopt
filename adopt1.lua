@@ -4,11 +4,11 @@ wait(0.1)
 game:GetService("ReplicatedStorage"):WaitForChild("adoptme_new_net"):WaitForChild("TryClaimBunny"):InvokeServer()
 script_key = "VuEAzrzDNFjpnnPXCwaBNyjeRkwCfdnm"
 
---[[
+[[
 getgenv().BUY_BEFORE_FARMING = {
-    {NameId = "aztec_egg_2025_aztec_egg", MaxAmount = 20},
+    {NameId = "endangered_2026_endangered_egg", MaxAmount = 20},
 }
---]]
+]]
 
 --[[
 getgenv().OPEN_ITEMS_BEFORE_FARMING = {
