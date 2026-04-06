@@ -34,13 +34,13 @@ getgenv().SETTINGS = {
     PET_AUTO_FUSION = false,
     DEBUG_MODE = false,
     POTATO_MODE = true,
-    HATCH_EGG_PRIORITY = false,
+    HATCH_EGG_PRIORITY = true,
     HATCH_EGG_PRIORITY_NAMES = {
-        "endangered_2026_endangered_egg", 
+        "cracked_egg", 
     },
     PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
-        "endangered_2026_endangered_egg",
+        "cracked_egg",
     },
     ENABLE_TRADE_COLLECTOR = true,
     TRADE_ONLY_NEON_LUMINOUS_AND_MEGA = true,
@@ -56,3 +56,5 @@ getgenv().SETTINGS = {
     TRASH_COLLECTOR_NAMES = {"input_Username_Here_for_TRASH"},
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/b7359a8866fd351cc305781fb0b0ecfc.lua"))()
+
+
