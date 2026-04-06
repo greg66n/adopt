@@ -38,7 +38,7 @@ getgenv().SETTINGS = {
     HATCH_EGG_PRIORITY_NAMES = {
         "cracked_egg", 
     },
-    PET_ONLY_PRIORITY = false,
+    PET_ONLY_PRIORITY = true,
     PET_ONLY_PRIORITY_NAMES = {
         "cracked_egg",
     },
